@@ -10,6 +10,32 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="PBR_Renderer.ui" />
+    <QtUic Include="Render.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="PBR_Renderer.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment\testFragment.frag" />
+    <None Include="shaders\vertex\testVertex.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cube.h" />
+    <ClInclude Include="RenderObject.h" />
+    <QtMoc Include="Render.h" />
+    <QtMoc Include="PBR_Renderer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="PBR_Renderer.cpp" />
+    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="RenderObject.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6FF44428-B424-4BAD-9E5E-6A728B981816}</ProjectGuid>
     <Keyword>QtVS_v302</Keyword>
@@ -59,9 +85,10 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -72,26 +99,14 @@
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="PBR_Renderer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="PBR_Renderer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="PBR_Renderer.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtRcc Include="PBR_Renderer.qrc" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

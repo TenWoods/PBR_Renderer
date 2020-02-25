@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QOpenGLWidget" name="openGLWidget_2"/>
+     <widget class="Render" name="render"/>
     </item>
    </layout>
   </widget>
@@ -147,7 +147,7 @@
               <x>0</x>
               <y>0</y>
               <width>266</width>
-              <height>369</height>
+              <height>310</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout">
@@ -380,6 +380,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Render</class>
+   <extends>QOpenGLWidget</extends>
+   <header>render.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="PBR_Renderer.qrc"/>
  </resources>

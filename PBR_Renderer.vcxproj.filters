@@ -23,22 +23,21 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PBR_Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="PBR_Renderer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{944d4835-e05d-40c1-b242-31f051d59b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex">
+      <UniqueIdentifier>{82d0cbcb-7d7d-4f2e-b5d1-2d3d2054776c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fragment">
+      <UniqueIdentifier>{de7b2e0a-b0dc-4cf2-9a4b-f73f81e30cb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PBR_Renderer.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Render.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -46,5 +45,52 @@
     <QtRcc Include="PBR_Renderer.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\vertex\testVertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="shaders\fragment\testFragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="PBR_Renderer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Render.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PBR_Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

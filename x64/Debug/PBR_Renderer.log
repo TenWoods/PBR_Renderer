@@ -1,5 +1,2 @@
-﻿  uic PBR_Renderer.ui
-  PBR_Renderer.cpp
-  main.cpp
-  moc_PBR_Renderer.cpp
+﻿  Render.cpp
   PBR_Renderer.vcxproj -> C:\WorkPlace\PBR_Renderer\x64\Debug\PBR_Renderer.exe
