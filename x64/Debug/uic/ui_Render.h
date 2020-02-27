@@ -24,6 +24,7 @@ public:
         if (Render->objectName().isEmpty())
             Render->setObjectName(QString::fromUtf8("Render"));
         Render->resize(400, 300);
+        Render->setFocusPolicy(Qt::ClickFocus);
 
         retranslateUi(Render);
 

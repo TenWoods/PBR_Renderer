@@ -8,13 +8,13 @@
 class RenderObject
 {
 private : 
-	QVector3D m_position;
-	QVector3D m_scale;
-	QVector3D m_rotation;
 	RenderObject* childObject;
 	RenderObject* fatherObject;
 protected :
-	Render *m_window;
+	Render* m_window;
+	QVector3D m_position;
+	QVector3D m_scale;
+	QVector3D m_rotation;
 public : 
 	RenderObject();
 	RenderObject(QVector3D position, QVector3D scale, QVector3D rotation, Render* window);

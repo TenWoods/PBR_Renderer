@@ -47,21 +47,21 @@
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\vertex\testVertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="shaders\fragment\testFragment.frag">
+    <None Include="shaders\fragment\traditionalFragment.frag">
       <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\vertex\traditionalVertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderObject.h">
+    <ClInclude Include="Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
+    <ClInclude Include="RenderObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,6 +77,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,9 +90,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Cube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

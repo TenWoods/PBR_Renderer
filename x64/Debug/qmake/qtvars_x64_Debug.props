@@ -5,7 +5,7 @@
 <Qt_LIBS_>C:\Qt\5.12.6\msvc2017_64\lib\Qt53DAnimationd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt53DExtrasd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt53DRenderd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt53DInputd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt53DLogicd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt53DCored.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt5Gamepadd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt5OpenGLd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt5Widgetsd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt5Guid.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt5Networkd.lib;C:\Qt\5.12.6\msvc2017_64\lib\Qt5Cored.lib;C:\Qt\5.12.6\msvc2017_64\lib\qtmaind.lib;shell32.lib</Qt_LIBS_>
 <Qt_LIBPATH_>C:\openssl\lib;C:\Utils\my_sql\mysql-5.6.11-winx64\lib;C:\Utils\postgresql\pgsql\lib</Qt_LIBPATH_>
 <Qt_INCLUDEPATH_
-      >$(Qt_INCLUDEPATH_);x64\Debug\moc;x64\Debug\uic</Qt_INCLUDEPATH_>
+      >$(Qt_INCLUDEPATH_);x64\Debug\moc\header;x64\Debug\uic</Qt_INCLUDEPATH_>
     <QtBkup_QtInstall
       >Qt 5.12.6</QtBkup_QtInstall>
     <QtBkup_QtModules
