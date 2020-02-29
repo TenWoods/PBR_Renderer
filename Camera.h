@@ -33,6 +33,6 @@ public :
 	QMatrix4x4 ViewMatrix();
 	void Move(Direction dir, float deltaTime);
 	void Rotate(float deltaX, float deltaY);
-	float Zoom();
+	float get_zoom();
+	QVector3D get_position();
 };
-

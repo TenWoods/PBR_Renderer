@@ -1,5 +1,4 @@
 #pragma once
-
 #include <QOpenGLWidget>
 #include <qopenglfunctions_4_4_core.h>
 #include <qopenglshaderprogram.h>
@@ -8,8 +7,10 @@
 #include <qkeyevent.h>
 #include <qwindowdefs.h>
 #include <QTime>
-
-class Cube;
+#include <qmath.h>
+#include "Light.h"
+#include "RenderObject.h"
+#include "Cube.h"
 
 class Render : public QOpenGLWidget, public QOpenGLFunctions_4_4_Core
 {
@@ -30,11 +31,11 @@ protected :
 	void mouseReleaseEvent(QMouseEvent* event) override;
 	void focusInEvent(QFocusEvent* event) override;
 	void focusOutEvent(QFocusEvent* event) override;
-
+	
 private:
+	//绘制参数
 	Ui::Render ui;
 	QOpenGLShaderProgram shaderProgram;
-	Cube* testCube;
 	float lastFrame;
 	float deltaTime;
 	QTime time;
@@ -42,5 +43,10 @@ private:
 	float lastY;
 	bool isFirstMouse;
 	bool isRightMousePress;
+	//场景数据
+	std::vector<RenderObject*> sceneObjects;
+	DirectionLight directionLight;
+	std::vector<PointLight> pointLights;
+	std::vector<SpotLight> spotLights;
 };
 

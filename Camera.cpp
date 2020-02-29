@@ -12,7 +12,7 @@ Camera::Camera()
 }
 
 Camera::Camera(QVector3D pos, QVector3D lookAtPoint, float moves, float rotates, float zoom) : position(pos), moveSpeed(moves), rotateSpeed(rotates), m_zoom(zoom), front(lookAtPoint - pos), 
-yaw(-90.0f), pitch(0.0f)
+yaw(90.0f), pitch(0.0f)
 {
 	QVector3D worldUp(0.0f, 1.0f, 0.0f);
 	front.normalize();
@@ -29,9 +29,14 @@ QMatrix4x4 Camera::ViewMatrix()
 	return view;
 }
 
-float Camera::Zoom()
+float Camera::get_zoom()
 {
 	return m_zoom;
+}
+
+QVector3D Camera::get_position()
+{
+	return position;
 }
 
 void Camera::Move(Direction dir, float deltaTime)

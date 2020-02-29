@@ -3,7 +3,22 @@
 #include <qopenglshaderprogram.h>
 #include <vector>
 #include <string>
-#include "Render.h"
+
+class Render;
+
+enum TEXTURE_TYPE
+{
+	NORMAL,
+	DIFFUSE,
+	HEIGHT,
+	SPECULAR
+};
+
+struct Texture {
+	unsigned int id;
+	TEXTURE_TYPE type;
+	std::string path;
+};
 
 class RenderObject
 {
@@ -20,24 +35,19 @@ public :
 	RenderObject(QVector3D position, QVector3D scale, QVector3D rotation, Render* window);
 	void AddChild(RenderObject* child);
 	void AddFather(RenderObject* father);
+	virtual void AddTexture(std::string path, TEXTURE_TYPE type) = 0;
 	virtual void Draw(QOpenGLShaderProgram* shader) = 0;
-};
-
-struct Texture {
-	unsigned int id;
-	std::string type;
-	std::string path;
 };
 
 struct Vertex {
 	// position
-	QVector3D Position;
+	QVector3D position;
 	// normal
-	QVector3D Normal;
+	QVector3D normal;
 	// texCoords
-	QVector2D TexCoords;
+	QVector2D texcoord;
 	// tangent
-	QVector3D Tangent;
+	QVector3D tangent;
 	// bitangent
-	QVector3D Bitangent;
+	QVector3D bitangent;
 };

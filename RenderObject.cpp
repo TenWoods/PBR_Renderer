@@ -1,4 +1,5 @@
 #include "RenderObject.h"
+#include "Render.h"
 
 RenderObject::RenderObject() : m_position(0.0, 0.0, 0.0), m_scale(1.0, 1.0, 1.0), m_rotation(0.0, 0.0, 0.0), childObject(NULL), fatherObject(NULL), m_window(NULL)
 {

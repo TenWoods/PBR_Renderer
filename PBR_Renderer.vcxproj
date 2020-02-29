@@ -24,7 +24,10 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="stb_image.h" />
     <QtMoc Include="Render.h" />
     <QtMoc Include="PBR_Renderer.h" />
   </ItemGroup>
@@ -32,6 +35,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="PBR_Renderer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="RenderObject.cpp" />
@@ -65,7 +69,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\WorkPlace\PBR_Renderer\PBR_Renderer\header;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Library\assimp-5.0.1\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
