@@ -25,6 +25,7 @@ class RenderObject
 private : 
 	RenderObject* childObject;
 	RenderObject* fatherObject;
+	bool hasNormalmap;
 protected :
 	Render* m_window;
 	QVector3D m_position;
@@ -35,6 +36,8 @@ public :
 	RenderObject(QVector3D position, QVector3D scale, QVector3D rotation, Render* window);
 	void AddChild(RenderObject* child);
 	void AddFather(RenderObject* father);
+	bool get_hasNormalmap();
+	void set_hasNornalmap(bool value);
 	virtual void AddTexture(std::string path, TEXTURE_TYPE type) = 0;
 	virtual void Draw(QOpenGLShaderProgram* shader) = 0;
 };

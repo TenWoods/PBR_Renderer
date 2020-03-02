@@ -19,7 +19,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment\traditionalFragment.frag" />
+    <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag" />
     <None Include="shaders\vertex\traditionalVertex.vert" />
+    <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />

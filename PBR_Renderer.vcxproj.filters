@@ -53,6 +53,12 @@
     <None Include="shaders\vertex\traditionalVertex.vert">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">

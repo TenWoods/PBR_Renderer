@@ -21,13 +21,13 @@ void Render::initializeGL()
 	//初始化OpenGL状态和着色器
 	initializeOpenGLFunctions();
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-	bool success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/traditionalVertex.vert");
+	bool success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/traditionalVertex_withNormalMap.vert");
 	if (!success)
 	{
 		qDebug() << "load vertex shader failed!" << shaderProgram.log();
 		return;
 	}
-	success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment.frag");
+	success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment_withNormalMap.frag");
 	if (!success)
 	{
 		qDebug() << "load frag shader failed!" << shaderProgram.log();
@@ -43,7 +43,9 @@ void Render::initializeGL()
 	time.start();
 	//初始化场景物体
 	sceneObjects.push_back(new Cube(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	sceneObjects[0]->AddTexture("wall.jpg", TEXTURE_TYPE::DIFFUSE);
+	sceneObjects[0]->set_hasNornalmap(false);
+	sceneObjects[0]->AddTexture("brickwall.jpg", TEXTURE_TYPE::DIFFUSE);
+	sceneObjects[0]->AddTexture("brickwall_normal.jpg", TEXTURE_TYPE::NORMAL);
 	//基础平行光
 	directionLight = DirectionLight(QVector3D(0.5f, 0.5f, 0.5f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
 	//点光源

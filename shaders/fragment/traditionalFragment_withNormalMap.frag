@@ -5,6 +5,7 @@
 in vec3 fragPos;
 in vec3 normal;
 in vec2 texcoord;
+in mat3 TBN;
 
 out vec4 FragColor;
 
@@ -66,16 +67,21 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
+    //法线贴图
+    vec3 normal_Map = vec3(texture(material.texture_normal, texcoord));
+    normal_Map = normalize(normal_Map * 2.0 - 1.0f);
+    normal_Map = normalize(TBN * normal_Map);
+    //视角方向
     vec3 viewDir = cameraPos - fragPos;
     viewDir = normalize(viewDir);
     //平行光
-	vec3 color = CalcDirectLight(dirLight, normal, viewDir);
+	vec3 color = CalcDirectLight(dirLight, normal_Map, viewDir);
     //点光源
     for (int i = 0; i < plNum; i++)
-        color += CalcPointLight(pointLights[i], normal, fragPos, viewDir);
+        color += CalcPointLight(pointLights[i], normal_Map, fragPos, viewDir);
     //聚光
     for (int i = 0; i < slNum; i++)
-        color += CalcSpotLight(spotLights[i], normal, fragPos, viewDir);
+        color += CalcSpotLight(spotLights[i], normal_Map, fragPos, viewDir);
 	FragColor = vec4(color, 1.0);
 }
 
@@ -142,3 +148,4 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular);
 }
+
