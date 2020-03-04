@@ -27,6 +27,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="stb_image.h" />
@@ -37,6 +38,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PBR_Renderer.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -71,7 +73,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Library\assimp-5.0.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Library\assimp-5.0.0\build\include;C:\Library\assimp-5.0.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\WorkPlace\PBR_Renderer\PBR_Renderer;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
@@ -114,6 +117,7 @@
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

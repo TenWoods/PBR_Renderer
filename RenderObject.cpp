@@ -31,3 +31,32 @@ void RenderObject::set_hasNornalmap(bool value)
 {
 	hasNormalmap = value;
 }
+
+void RenderObject::set_position(QVector3D value)
+{
+	m_position = value;
+}
+
+QVector3D RenderObject::get_position()
+{
+	return m_position;
+}
+
+void RenderObject::set_scale(QVector3D value)
+{
+	m_scale = value;
+}
+
+QVector3D RenderObject::get_scale()
+{
+	return m_scale;
+}
+void RenderObject::set_rotation(QVector3D value)
+{
+	m_rotation = value;
+}
+
+QVector3D RenderObject::get_rotation()
+{
+	return m_rotation;
+}

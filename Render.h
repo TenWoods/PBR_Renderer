@@ -2,15 +2,16 @@
 #include <QOpenGLWidget>
 #include <qopenglfunctions_4_4_core.h>
 #include <qopenglshaderprogram.h>
-#include "ui_Render.h"
-#include "Camera.h"
 #include <qkeyevent.h>
 #include <qwindowdefs.h>
 #include <QTime>
 #include <qmath.h>
+#include "ui_Render.h"
+#include "Camera.h"
 #include "Light.h"
 #include "RenderObject.h"
 #include "Cube.h"
+#include "Model.h"
 
 class Render : public QOpenGLWidget, public QOpenGLFunctions_4_4_Core
 {

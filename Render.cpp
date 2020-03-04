@@ -46,6 +46,7 @@ void Render::initializeGL()
 	sceneObjects[0]->set_hasNornalmap(false);
 	sceneObjects[0]->AddTexture("brickwall.jpg", TEXTURE_TYPE::DIFFUSE);
 	sceneObjects[0]->AddTexture("brickwall_normal.jpg", TEXTURE_TYPE::NORMAL);
+	sceneObjects.push_back(new Model("nanosuit/nanosuit.obj", this));
 	//基础平行光
 	directionLight = DirectionLight(QVector3D(0.5f, 0.5f, 0.5f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
 	//点光源

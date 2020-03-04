@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION 
 #include "stb_image.h"
 
-Cube::Cube() : RenderObject(), /*cubeData(NULL),*/ VAO(0), VBO(0)
+Cube::Cube() : RenderObject(), VAO(0), VBO(0)
 {
 
 }
@@ -97,6 +97,7 @@ void Cube::Draw(QOpenGLShaderProgram* shader)
         m_window->glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     model.translate(m_position);
+    //TODO: 旋转和放缩的添加
     shader->setUniformValue("model", model);
     QMatrix4x4 view;
     view = m_window->camera.ViewMatrix();
