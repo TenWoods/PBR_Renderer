@@ -59,6 +59,15 @@
     <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="shaders\fragment\PBRFragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="test.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="test.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -80,6 +89,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -18,10 +18,13 @@
     <QtRcc Include="PBR_Renderer.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\fragment\PBRFragment.frag" />
     <None Include="shaders\fragment\traditionalFragment.frag" />
     <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag" />
     <None Include="shaders\vertex\traditionalVertex.vert" />
     <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert" />
+    <None Include="test.frag" />
+    <None Include="test.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -30,6 +33,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="stb_image.h" />
     <QtMoc Include="Render.h" />
     <QtMoc Include="PBR_Renderer.h" />
@@ -43,6 +47,7 @@
     <ClCompile Include="PBR_Renderer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="RenderObject.cpp" />
+    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6FF44428-B424-4BAD-9E5E-6A728B981816}</ProjectGuid>

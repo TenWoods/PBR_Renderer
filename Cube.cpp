@@ -97,6 +97,7 @@ void Cube::Draw(QOpenGLShaderProgram* shader)
         m_window->glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     model.translate(m_position);
+    model.scale(m_scale);
     //TODO: 旋转和放缩的添加
     shader->setUniformValue("model", model);
     QMatrix4x4 view;

@@ -11,6 +11,7 @@
 #include "Light.h"
 #include "RenderObject.h"
 #include "Cube.h"
+#include "Sphere.h"
 #include "Model.h"
 
 class Render : public QOpenGLWidget, public QOpenGLFunctions_4_4_Core

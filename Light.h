@@ -4,44 +4,33 @@
 class Light
 {
 private :
-	QVector3D m_diffuse;
-	QVector3D m_specular;
+	QVector3D m_lightColor;
 	QVector3D m_ambient;
 
 public : 
-	Light() : m_diffuse(0.0f, 0.0f, 0.0f), m_specular(0.0f, 0.0f, 0.0f), m_ambient(0.0f, 0.0f, 0.0f)
+	Light() : m_lightColor(0.0f, 0.0f, 0.0f), m_ambient(0.0f, 0.0f, 0.0f)
 	{
 
 	}
 
-	Light(QVector3D diffuse, QVector3D specular, QVector3D ambient) : m_diffuse(diffuse), m_specular(specular), m_ambient(ambient)
+	Light(QVector3D lightColor, QVector3D ambient) : m_lightColor(lightColor), m_ambient(ambient)
 	{
 
 	}
 
-	void set_diffuse(QVector3D newDiffuse)
+	void set_diffuse(QVector3D value)
 	{
-		m_diffuse = newDiffuse;
+		m_lightColor = value;
 	}
 
-	void set_specular(QVector3D newSpecular)
+	void set_ambient(QVector3D value)
 	{
-		m_specular = newSpecular;
+		m_ambient = value;
 	}
 
-	void set_ambient(QVector3D newAmbient)
+	QVector3D get_lightColor()
 	{
-		m_ambient = newAmbient;
-	}
-
-	QVector3D get_diffuse()
-	{
-		return m_diffuse;
-	}
-
-	QVector3D get_specular()
-	{
-		return m_specular;
+		return m_lightColor;
 	}
 
 	QVector3D get_ambient()
@@ -62,7 +51,7 @@ public :
 
 	}
 
-	DirectionLight(QVector3D diffuse, QVector3D specular, QVector3D ambient, QVector3D direction) : Light(diffuse, specular, ambient), m_direction(direction)
+	DirectionLight(QVector3D diffuse, QVector3D ambient, QVector3D direction) : Light(diffuse, ambient), m_direction(direction)
 	{
 
 	}
@@ -92,7 +81,7 @@ public :
 
 	}
 
-	PointLight(QVector3D diffuse, QVector3D specular, QVector3D ambient, QVector3D position, float linear, float quadratic) : Light(diffuse, specular, ambient), m_position(position), m_constant(1.0f), m_linear(linear), m_quadratic(quadratic)
+	PointLight(QVector3D lightColor, QVector3D ambient, QVector3D position, float linear, float quadratic) : Light(lightColor, ambient), m_position(position), m_constant(1.0f), m_linear(linear), m_quadratic(quadratic)
 	{
 
 	}
@@ -146,7 +135,7 @@ public :
 
 	}
 
-	SpotLight(QVector3D diffuse, QVector3D specular, QVector3D ambient, QVector3D position, float linear, float quadratic, QVector3D direction, float cutoff, float cutoffout) : PointLight(diffuse, specular, ambient, position, linear, quadratic), m_direction(direction), m_cutoff(cutoff), m_cutoffout(cutoffout)
+	SpotLight(QVector3D diffuse, QVector3D ambient, QVector3D position, float linear, float quadratic, QVector3D direction, float cutoff, float cutoffout) : PointLight(diffuse, ambient, position, linear, quadratic), m_direction(direction), m_cutoff(cutoff), m_cutoffout(cutoffout)
 	{
 
 	}
