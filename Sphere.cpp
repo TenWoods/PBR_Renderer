@@ -103,8 +103,6 @@ Sphere::Sphere(QVector3D position, QVector3D scale, QVector3D rotation, Render* 
 
 void Sphere::Draw(QOpenGLShaderProgram* shader)
 {
-	shader->setUniformValue("albedo", QVector3D(0.5f, 0.0f, 0.0f));
-	shader->setUniformValue("ao", 1.0f);
 	shader->bind();
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
@@ -128,41 +126,7 @@ void Sphere::Draw(QOpenGLShaderProgram* shader)
 		m_window->glActiveTexture(GL_TEXTURE0 + i);
 		m_window->glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
-	/*int nrRows = 7;
-	int nrColumns = 7;
-	float spacing = 2.5;
-	for (int row = 0; row < nrRows; ++row)
-	{
-		shader->setUniformValue("metallic", (float)row / (float)nrRows);
-		for (int col = 0; col < nrColumns; ++col)
-		{
-			float value = (float)col / (float)nrColumns;
-			if (value < 0.05f)
-			{
-				value = 0.05f;
-			}
-			else if (value > 1.0f)
-			{
-				value = 1.0f;
-			}
-			shader->setUniformValue("roughness", value);
-			QMatrix4x4 model;
-			model.translate(QVector3D(
-				(col - (nrColumns / 2)) * spacing,
-				(row - (nrRows / 2)) * spacing,
-				0.0f
-			));
-			shader->setUniformValue("model", model);
-			QMatrix4x4 view;
-			view = m_window->camera.ViewMatrix();
-			shader->setUniformValue("view", view);
-			QMatrix4x4 projection;
-			projection.perspective(m_window->camera.get_zoom(), (float)m_window->width() / (float)m_window->height(), 0.1f, 100.0f);
-			shader->setUniformValue("projection", projection);
-			m_window->glBindVertexArray(VAO);
-			m_window->glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-		}
-	}*/
+
 	QMatrix4x4 model;
 	model.translate(m_position);
 	model.scale(m_scale);

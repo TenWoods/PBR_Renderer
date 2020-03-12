@@ -90,6 +90,15 @@ void Cube::Draw(QOpenGLShaderProgram* shader)
         case TEXTURE_TYPE::HEIGHT :
             shader->setUniformValue("material.texture_height", i);
             break;
+        case TEXTURE_TYPE::METALLIC :
+            shader->setUniformValue("material.texture_metallic", i);
+            break;
+        case TEXTURE_TYPE::ROUGHNESS :
+            shader->setUniformValue("material.texture_roughness", i);
+            break;
+        case TEXTURE_TYPE::AO :
+            shader->setUniformValue("material.texture_ao", i);
+            break;
         default :
             break;
         }

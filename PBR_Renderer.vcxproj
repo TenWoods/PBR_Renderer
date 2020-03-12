@@ -18,6 +18,7 @@
     <QtRcc Include="PBR_Renderer.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="PBRFragment_withtextures.frag" />
     <None Include="shaders\fragment\PBRFragment.frag" />
     <None Include="shaders\fragment\traditionalFragment.frag" />
     <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag" />

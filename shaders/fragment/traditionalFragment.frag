@@ -66,14 +66,14 @@ void main()
     vec3 viewDir = cameraPos - fragPos;
     viewDir = normalize(viewDir);
     vec3 color = vec3(0.0, 0.0, 0.0);
-//    //平行光
-//	vec3 color = CalcDirectLight(dirLight, normal, viewDir);
+    //平行光
+	vec3 color = CalcDirectLight(dirLight, normal, viewDir);
     //点光源
     for (int i = 0; i < plNum; i++)
         color += CalcPointLight(pointLights[i], normal, fragPos, viewDir);
     //聚光
-//    for (int i = 0; i < slNum; i++)
-//        color += CalcSpotLight(spotLights[i], normal, fragPos, viewDir);
+    for (int i = 0; i < slNum; i++)
+        color += CalcSpotLight(spotLights[i], normal, fragPos, viewDir);
 	FragColor = vec4(color, 1.0);
 }
 

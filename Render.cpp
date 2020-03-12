@@ -26,7 +26,7 @@ void Render::initializeGL()
 		qDebug() << "load vertex shader failed!" << shaderProgram.log();
 		return;
 	}
-	success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment.frag");
+	success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/PBRFragment.frag");
 	if (!success)
 	{
 		qDebug() << "load frag shader failed!" << shaderProgram.log();
@@ -45,17 +45,15 @@ void Render::initializeGL()
 	sceneObjects[0]->set_hasNornalmap(false);
 	sceneObjects[0]->AddTexture("brickwall.jpg", TEXTURE_TYPE::DIFFUSE);
 	sceneObjects[0]->AddTexture("brickwall_normal.jpg", TEXTURE_TYPE::NORMAL);
-	//sceneObjects.push_back(new Model("nanosuit/nanosuit.obj", this));
-	////基础平行光
-	//directionLight = DirectionLight(QVector3D(0.5f, 0.5f, 0.5f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
+	//基础平行光
+	directionLight = DirectionLight(QVector3D(150.0f, 150.0f, 150.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
 	//点光源
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
-	//pointLights.push_back(PointLight(QVector3D(0.0f, 1.0f, 0.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(4.0f, 2.0f, 0.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
 	//聚光
-	/*spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 0.5f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));*/
+	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
 }
 
 void Render::paintGL()
@@ -69,10 +67,10 @@ void Render::paintGL()
 	//把光照信息和相机信息传给shader
 	shaderProgram.bind();
 	shaderProgram.setUniformValue("cameraPos", camera.get_position());
-	////平行光信息
-	//shaderProgram.setUniformValue("dirLight.direction", directionLight.get_direction());
-	//shaderProgram.setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
-	//shaderProgram.setUniformValue("dirLight.ambient", directionLight.get_ambient());
+	//平行光信息
+	shaderProgram.setUniformValue("dirLight.direction", directionLight.get_direction());
+	shaderProgram.setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
+	shaderProgram.setUniformValue("dirLight.ambient", directionLight.get_ambient());
 	//点光源信息
 	shaderProgram.setUniformValue("plNum", (int)pointLights.size());
 	for (int i = 0; i < pointLights.size(); i++)
@@ -85,33 +83,25 @@ void Render::paintGL()
 		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(), 
 			pointLights[i].get_lightColor());
 	}
-	////聚光信息
-	//shaderProgram.setUniformValue("slNum", (int)spotLights.size());
-	//for (int i = 0; i < spotLights.size(); i++)
-	//{
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].position")).c_str(), 
-	//		spotLights[i].get_position());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].direction")).c_str(), 
-	//		spotLights[i].get_direction());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].constant")).c_str(), 
-	//		spotLights[i].get_constant());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].linear")).c_str(), 
-	//		spotLights[i].get_linear());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].quadratic")).c_str(), 
-	//		spotLights[i].get_quadratic());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].ambient")).c_str(), 
-	//		spotLights[i].get_ambient());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].lightColor")).c_str(), 
-	//		spotLights[i].get_lightColor());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].cutOff")).c_str(), 
-	//		spotLights[i].get_cutoff());
-	//	shaderProgram.setUniformValue((std::string("spotLights[") + std::to_string(i) + std::string("].cutoffout")).c_str(),
-	//		spotLights[i].get_cutoffout());
-	//}
-	//shaderProgram.setUniformValue("albedo", QVector3D(0.5f, 0.0f, 0.0f));
-	//shaderProgram.setUniformValue("ao", 1.0f);
-	//shaderProgram.setUniformValue("metallic", 0.5f);
-	//shaderProgram.setUniformValue("roughness", 0.5f);
+	//聚光信息
+	shaderProgram.setUniformValue("slNum", (int)spotLights.size());
+	for (int i = 0; i < spotLights.size(); i++)
+	{
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].position").c_str(), spotLights[i].get_position());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].direction").c_str(), 
+			spotLights[i].get_direction());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].constant").c_str(), spotLights[i].get_constant());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].linear").c_str(), spotLights[i].get_linear());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].quadratic").c_str(), spotLights[i].get_quadratic());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].ambient").c_str(), spotLights[i].get_ambient());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].cutOff").c_str(), spotLights[i].get_cutoff());
+		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].cutoffout").c_str(), spotLights[i].get_cutoffout());
+	}
+	shaderProgram.setUniformValue("albedo", QVector3D(0.5f, 0.0f, 0.0f));
+	shaderProgram.setUniformValue("ao", 1.0f);
+	shaderProgram.setUniformValue("metallic", 0.5f);
+	shaderProgram.setUniformValue("roughness", 0.5f);
 	//绘制场景
 	for each (auto obj in sceneObjects)
 	{
