@@ -88,7 +88,7 @@ void Render::initializeGL()
 		qDebug() << "load vertex shader failed!" << pbr_tex_shader.log();
 		return;
 	}
-	success = pbr_tex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/basePBRFragment.frag");
+	success = pbr_tex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/PBRFragment_withtextures.frag");
 	if (!success)
 	{
 		qDebug() << "load frag shader failed!" << pbr_tex_shader.log();
@@ -114,14 +114,14 @@ void Render::initializeGL()
 	sceneObjects[0]->AddTexture("rustediron2_ao.png", TEXTURE_TYPE::AO);*/
 
 	//基础平行光
-	directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
+	/*directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));*/
 	//点光源
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
 	//聚光
-	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
+	/*spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));*/
 }
 
 void Render::paintGL()
@@ -160,10 +160,17 @@ void Render::paintGL()
 	//把光照信息和相机信息传给shader
 	shaderProgram->bind();
 	shaderProgram->setUniformValue("cameraPos", camera.get_position());
-	//平行光信息
-	shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
-	shaderProgram->setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
-	shaderProgram->setUniformValue("dirLight.ambient", directionLight.get_ambient());
+	////平行光信息
+	//shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
+	//shaderProgram->setUniformValue("dirLight.ambient", directionLight.get_ambient());
+	//if (PBRMaterialON)
+	//{
+	//	shaderProgram->setUniformValue("dirLight.lightColor", directionLight.get_lightColor() * 300.0f);
+	//}
+	//else
+	//{
+	//	shaderProgram->setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
+	//}
 	//点光源信息
 	shaderProgram->setUniformValue("plNum", (int)pointLights.size());
 	for (int i = 0; i < pointLights.size(); i++)
@@ -173,8 +180,16 @@ void Render::paintGL()
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].linear").c_str(), pointLights[i].get_linear());
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].quadratic").c_str(), pointLights[i].get_quadratic());
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].ambient").c_str(), pointLights[i].get_ambient());
-		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(),
-			pointLights[i].get_lightColor());
+		if (PBRMaterialON)
+		{
+			shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(),
+				pointLights[i].get_lightColor() * 60.0f);
+		}
+		else
+		{
+			shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(),
+				pointLights[i].get_lightColor());
+		}
 	}
 	//聚光信息
 	shaderProgram->setUniformValue("slNum", (int)spotLights.size());
@@ -187,9 +202,16 @@ void Render::paintGL()
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].linear").c_str(), spotLights[i].get_linear());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].quadratic").c_str(), spotLights[i].get_quadratic());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].ambient").c_str(), spotLights[i].get_ambient());
-		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].cutOff").c_str(), spotLights[i].get_cutoff());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].cutoffout").c_str(), spotLights[i].get_cutoffout());
+		if (PBRMaterialON)
+		{
+			shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor() * 300.0f);
+		}
+		else
+		{
+			shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor());
+		}
 	}
 	//绘制场景
 	for (int i = 0; i < sceneObjects.size(); i++)
@@ -306,12 +328,14 @@ bool Render::get_PBRMaterialON()
 int Render::AddCube()
 {
 	sceneObjects.push_back(new Cube(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	//qDebug() << sceneObjects.size();
 	return sceneObjects.size() - 1;
 }
 
 int Render::AddSphere()
 {
 	sceneObjects.push_back(new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	//qDebug() << sceneObjects.size();
 	return sceneObjects.size() - 1;
 }
 

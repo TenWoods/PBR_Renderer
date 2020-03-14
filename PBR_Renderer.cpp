@@ -12,6 +12,7 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	ui.treeView->setModel(sceneTree);
 	ui.property->set_render(ui.render);
 	ui.property->SetConnection();
+	ui.property->setEnabled(false);
 	//菜单栏按键绑定
 	connect(ui.actionsphere, &QAction::triggered, this, &PBR_Renderer::AddSphere); //场景生成球
 	connect(ui.actioncube, &QAction::triggered, this, &PBR_Renderer::AddCube);  //场景生成立方体
@@ -37,11 +38,14 @@ void PBR_Renderer::AddCube()
 	QString text(("Cube" + num).c_str());
 	QStandardItem* cube = new QStandardItem(text);
 	cube->setData(QVariant(ui.render->AddCube()));  //将对应物体索引存储到item中
+	//qDebug() << cube->data().value<int>();
 	sceneTree->appendRow(cube);
 }
 
 void PBR_Renderer::ShowProperties(const QModelIndex& index)
 {
+	ui.property->setEnabled(true);
 	ui.render->set_focusObject(index.data().value<int>());
+	//qDebug() << index.data().value<int>();
 	ui.property->SetProperties();
 }

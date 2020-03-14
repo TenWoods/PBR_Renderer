@@ -309,7 +309,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="specularButton">
             <property name="text">
              <string>选择贴图</string>
             </property>
@@ -336,7 +336,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="normalButton">
             <property name="text">
              <string>选择贴图</string>
             </property>
@@ -363,7 +363,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="metallicButton">
             <property name="text">
              <string>选择贴图</string>
             </property>
@@ -390,7 +390,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QPushButton" name="roughnessButton">
             <property name="text">
              <string>选择贴图</string>
             </property>
@@ -417,7 +417,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="AOButton">
             <property name="text">
              <string>选择贴图</string>
             </property>

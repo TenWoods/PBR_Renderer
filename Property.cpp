@@ -15,6 +15,13 @@ Property::Property(QWidget *parent)
 	//ao组
 	connect(ui.aoSlider, &QSlider::sliderMoved, this, &Property::AOEditFromSlider);
 	connect(ui.aoEdit, &QLineEdit::textChanged, this, &Property::AOSliderFromEdit);
+	//贴图按键连接
+	connect(ui.diffuseButton, &QPushButton::clicked, this, &Property::SetDiffuseButtonON);
+	connect(ui.specularButton, &QPushButton::clicked, this, &Property::SetSpecularButtonON);
+	connect(ui.normalButton, &QPushButton::clicked, this, &Property::SetNormalButtonON);
+	connect(ui.metallicButton, &QPushButton::clicked, this, &Property::SetMetallicButtonON);
+	connect(ui.roughnessButton, &QPushButton::clicked, this, &Property::SetRoughnessButtonON);
+	connect(ui.AOButton, &QPushButton::clicked, this, &Property::SetAOButtonON);
 }
 
 Property::~Property()
@@ -134,6 +141,8 @@ void Property::set_render(Render* value)
 	render = value;
 }
 
+//槽函数
+//slider与edit的联动
 void Property::MetallicEditFromSlider(int value)
 {
 	ui.metallicEdit->setText(QString("%1").arg((float)value / 100.0f));
@@ -162,4 +171,52 @@ void Property::AOEditFromSlider(int value)
 void Property::AOSliderFromEdit(const QString& text)
 {
 	ui.aoSlider->setValue((int)(text.toFloat() * 100.0f));
+}
+//设置贴图
+void Property::SetDiffuseButtonON()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择漫反射贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::DIFFUSE);
+}
+
+void Property::SetSpecularButtonON()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择高光贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::SPECULAR);
+}
+
+void Property::SetNormalButtonON()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择法线贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::NORMAL);
+}
+
+void Property::SetMetallicButtonON()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择金属度贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::METALLIC);
+}
+
+void Property::SetRoughnessButtonON()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择粗糙度贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::ROUGHNESS);
+}
+
+void Property::SetAOButtonON()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择AO贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::AO);
 }

@@ -195,7 +195,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     float epsilon = light.cutOff - light.cutoffout;
     float intensity = clamp((theta - light.cutoffout) / epsilon, 0.0, 1.0);
 
-    vec3 radiance = light.lightColor * attenuation * intensity;
+    vec3 radiance = light.lightColor * attenuation;
 
     //BRDF
     float D = DistributionGGX(normal, halfVec, roughness);
@@ -210,5 +210,5 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     //结果
     float NdotL = max(dot(normal, lightDir), 0.0);
     vec3 color = (kd * albedo / PI + specular) * radiance * NdotL;
-    return color;
+    return color * intensity;
 }

@@ -78,27 +78,27 @@ public:
     QWidget *specularWidget;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_7;
-    QPushButton *pushButton;
+    QPushButton *specularButton;
     QLabel *label_12;
     QWidget *normalWidget;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_8;
-    QPushButton *pushButton_2;
+    QPushButton *normalButton;
     QLabel *label_13;
     QWidget *metallictexWidget;
     QHBoxLayout *horizontalLayout_8;
     QLabel *label_9;
-    QPushButton *pushButton_3;
+    QPushButton *metallicButton;
     QLabel *label_14;
     QWidget *roughnesstexWidget;
     QHBoxLayout *horizontalLayout_7;
     QLabel *label_10;
-    QPushButton *pushButton_4;
+    QPushButton *roughnessButton;
     QLabel *label_15;
     QWidget *aotexWidget;
     QHBoxLayout *horizontalLayout_10;
     QLabel *label_6;
-    QPushButton *pushButton_5;
+    QPushButton *AOButton;
     QLabel *label_16;
 
     void setupUi(QWidget *Property)
@@ -361,10 +361,10 @@ public:
 
         horizontalLayout_6->addWidget(label_7);
 
-        pushButton = new QPushButton(specularWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        specularButton = new QPushButton(specularWidget);
+        specularButton->setObjectName(QString::fromUtf8("specularButton"));
 
-        horizontalLayout_6->addWidget(pushButton);
+        horizontalLayout_6->addWidget(specularButton);
 
         label_12 = new QLabel(specularWidget);
         label_12->setObjectName(QString::fromUtf8("label_12"));
@@ -385,10 +385,10 @@ public:
 
         horizontalLayout_9->addWidget(label_8);
 
-        pushButton_2 = new QPushButton(normalWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        normalButton = new QPushButton(normalWidget);
+        normalButton->setObjectName(QString::fromUtf8("normalButton"));
 
-        horizontalLayout_9->addWidget(pushButton_2);
+        horizontalLayout_9->addWidget(normalButton);
 
         label_13 = new QLabel(normalWidget);
         label_13->setObjectName(QString::fromUtf8("label_13"));
@@ -409,10 +409,10 @@ public:
 
         horizontalLayout_8->addWidget(label_9);
 
-        pushButton_3 = new QPushButton(metallictexWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        metallicButton = new QPushButton(metallictexWidget);
+        metallicButton->setObjectName(QString::fromUtf8("metallicButton"));
 
-        horizontalLayout_8->addWidget(pushButton_3);
+        horizontalLayout_8->addWidget(metallicButton);
 
         label_14 = new QLabel(metallictexWidget);
         label_14->setObjectName(QString::fromUtf8("label_14"));
@@ -433,10 +433,10 @@ public:
 
         horizontalLayout_7->addWidget(label_10);
 
-        pushButton_4 = new QPushButton(roughnesstexWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        roughnessButton = new QPushButton(roughnesstexWidget);
+        roughnessButton->setObjectName(QString::fromUtf8("roughnessButton"));
 
-        horizontalLayout_7->addWidget(pushButton_4);
+        horizontalLayout_7->addWidget(roughnessButton);
 
         label_15 = new QLabel(roughnesstexWidget);
         label_15->setObjectName(QString::fromUtf8("label_15"));
@@ -457,10 +457,10 @@ public:
 
         horizontalLayout_10->addWidget(label_6);
 
-        pushButton_5 = new QPushButton(aotexWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        AOButton = new QPushButton(aotexWidget);
+        AOButton->setObjectName(QString::fromUtf8("AOButton"));
 
-        horizontalLayout_10->addWidget(pushButton_5);
+        horizontalLayout_10->addWidget(AOButton);
 
         label_16 = new QLabel(aotexWidget);
         label_16->setObjectName(QString::fromUtf8("label_16"));
@@ -507,19 +507,19 @@ public:
         diffuseButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
         label_11->setText(QApplication::translate("Property", "diffuse", nullptr));
         label_7->setText(QApplication::translate("Property", "Specular Texture", nullptr));
-        pushButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        specularButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
         label_12->setText(QApplication::translate("Property", "specular", nullptr));
         label_8->setText(QApplication::translate("Property", "Normal", nullptr));
-        pushButton_2->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        normalButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
         label_13->setText(QApplication::translate("Property", "normal", nullptr));
         label_9->setText(QApplication::translate("Property", "Metallic Texture", nullptr));
-        pushButton_3->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        metallicButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
         label_14->setText(QApplication::translate("Property", "metaliic", nullptr));
         label_10->setText(QApplication::translate("Property", "Roughness Texture", nullptr));
-        pushButton_4->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        roughnessButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
         label_15->setText(QApplication::translate("Property", "rougnness", nullptr));
         label_6->setText(QApplication::translate("Property", "AO Texture", nullptr));
-        pushButton_5->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        AOButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
         label_16->setText(QApplication::translate("Property", "ao", nullptr));
     } // retranslateUi
 

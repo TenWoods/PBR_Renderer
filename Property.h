@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <qfiledialog.h>
 #include "ui_Property.h"
 #include "RenderObject.h"
 
@@ -21,6 +22,13 @@ public:
 	void RoughnessSliderFromEdit(const QString& text);
 	void AOEditFromSlider(int value);
 	void AOSliderFromEdit(const QString& text);
+	//…Ë÷√Ã˘Õº
+	void SetDiffuseButtonON();
+	void SetSpecularButtonON();
+	void SetNormalButtonON();
+	void SetMetallicButtonON();
+	void SetRoughnessButtonON();
+	void SetAOButtonON();
 private:
 	Ui::Property ui;
 	Render* render;
