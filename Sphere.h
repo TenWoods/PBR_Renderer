@@ -6,8 +6,8 @@ private :
 	unsigned int VAO;
 	unsigned int VBO;
 	unsigned int EBO;
-	std::vector<Texture> textures;
 	int indexCount;
+	bool hasInit;
 public :
 	Sphere();
 	Sphere(QVector3D position, QVector3D scale, QVector3D rotation, Render* window);

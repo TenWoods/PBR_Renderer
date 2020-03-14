@@ -1,13 +1,13 @@
 #include "RenderObject.h"
 #include "Render.h"
 
-RenderObject::RenderObject() : m_position(0.0, 0.0, 0.0), m_scale(1.0, 1.0, 1.0), m_rotation(0.0, 0.0, 0.0), childObject(NULL), fatherObject(NULL), m_window(NULL), hasNormalmap(false)
+RenderObject::RenderObject() : m_position(0.0, 0.0, 0.0), m_scale(1.0, 1.0, 1.0), m_rotation(0.0, 0.0, 0.0), childObject(NULL), fatherObject(NULL), m_window(NULL), hasNormalmap(false), color(0.5f, 0.0f, 0.0f), metallic(0.0f), roughness(0.05f), ao(1.0f)
 {
 
 }
 
 RenderObject::RenderObject(QVector3D position, QVector3D scale, QVector3D rotation, Render* window) : m_position(position), m_scale(scale), m_rotation(rotation),
-childObject(NULL), fatherObject(NULL), m_window(window), hasNormalmap(false)
+childObject(NULL), fatherObject(NULL), m_window(window), hasNormalmap(false), color(0.5f, 0.0f, 0.0f), metallic(0.0f), roughness(0.05f), ao(1.0f)
 {
 
 }
@@ -59,4 +59,44 @@ void RenderObject::set_rotation(QVector3D value)
 QVector3D RenderObject::get_rotation()
 {
 	return m_rotation;
+}
+
+void RenderObject::set_color(QVector3D value)
+{
+	color = value;
+}
+
+QVector3D RenderObject::get_color()
+{
+	return color;
+}
+
+void RenderObject::set_metallic(float value)
+{
+	metallic = value;
+}
+
+float RenderObject::get_metallic()
+{
+	return metallic;
+}
+
+void RenderObject::set_roughness(float value)
+{
+	roughness = value;
+}
+
+float RenderObject::get_roughness()
+{
+	return roughness;
+}
+
+void RenderObject::set_ao(float value)
+{
+	ao = value;
+}
+
+float RenderObject::get_ao()
+{
+	return ao;
 }

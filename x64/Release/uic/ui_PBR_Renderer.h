@@ -17,7 +17,6 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -26,6 +25,7 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "property.h"
 #include "render.h"
 
 QT_BEGIN_NAMESPACE
@@ -40,16 +40,17 @@ public:
     QAction *actionNewTexture;
     QAction *actionLoadTexture;
     QAction *actionPBRMaterial;
-    QAction *actiondirectLight;
-    QAction *actionHDR;
     QAction *actionindirectDiffuse;
     QAction *actionIBL;
     QAction *actionopen;
+    QAction *actionsphere;
+    QAction *actioncube;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     Render *render;
     QMenuBar *menuBar;
     QMenu *menu;
+    QMenu *menu_2;
     QMenu *functionMenu;
     QMenu *learnMenu;
     QDockWidget *sceneDockWidget;
@@ -76,18 +77,16 @@ public:
     QLabel *leftLabel;
     QLabel *upLabel;
     QLabel *upSkybox;
-    QDockWidget *textureDockWidget;
-    QWidget *textureDockWidgetContent;
+    QDockWidget *informationDockWidget;
+    QWidget *informationDockWidgetContent;
     QVBoxLayout *verticalLayout_2;
-    QWidget *widget;
-    QVBoxLayout *verticalLayout_4;
-    QListView *listView;
+    Property *property;
 
     void setupUi(QMainWindow *PBR_RendererClass)
     {
         if (PBR_RendererClass->objectName().isEmpty())
             PBR_RendererClass->setObjectName(QString::fromUtf8("PBR_RendererClass"));
-        PBR_RendererClass->resize(1076, 729);
+        PBR_RendererClass->resize(1200, 800);
         actionNewScene = new QAction(PBR_RendererClass);
         actionNewScene->setObjectName(QString::fromUtf8("actionNewScene"));
         actionOpenScene = new QAction(PBR_RendererClass);
@@ -105,12 +104,6 @@ public:
         actionPBRMaterial->setCheckable(true);
         actionPBRMaterial->setChecked(false);
         actionPBRMaterial->setEnabled(true);
-        actiondirectLight = new QAction(PBR_RendererClass);
-        actiondirectLight->setObjectName(QString::fromUtf8("actiondirectLight"));
-        actiondirectLight->setCheckable(true);
-        actionHDR = new QAction(PBR_RendererClass);
-        actionHDR->setObjectName(QString::fromUtf8("actionHDR"));
-        actionHDR->setCheckable(true);
         actionindirectDiffuse = new QAction(PBR_RendererClass);
         actionindirectDiffuse->setObjectName(QString::fromUtf8("actionindirectDiffuse"));
         actionindirectDiffuse->setCheckable(true);
@@ -119,6 +112,10 @@ public:
         actionIBL->setCheckable(true);
         actionopen = new QAction(PBR_RendererClass);
         actionopen->setObjectName(QString::fromUtf8("actionopen"));
+        actionsphere = new QAction(PBR_RendererClass);
+        actionsphere->setObjectName(QString::fromUtf8("actionsphere"));
+        actioncube = new QAction(PBR_RendererClass);
+        actioncube->setObjectName(QString::fromUtf8("actioncube"));
         centralWidget = new QWidget(PBR_RendererClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -133,9 +130,11 @@ public:
         PBR_RendererClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PBR_RendererClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1076, 23));
+        menuBar->setGeometry(QRect(0, 0, 1200, 23));
         menu = new QMenu(menuBar);
         menu->setObjectName(QString::fromUtf8("menu"));
+        menu_2 = new QMenu(menu);
+        menu_2->setObjectName(QString::fromUtf8("menu_2"));
         functionMenu = new QMenu(menuBar);
         functionMenu->setObjectName(QString::fromUtf8("functionMenu"));
         learnMenu = new QMenu(menuBar);
@@ -179,7 +178,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 266, 310));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 266, 347));
         gridLayout = new QGridLayout(scrollAreaWidgetContents);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -254,33 +253,23 @@ public:
 
         sceneDockWidget->setWidget(scenedockWidgetContent);
         PBR_RendererClass->addDockWidget(static_cast<Qt::DockWidgetArea>(1), sceneDockWidget);
-        textureDockWidget = new QDockWidget(PBR_RendererClass);
-        textureDockWidget->setObjectName(QString::fromUtf8("textureDockWidget"));
-        textureDockWidget->setMinimumSize(QSize(200, 280));
-        textureDockWidgetContent = new QWidget();
-        textureDockWidgetContent->setObjectName(QString::fromUtf8("textureDockWidgetContent"));
-        verticalLayout_2 = new QVBoxLayout(textureDockWidgetContent);
+        informationDockWidget = new QDockWidget(PBR_RendererClass);
+        informationDockWidget->setObjectName(QString::fromUtf8("informationDockWidget"));
+        informationDockWidget->setMinimumSize(QSize(200, 280));
+        informationDockWidgetContent = new QWidget();
+        informationDockWidgetContent->setObjectName(QString::fromUtf8("informationDockWidgetContent"));
+        verticalLayout_2 = new QVBoxLayout(informationDockWidgetContent);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        widget = new QWidget(textureDockWidgetContent);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        verticalLayout_4 = new QVBoxLayout(widget);
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
-        listView = new QListView(widget);
-        listView->setObjectName(QString::fromUtf8("listView"));
+        property = new Property(informationDockWidgetContent);
+        property->setObjectName(QString::fromUtf8("property"));
 
-        verticalLayout_4->addWidget(listView);
+        verticalLayout_2->addWidget(property);
 
-
-        verticalLayout_2->addWidget(widget);
-
-        textureDockWidget->setWidget(textureDockWidgetContent);
-        PBR_RendererClass->addDockWidget(static_cast<Qt::DockWidgetArea>(1), textureDockWidget);
+        informationDockWidget->setWidget(informationDockWidgetContent);
+        PBR_RendererClass->addDockWidget(static_cast<Qt::DockWidgetArea>(1), informationDockWidget);
 
         menuBar->addAction(menu->menuAction());
         menuBar->addAction(functionMenu->menuAction());
@@ -290,13 +279,16 @@ public:
         menu->addAction(actionSaveScene);
         menu->addSeparator();
         menu->addAction(actionLoadModel);
+        menu->addAction(menu_2->menuAction());
         menu->addSeparator();
         menu->addAction(actionNewTexture);
         menu->addAction(actionLoadTexture);
+        menu_2->addAction(actionsphere);
+        menu_2->addAction(actioncube);
         functionMenu->addAction(actionPBRMaterial);
-        functionMenu->addAction(actiondirectLight);
-        functionMenu->addAction(actionHDR);
+        functionMenu->addSeparator();
         functionMenu->addAction(actionindirectDiffuse);
+        functionMenu->addSeparator();
         functionMenu->addAction(actionIBL);
         learnMenu->addAction(actionopen);
 
@@ -317,13 +309,14 @@ public:
         actionLoadModel->setText(QApplication::translate("PBR_RendererClass", "\345\212\240\350\275\275\346\250\241\345\236\213", nullptr));
         actionNewTexture->setText(QApplication::translate("PBR_RendererClass", "\346\226\260\345\273\272\346\235\220\350\264\250", nullptr));
         actionLoadTexture->setText(QApplication::translate("PBR_RendererClass", "\345\212\240\350\275\275\346\235\220\350\264\250", nullptr));
-        actionPBRMaterial->setText(QApplication::translate("PBR_RendererClass", "PBR\346\235\220\350\264\250", nullptr));
-        actiondirectLight->setText(QApplication::translate("PBR_RendererClass", "\347\233\264\346\216\245\345\205\211\347\205\247", nullptr));
-        actionHDR->setText(QApplication::translate("PBR_RendererClass", "HDR", nullptr));
+        actionPBRMaterial->setText(QApplication::translate("PBR_RendererClass", "PBR\346\235\220\350\264\250\344\270\216\347\233\264\346\216\245\345\205\211\347\205\247", nullptr));
         actionindirectDiffuse->setText(QApplication::translate("PBR_RendererClass", "\351\227\264\346\216\245\346\274\253\345\217\215\345\260\204", nullptr));
         actionIBL->setText(QApplication::translate("PBR_RendererClass", "IBL\351\227\264\346\216\245\351\225\234\351\235\242\345\217\215\345\260\204", nullptr));
         actionopen->setText(QApplication::translate("PBR_RendererClass", "\346\211\223\345\274\200", nullptr));
+        actionsphere->setText(QApplication::translate("PBR_RendererClass", "\347\220\203", nullptr));
+        actioncube->setText(QApplication::translate("PBR_RendererClass", "\347\253\213\346\226\271\344\275\223", nullptr));
         menu->setTitle(QApplication::translate("PBR_RendererClass", "\350\217\234\345\215\225", nullptr));
+        menu_2->setTitle(QApplication::translate("PBR_RendererClass", "\346\226\260\345\273\272\351\273\230\350\256\244\347\211\251\344\275\223", nullptr));
         functionMenu->setTitle(QApplication::translate("PBR_RendererClass", "\345\212\237\350\203\275\350\247\243\351\224\201", nullptr));
         learnMenu->setTitle(QApplication::translate("PBR_RendererClass", "\345\255\246\344\271\240", nullptr));
         sceneDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\345\234\272\346\231\257\344\270\216\345\244\251\347\251\272\347\233\222", nullptr));
@@ -341,7 +334,7 @@ public:
         upLabel->setText(QApplication::translate("PBR_RendererClass", "\344\270\212:", nullptr));
         upSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(skybox), QApplication::translate("PBR_RendererClass", "\345\244\251\347\251\272\347\233\222", nullptr));
-        textureDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\346\235\220\350\264\250", nullptr));
+        informationDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\345\261\236\346\200\247", nullptr));
     } // retranslateUi
 
 };

@@ -40,6 +40,9 @@
     <QtUic Include="Render.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="Property.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="PBR_Renderer.qrc">
@@ -47,28 +50,28 @@
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragment\traditionalFragment.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="shaders\vertex\traditionalVertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
     <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
     <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert">
       <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="shaders\fragment\PBRFragment.frag">
+    <None Include="shaders\fragment\traditionalFragment_withTexture.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="test.vert">
+    <None Include="shaders\fragment\basePBRFragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\vertex\baseVertex.vert">
       <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="test.frag">
+    <None Include="shaders\fragment\PBRFragment_withtextures.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="PBRFragment_withtextures.frag">
+    <None Include="shaders\vertex\PBRVertex_withtexture.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="shaders\fragment\traditionalFragment_notexture.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>
@@ -105,6 +108,9 @@
     <QtMoc Include="Render.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Property.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -132,6 +138,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Property.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

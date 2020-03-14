@@ -12,7 +12,7 @@ Camera::Camera()
 }
 
 Camera::Camera(QVector3D pos, QVector3D lookAtPoint, float moves, float rotates, float zoom) : position(pos), moveSpeed(moves), rotateSpeed(rotates), m_zoom(zoom), front(lookAtPoint - pos), 
-yaw(90.0f), pitch(0.0f)
+yaw(270.0f), pitch(0.0f)
 {
 	QVector3D worldUp(0.0f, 1.0f, 0.0f);
 	front.normalize();
@@ -50,10 +50,10 @@ void Camera::Move(Direction dir, float deltaTime)
 		position -= front * moveSpeed * deltaTime;
 		break;
 	case Direction::Right:
-		position += right * moveSpeed * deltaTime;
+		position -= right * moveSpeed * deltaTime;
 		break;
 	case Direction::Left:
-		position -= right * moveSpeed * deltaTime;
+		position += right * moveSpeed * deltaTime;
 		break;
 	case Direction::Up:
 		position += up * moveSpeed * deltaTime;

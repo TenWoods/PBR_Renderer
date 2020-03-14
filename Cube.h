@@ -8,7 +8,7 @@ class Cube : public RenderObject
 private :
 	unsigned int VAO;
 	unsigned int VBO;
-	std::vector<Texture> textures;
+	bool hasInit;
 public : 
 	Cube();
 	Cube(QVector3D position, QVector3D scale, QVector3D rotation, Render* window);

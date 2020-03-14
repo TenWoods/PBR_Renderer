@@ -2,10 +2,10 @@
 #include "RenderObject.h"
 
 Render::Render(QWidget* parent)
-	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, -2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f), 
+	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f), 
 	lastFrame(0.0f), deltaTime(0.0f), time(), 
 	isFirstMouse(true), isRightMousePress(false),
-	lastX(0.0f), lastY(0.0f)
+	lastX(0.0f), lastY(0.0f), focusObject(NULL), PBRMaterialON(false), textureON(false)
 {
 	ui.setupUi(this);
 }
@@ -17,47 +17,140 @@ Render::~Render()
 
 void Render::initializeGL()
 {
-	//初始化OpenGL状态和着色器
+	//初始化OpenGL状态
 	initializeOpenGLFunctions();
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-	bool success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/traditionalVertex.vert");
+	//初始化所有着色器
+	//传统无贴图
+	bool success = traditonal_notex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
 	if (!success)
 	{
-		qDebug() << "load vertex shader failed!" << shaderProgram.log();
+		qDebug() << "load vertex shader failed!" << traditonal_notex_shader.log();
 		return;
 	}
-	success = shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/PBRFragment.frag");
+	success = traditonal_notex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment_notexture.frag");
 	if (!success)
 	{
-		qDebug() << "load frag shader failed!" << shaderProgram.log();
+		qDebug() << "load frag shader failed!" << traditonal_notex_shader.log();
 		return;
 	}
-	success = shaderProgram.link();
+	success = traditonal_notex_shader.link();
 	if (!success)
 	{
-		qDebug() << "shader program link failed" << shaderProgram.log();
+		qDebug() << "shader program link failed" << traditonal_notex_shader.log();
 		return;
 	}
+
+	//传统有贴图
+	success = traditonal_tex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
+	if (!success)
+	{
+		qDebug() << "load vertex shader failed!" << traditonal_tex_shader.log();
+		return;
+	}
+	success = traditonal_tex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment_withTexture.frag");
+	if (!success)
+	{
+		qDebug() << "load frag shader failed!" << traditonal_tex_shader.log();
+		return;
+	}
+	success = traditonal_tex_shader.link();
+	if (!success)
+	{
+		qDebug() << "shader program link failed" << traditonal_tex_shader.log();
+		return;
+	}
+
+	//PBR无贴图
+	success = pbr_notex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
+	if (!success)
+	{
+		qDebug() << "load vertex shader failed!" << pbr_notex_shader.log();
+		return;
+	}
+	success = pbr_notex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/basePBRFragment.frag");
+	if (!success)
+	{
+		qDebug() << "load frag shader failed!" << pbr_notex_shader.log();
+		return;
+	}
+	success = pbr_notex_shader.link();
+	if (!success)
+	{
+		qDebug() << "shader program link failed" << pbr_notex_shader.log();
+		return;
+	}
+
+	//PBR有贴图
+	success = pbr_tex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
+	if (!success)
+	{
+		qDebug() << "load vertex shader failed!" << pbr_tex_shader.log();
+		return;
+	}
+	success = pbr_tex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/basePBRFragment.frag");
+	if (!success)
+	{
+		qDebug() << "load frag shader failed!" << pbr_tex_shader.log();
+		return;
+	}
+	success = pbr_tex_shader.link();
+	if (!success)
+	{
+		qDebug() << "shader program link failed" << pbr_tex_shader.log();
+		return;
+	}
+
 	//开启计时
 	time.start();
 	//初始化场景物体
-	sceneObjects.push_back(new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	sceneObjects[0]->set_hasNornalmap(false);
-	sceneObjects[0]->AddTexture("brickwall.jpg", TEXTURE_TYPE::DIFFUSE);
-	sceneObjects[0]->AddTexture("brickwall_normal.jpg", TEXTURE_TYPE::NORMAL);
+	//sceneObjects.push_back(new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	//sceneObjects.push_back(new Sphere(QVector3D(1.0f, 1.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	//sceneObjects.push_back(new Sphere(QVector3D(1.0f, 0.0f, 1.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	/*sceneObjects[0]->AddTexture("rustediron2_basecolor.png", TEXTURE_TYPE::DIFFUSE);
+	sceneObjects[0]->AddTexture("rustediron2_normal.png", TEXTURE_TYPE::NORMAL);
+	sceneObjects[0]->AddTexture("rustediron2_metallic.png", TEXTURE_TYPE::METALLIC);
+	sceneObjects[0]->AddTexture("rustediron2_roughness.png", TEXTURE_TYPE::ROUGHNESS);
+	sceneObjects[0]->AddTexture("rustediron2_ao.png", TEXTURE_TYPE::AO);*/
+
 	//基础平行光
-	directionLight = DirectionLight(QVector3D(150.0f, 150.0f, 150.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
+	directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));
 	//点光源
-	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(300.0f, 300.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
 	//聚光
-	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 300.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
+	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
 }
 
 void Render::paintGL()
 {
+	update();
+	//判断使用哪种着色器
+	if (textureON)
+	{
+		if (PBRMaterialON)
+		{
+			shaderProgram = &pbr_tex_shader;
+		}
+		else
+		{
+			shaderProgram = &traditonal_tex_shader;
+		}
+	}
+	else
+	{
+		if (PBRMaterialON)
+		{
+			shaderProgram = &pbr_notex_shader;
+		}
+		else
+		{
+			shaderProgram = &traditonal_notex_shader;
+		}
+	}
+
 	float currentTime = (float)time.elapsed() / 1000;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
@@ -65,49 +158,48 @@ void Render::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//把光照信息和相机信息传给shader
-	shaderProgram.bind();
-	shaderProgram.setUniformValue("cameraPos", camera.get_position());
+	shaderProgram->bind();
+	shaderProgram->setUniformValue("cameraPos", camera.get_position());
 	//平行光信息
-	shaderProgram.setUniformValue("dirLight.direction", directionLight.get_direction());
-	shaderProgram.setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
-	shaderProgram.setUniformValue("dirLight.ambient", directionLight.get_ambient());
+	shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
+	shaderProgram->setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
+	shaderProgram->setUniformValue("dirLight.ambient", directionLight.get_ambient());
 	//点光源信息
-	shaderProgram.setUniformValue("plNum", (int)pointLights.size());
+	shaderProgram->setUniformValue("plNum", (int)pointLights.size());
 	for (int i = 0; i < pointLights.size(); i++)
 	{
-		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i].get_position());
-		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + "].constant").c_str(), pointLights[i].get_constant());
-		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + "].linear").c_str(), pointLights[i].get_linear());
-		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + "].quadratic").c_str(), pointLights[i].get_quadratic());
-		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + "].ambient").c_str(), pointLights[i].get_ambient());
-		shaderProgram.setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(), 
+		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i].get_position());
+		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].constant").c_str(), pointLights[i].get_constant());
+		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].linear").c_str(), pointLights[i].get_linear());
+		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].quadratic").c_str(), pointLights[i].get_quadratic());
+		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].ambient").c_str(), pointLights[i].get_ambient());
+		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(),
 			pointLights[i].get_lightColor());
 	}
 	//聚光信息
-	shaderProgram.setUniformValue("slNum", (int)spotLights.size());
+	shaderProgram->setUniformValue("slNum", (int)spotLights.size());
 	for (int i = 0; i < spotLights.size(); i++)
 	{
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].position").c_str(), spotLights[i].get_position());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].direction").c_str(), 
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].position").c_str(), spotLights[i].get_position());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].direction").c_str(),
 			spotLights[i].get_direction());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].constant").c_str(), spotLights[i].get_constant());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].linear").c_str(), spotLights[i].get_linear());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].quadratic").c_str(), spotLights[i].get_quadratic());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].ambient").c_str(), spotLights[i].get_ambient());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].cutOff").c_str(), spotLights[i].get_cutoff());
-		shaderProgram.setUniformValue(("spotLights[" + std::to_string(i) + "].cutoffout").c_str(), spotLights[i].get_cutoffout());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].constant").c_str(), spotLights[i].get_constant());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].linear").c_str(), spotLights[i].get_linear());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].quadratic").c_str(), spotLights[i].get_quadratic());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].ambient").c_str(), spotLights[i].get_ambient());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].cutOff").c_str(), spotLights[i].get_cutoff());
+		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].cutoffout").c_str(), spotLights[i].get_cutoffout());
 	}
-	shaderProgram.setUniformValue("albedo", QVector3D(0.5f, 0.0f, 0.0f));
-	shaderProgram.setUniformValue("ao", 1.0f);
-	shaderProgram.setUniformValue("metallic", 0.5f);
-	shaderProgram.setUniformValue("roughness", 0.5f);
 	//绘制场景
-	for each (auto obj in sceneObjects)
+	for (int i = 0; i < sceneObjects.size(); i++)
 	{
-		obj->Draw(&shaderProgram);
+		if (sceneObjects[i] == NULL)
+		{
+			continue;
+		}
+		sceneObjects[i]->Draw(shaderProgram);
 	}
-	update();
 }
 
 void Render::resizeGL(int w, int h)
@@ -141,7 +233,6 @@ void Render::keyPressEvent(QKeyEvent* event)
 	default:
 		break;
 	}
-	//qDebug() << camera.position;
 }
 
 //处理鼠标移动事件
@@ -156,10 +247,8 @@ void Render::mouseMoveEvent(QMouseEvent* event)
 	}
 	float deltaX = event->pos().x() - lastX;
 	lastX = event->x();
-	//qDebug() << deltaX;
 	float deltaY = event->pos().y() - lastY;
 	lastY = event->y();
-	//qDebug() << deltaY;
 	camera.Rotate(deltaX, deltaY);
 }
 
@@ -191,4 +280,176 @@ void Render::mousePressEvent(QMouseEvent* event)
 void Render::mouseReleaseEvent(QMouseEvent* event)
 {
 	isRightMousePress = false;
+}
+
+void Render::set_focusObject(int i)
+{
+	focusObject = sceneObjects[i];
+}
+
+RenderObject* Render::get_focusObject()
+{
+	return focusObject;
+}
+
+bool Render::get_textureON()
+{
+	return textureON;
+}
+
+bool Render::get_PBRMaterialON()
+{
+	return PBRMaterialON;
+}
+
+//槽函数
+int Render::AddCube()
+{
+	sceneObjects.push_back(new Cube(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	return sceneObjects.size() - 1;
+}
+
+int Render::AddSphere()
+{
+	sceneObjects.push_back(new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
+	return sceneObjects.size() - 1;
+}
+
+void Render::ChangePositionX(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D position = focusObject->get_position();
+	position.setX(text.toFloat());
+	focusObject->set_position(position);
+}
+
+void Render::ChangePositionY(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D position = focusObject->get_position();
+	position.setY(text.toFloat());
+	focusObject->set_position(position);
+}
+
+void Render::ChangePositionZ(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D position = focusObject->get_position();
+	position.setZ(text.toFloat());
+	focusObject->set_position(position);
+}
+
+void Render::ChangeScaleX(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D scale = focusObject->get_scale();
+	scale.setX(text.toFloat());
+	focusObject->set_scale(scale);
+}
+
+void Render::ChangeScaleY(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D scale = focusObject->get_scale();
+	scale.setY(text.toFloat());
+	focusObject->set_scale(scale);
+}
+
+void Render::ChangeScaleZ(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D scale = focusObject->get_scale();
+	scale.setZ(text.toFloat());
+	focusObject->set_scale(scale);
+}
+
+void Render::ChangeRotationX(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D rotation = focusObject->get_rotation();
+	rotation.setX(text.toFloat());
+	focusObject->set_rotation(rotation);
+}
+
+void Render::ChangeRotationY(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D rotation = focusObject->get_rotation();
+	rotation.setY(text.toFloat());
+	focusObject->set_rotation(rotation);
+}
+
+void Render::ChangeRotationZ(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D rotation = focusObject->get_rotation();
+	rotation.setZ(text.toFloat());
+	focusObject->set_rotation(rotation);
+}
+
+void Render::ChangeColorR(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D color = focusObject->get_color();
+	color.setX(text.toFloat());
+	focusObject->set_color(color);
+}
+
+void Render::ChangeColorG(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D color = focusObject->get_color();
+	color.setY(text.toFloat());
+	focusObject->set_color(color);
+}
+
+void Render::ChangeColorB(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	QVector3D color = focusObject->get_color();
+	color.setZ(text.toFloat());
+	focusObject->set_color(color);
+}
+
+void Render::ChangeMetallic(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	focusObject->set_metallic(text.toFloat());
+}
+
+void Render::ChangeRoughness(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	focusObject->set_roughness(text.toFloat());
+}
+
+void Render::ChangeAO(const QString& text)
+{
+	if (focusObject == NULL)
+		return;
+	focusObject->set_ao(text.toFloat());
+}
+
+void Render::SettextureON(bool value)
+{
+	textureON = value;
+}
+
+void Render::SetPBRMaterialON(bool value)
+{
+	PBRMaterialON = value;
 }

@@ -49,6 +49,11 @@ protected :
 	QVector3D m_position;
 	QVector3D m_scale;
 	QVector3D m_rotation;
+	std::vector<Texture> textures;
+	QVector3D color;
+	float metallic;
+	float roughness;
+	float ao;
 public : 
 	RenderObject();
 	RenderObject(QVector3D position, QVector3D scale, QVector3D rotation, Render* window);
@@ -62,6 +67,14 @@ public :
 	QVector3D get_scale();
 	void set_rotation(QVector3D value);
 	QVector3D get_rotation();
+	void set_color(QVector3D value);
+	QVector3D get_color();
+	void set_metallic(float value);
+	float get_metallic();
+	void set_roughness(float value);
+	float get_roughness();
+	void set_ao(float value);
+	float get_ao();
 	virtual void AddTexture(std::string path, TEXTURE_TYPE type) = 0;
 	virtual void Draw(QOpenGLShaderProgram* shader) = 0;
 };

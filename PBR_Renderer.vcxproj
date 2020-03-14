@@ -12,20 +12,21 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PBR_Renderer.ui" />
+    <QtUic Include="Property.ui" />
     <QtUic Include="Render.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="PBR_Renderer.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PBRFragment_withtextures.frag" />
-    <None Include="shaders\fragment\PBRFragment.frag" />
-    <None Include="shaders\fragment\traditionalFragment.frag" />
+    <None Include="shaders\fragment\basePBRFragment.frag" />
+    <None Include="shaders\fragment\PBRFragment_withtextures.frag" />
+    <None Include="shaders\fragment\traditionalFragment_notexture.frag" />
+    <None Include="shaders\fragment\traditionalFragment_withTexture.frag" />
     <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag" />
-    <None Include="shaders\vertex\traditionalVertex.vert" />
+    <None Include="shaders\vertex\baseVertex.vert" />
+    <None Include="shaders\vertex\PBRVertex_withtexture.vert" />
     <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert" />
-    <None Include="test.frag" />
-    <None Include="test.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <QtMoc Include="Property.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="stb_image.h" />
@@ -46,6 +48,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PBR_Renderer.cpp" />
+    <ClCompile Include="Property.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -117,13 +120,14 @@
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\WorkPlace\PBR_Renderer\PBR_Renderer\x64\Release\uic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\WorkPlace\PBR_Renderer\PBR_Renderer\x64\Release\uic;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
