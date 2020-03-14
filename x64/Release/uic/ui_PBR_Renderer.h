@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'PBR_Renderer.ui'
+** Form generated from reading UI file 'PBR_RenderercsMqjr.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.12.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_PBR_RENDERER_H
-#define UI_PBR_RENDERER_H
+#ifndef PBR_RENDERERCSMQJR_H
+#define PBR_RENDERERCSMQJR_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -42,7 +42,7 @@ public:
     QAction *actionPBRMaterial;
     QAction *actionindirectDiffuse;
     QAction *actionIBL;
-    QAction *actionopen;
+    QAction *actionPartone;
     QAction *actionsphere;
     QAction *actioncube;
     QWidget *centralWidget;
@@ -110,8 +110,8 @@ public:
         actionIBL = new QAction(PBR_RendererClass);
         actionIBL->setObjectName(QString::fromUtf8("actionIBL"));
         actionIBL->setCheckable(true);
-        actionopen = new QAction(PBR_RendererClass);
-        actionopen->setObjectName(QString::fromUtf8("actionopen"));
+        actionPartone = new QAction(PBR_RendererClass);
+        actionPartone->setObjectName(QString::fromUtf8("actionPartone"));
         actionsphere = new QAction(PBR_RendererClass);
         actionsphere->setObjectName(QString::fromUtf8("actionsphere"));
         actioncube = new QAction(PBR_RendererClass);
@@ -290,7 +290,7 @@ public:
         functionMenu->addAction(actionindirectDiffuse);
         functionMenu->addSeparator();
         functionMenu->addAction(actionIBL);
-        learnMenu->addAction(actionopen);
+        learnMenu->addAction(actionPartone);
 
         retranslateUi(PBR_RendererClass);
 
@@ -312,7 +312,7 @@ public:
         actionPBRMaterial->setText(QApplication::translate("PBR_RendererClass", "PBR\346\235\220\350\264\250\344\270\216\347\233\264\346\216\245\345\205\211\347\205\247", nullptr));
         actionindirectDiffuse->setText(QApplication::translate("PBR_RendererClass", "\351\227\264\346\216\245\346\274\253\345\217\215\345\260\204", nullptr));
         actionIBL->setText(QApplication::translate("PBR_RendererClass", "IBL\351\227\264\346\216\245\351\225\234\351\235\242\345\217\215\345\260\204", nullptr));
-        actionopen->setText(QApplication::translate("PBR_RendererClass", "\346\211\223\345\274\200", nullptr));
+        actionPartone->setText(QApplication::translate("PBR_RendererClass", "PBR\346\235\220\350\264\250\351\203\250\345\210\206", nullptr));
         actionsphere->setText(QApplication::translate("PBR_RendererClass", "\347\220\203", nullptr));
         actioncube->setText(QApplication::translate("PBR_RendererClass", "\347\253\213\346\226\271\344\275\223", nullptr));
         menu->setTitle(QApplication::translate("PBR_RendererClass", "\350\217\234\345\215\225", nullptr));
@@ -345,4 +345,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // UI_PBR_RENDERER_H
+#endif // PBR_RENDERERCSMQJR_H

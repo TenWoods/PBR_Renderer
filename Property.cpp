@@ -64,6 +64,7 @@ void Property::SetProperties()
 	//根据功能开放程度开放调节栏
 	if (render->get_PBRMaterialON())  //开启pbr材质功能
 	{
+		ui.specularWidget->setEnabled(false);
 		if (render->get_textureON())  //有贴图
 		{
 			ui.metallicWidget->setEnabled(false);
@@ -92,18 +93,24 @@ void Property::SetProperties()
 		ui.metallictexWidget->setEnabled(false);
 		ui.roughnesstexWidget->setEnabled(false);
 		ui.aotexWidget->setEnabled(false);
+		if (render->get_textureON())
+		{
+			ui.specularWidget->setEnabled(true);
+		}
+		else
+		{
+			ui.specularWidget->setEnabled(false);
+		}
 	}
 	if (render->get_textureON())  //开启贴图功能
 	{
 		ui.diffuseWidget->setEnabled(true);
-		ui.specularWidget->setEnabled(true);
 		ui.normalWidget->setEnabled(true);
 		//TODO: 贴图预览
 	}
 	else
 	{
 		ui.diffuseWidget->setEnabled(false);
-		ui.specularWidget->setEnabled(false);
 		ui.normalWidget->setEnabled(false);
 	}
 

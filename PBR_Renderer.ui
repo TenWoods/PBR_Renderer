@@ -64,7 +64,7 @@
     <property name="title">
      <string>学习</string>
     </property>
-    <addaction name="actionopen"/>
+    <addaction name="actionPartone"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="functionMenu"/>
@@ -347,9 +347,9 @@
     <string>IBL间接镜面反射</string>
    </property>
   </action>
-  <action name="actionopen">
+  <action name="actionPartone">
    <property name="text">
-    <string>打开</string>
+    <string>PBR材质部分</string>
    </property>
   </action>
   <action name="actionsphere">

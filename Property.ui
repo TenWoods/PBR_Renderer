@@ -23,7 +23,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-110</y>
         <width>295</width>
         <height>630</height>
        </rect>
@@ -288,13 +288,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>diffuse</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -312,13 +305,6 @@
            <widget class="QPushButton" name="specularButton">
             <property name="text">
              <string>选择贴图</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>specular</string>
             </property>
            </widget>
           </item>
@@ -342,13 +328,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>normal</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -366,13 +345,6 @@
            <widget class="QPushButton" name="metallicButton">
             <property name="text">
              <string>选择贴图</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>metaliic</string>
             </property>
            </widget>
           </item>
@@ -396,13 +368,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>rougnness</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -420,13 +385,6 @@
            <widget class="QPushButton" name="AOButton">
             <property name="text">
              <string>选择贴图</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>ao</string>
             </property>
            </widget>
           </item>

@@ -14,6 +14,7 @@
     <QtUic Include="PBR_Renderer.ui" />
     <QtUic Include="Property.ui" />
     <QtUic Include="Render.ui" />
+    <QtUic Include="StudyResourse.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="PBR_Renderer.qrc" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <QtMoc Include="StudyResourse.h" />
     <QtMoc Include="Property.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="Sphere.h" />
@@ -52,6 +54,7 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="StudyResourse.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6FF44428-B424-4BAD-9E5E-6A728B981816}</ProjectGuid>
@@ -120,10 +123,10 @@
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>C:\WorkPlace\PBR_Renderer\PBR_Renderer\x64\Release\uic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\WorkPlace\PBR_Renderer\PBR_Renderer\x64\Release\uic;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>

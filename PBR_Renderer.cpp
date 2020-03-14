@@ -21,6 +21,8 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	connect(ui.actionPBRMaterial, &QAction::triggered, ui.property, &Property::SetProperties);
 	//场景栏点击事件
 	connect(ui.treeView, &QTreeView::clicked, this, &PBR_Renderer::ShowProperties); //单击显示选中物体的属性
+	//教学文档显示
+	connect(ui.actionPartone, &QAction::triggered, this, &PBR_Renderer::ShowPartone);
 }
 
 void PBR_Renderer::AddSphere()
@@ -45,7 +47,15 @@ void PBR_Renderer::AddCube()
 void PBR_Renderer::ShowProperties(const QModelIndex& index)
 {
 	ui.property->setEnabled(true);
-	ui.render->set_focusObject(index.data().value<int>());
-	//qDebug() << index.data().value<int>();
+	int i = sceneTree->itemFromIndex(index)->data().value<int>();
+	ui.render->set_focusObject(i);
+	//qDebug() << i;
 	ui.property->SetProperties();
+}
+
+void PBR_Renderer::ShowPartone()
+{
+	partone = new StudyResourse(this);
+	partone->setModal(false);
+	partone->show();
 }
