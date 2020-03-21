@@ -18,6 +18,7 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -34,72 +35,93 @@ public:
     QWidget *widget;
     QHBoxLayout *horizontalLayout_11;
     QLabel *label_17;
+    QSpacerItem *horizontalSpacer;
     QLineEdit *px;
     QLineEdit *py;
     QLineEdit *pz;
+    QSpacerItem *horizontalSpacer_5;
     QWidget *widget_3;
     QHBoxLayout *horizontalLayout_12;
     QLabel *label_18;
+    QSpacerItem *horizontalSpacer_2;
     QLineEdit *sx;
     QLineEdit *sy;
     QLineEdit *sz;
+    QSpacerItem *horizontalSpacer_6;
     QWidget *widget_2;
     QHBoxLayout *horizontalLayout_13;
     QLabel *label_19;
+    QSpacerItem *horizontalSpacer_3;
     QLineEdit *rx;
     QLineEdit *ry;
     QLineEdit *rz;
+    QSpacerItem *horizontalSpacer_7;
     QWidget *colorWidget;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
+    QSpacerItem *horizontalSpacer_4;
     QLineEdit *colorR;
     QLineEdit *colorG;
     QLineEdit *colorB;
+    QSpacerItem *horizontalSpacer_8;
     QWidget *metallicWidget;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
+    QSpacerItem *horizontalSpacer_15;
     QSlider *metallicSlider;
+    QSpacerItem *horizontalSpacer_18;
     QLineEdit *metallicEdit;
     QWidget *roughnessWidget;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_3;
+    QSpacerItem *horizontalSpacer_16;
     QSlider *roughnessSlider;
+    QSpacerItem *horizontalSpacer_19;
     QLineEdit *roughnessEdit;
     QWidget *aoWidget;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_4;
+    QSpacerItem *horizontalSpacer_17;
     QSlider *aoSlider;
+    QSpacerItem *horizontalSpacer_20;
     QLineEdit *aoEdit;
     QWidget *diffuseWidget;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_5;
     QPushButton *diffuseButton;
+    QSpacerItem *horizontalSpacer_9;
     QWidget *specularWidget;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_7;
     QPushButton *specularButton;
+    QSpacerItem *horizontalSpacer_10;
     QWidget *normalWidget;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_8;
     QPushButton *normalButton;
+    QSpacerItem *horizontalSpacer_11;
     QWidget *metallictexWidget;
     QHBoxLayout *horizontalLayout_8;
     QLabel *label_9;
     QPushButton *metallicButton;
+    QSpacerItem *horizontalSpacer_12;
     QWidget *roughnesstexWidget;
     QHBoxLayout *horizontalLayout_7;
     QLabel *label_10;
     QPushButton *roughnessButton;
+    QSpacerItem *horizontalSpacer_13;
     QWidget *aotexWidget;
     QHBoxLayout *horizontalLayout_10;
     QLabel *label_6;
     QPushButton *AOButton;
+    QSpacerItem *horizontalSpacer_14;
 
     void setupUi(QWidget *Property)
     {
         if (Property->objectName().isEmpty())
             Property->setObjectName(QString::fromUtf8("Property"));
-        Property->resize(332, 540);
+        Property->resize(475, 540);
+        Property->setMaximumSize(QSize(475, 16777215));
         verticalLayout = new QVBoxLayout(Property);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -109,7 +131,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, -110, 295, 630));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 438, 630));
         verticalLayout_2 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -131,6 +153,10 @@ public:
 
         horizontalLayout_11->addWidget(label_17);
 
+        horizontalSpacer = new QSpacerItem(0, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_11->addItem(horizontalSpacer);
+
         px = new QLineEdit(widget);
         px->setObjectName(QString::fromUtf8("px"));
 
@@ -146,6 +172,10 @@ public:
 
         horizontalLayout_11->addWidget(pz);
 
+        horizontalSpacer_5 = new QSpacerItem(300, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_11->addItem(horizontalSpacer_5);
+
 
         verticalLayout_2->addWidget(widget);
 
@@ -159,6 +189,10 @@ public:
         label_18->setObjectName(QString::fromUtf8("label_18"));
 
         horizontalLayout_12->addWidget(label_18);
+
+        horizontalSpacer_2 = new QSpacerItem(18, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_12->addItem(horizontalSpacer_2);
 
         sx = new QLineEdit(widget_3);
         sx->setObjectName(QString::fromUtf8("sx"));
@@ -175,6 +209,10 @@ public:
 
         horizontalLayout_12->addWidget(sz);
 
+        horizontalSpacer_6 = new QSpacerItem(300, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_12->addItem(horizontalSpacer_6);
+
 
         verticalLayout_2->addWidget(widget_3);
 
@@ -188,6 +226,10 @@ public:
         label_19->setObjectName(QString::fromUtf8("label_19"));
 
         horizontalLayout_13->addWidget(label_19);
+
+        horizontalSpacer_3 = new QSpacerItem(0, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_13->addItem(horizontalSpacer_3);
 
         rx = new QLineEdit(widget_2);
         rx->setObjectName(QString::fromUtf8("rx"));
@@ -204,6 +246,10 @@ public:
 
         horizontalLayout_13->addWidget(rz);
 
+        horizontalSpacer_7 = new QSpacerItem(300, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_13->addItem(horizontalSpacer_7);
+
 
         verticalLayout_2->addWidget(widget_2);
 
@@ -217,6 +263,10 @@ public:
         label->setObjectName(QString::fromUtf8("label"));
 
         horizontalLayout->addWidget(label);
+
+        horizontalSpacer_4 = new QSpacerItem(17, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer_4);
 
         colorR = new QLineEdit(colorWidget);
         colorR->setObjectName(QString::fromUtf8("colorR"));
@@ -234,6 +284,10 @@ public:
 
         horizontalLayout->addWidget(colorB);
 
+        horizontalSpacer_8 = new QSpacerItem(300, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer_8);
+
 
         verticalLayout_2->addWidget(colorWidget);
 
@@ -248,6 +302,10 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
+        horizontalSpacer_15 = new QSpacerItem(6, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_15);
+
         metallicSlider = new QSlider(metallicWidget);
         metallicSlider->setObjectName(QString::fromUtf8("metallicSlider"));
         metallicSlider->setMaximum(100);
@@ -257,6 +315,10 @@ public:
         metallicSlider->setTickInterval(0);
 
         horizontalLayout_2->addWidget(metallicSlider);
+
+        horizontalSpacer_18 = new QSpacerItem(10, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_18);
 
         metallicEdit = new QLineEdit(metallicWidget);
         metallicEdit->setObjectName(QString::fromUtf8("metallicEdit"));
@@ -277,6 +339,10 @@ public:
 
         horizontalLayout_3->addWidget(label_3);
 
+        horizontalSpacer_16 = new QSpacerItem(0, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_16);
+
         roughnessSlider = new QSlider(roughnessWidget);
         roughnessSlider->setObjectName(QString::fromUtf8("roughnessSlider"));
         roughnessSlider->setMinimum(5);
@@ -284,6 +350,10 @@ public:
         roughnessSlider->setOrientation(Qt::Horizontal);
 
         horizontalLayout_3->addWidget(roughnessSlider);
+
+        horizontalSpacer_19 = new QSpacerItem(10, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_19);
 
         roughnessEdit = new QLineEdit(roughnessWidget);
         roughnessEdit->setObjectName(QString::fromUtf8("roughnessEdit"));
@@ -305,12 +375,20 @@ public:
 
         horizontalLayout_4->addWidget(label_4);
 
+        horizontalSpacer_17 = new QSpacerItem(41, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_17);
+
         aoSlider = new QSlider(aoWidget);
         aoSlider->setObjectName(QString::fromUtf8("aoSlider"));
         aoSlider->setMaximum(100);
         aoSlider->setOrientation(Qt::Horizontal);
 
         horizontalLayout_4->addWidget(aoSlider);
+
+        horizontalSpacer_20 = new QSpacerItem(10, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_20);
 
         aoEdit = new QLineEdit(aoWidget);
         aoEdit->setObjectName(QString::fromUtf8("aoEdit"));
@@ -336,6 +414,10 @@ public:
 
         horizontalLayout_5->addWidget(diffuseButton);
 
+        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_5->addItem(horizontalSpacer_9);
+
 
         verticalLayout_2->addWidget(diffuseWidget);
 
@@ -354,6 +436,10 @@ public:
         specularButton->setObjectName(QString::fromUtf8("specularButton"));
 
         horizontalLayout_6->addWidget(specularButton);
+
+        horizontalSpacer_10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_6->addItem(horizontalSpacer_10);
 
 
         verticalLayout_2->addWidget(specularWidget);
@@ -374,6 +460,10 @@ public:
 
         horizontalLayout_9->addWidget(normalButton);
 
+        horizontalSpacer_11 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_9->addItem(horizontalSpacer_11);
+
 
         verticalLayout_2->addWidget(normalWidget);
 
@@ -392,6 +482,10 @@ public:
         metallicButton->setObjectName(QString::fromUtf8("metallicButton"));
 
         horizontalLayout_8->addWidget(metallicButton);
+
+        horizontalSpacer_12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_8->addItem(horizontalSpacer_12);
 
 
         verticalLayout_2->addWidget(metallictexWidget);
@@ -412,6 +506,10 @@ public:
 
         horizontalLayout_7->addWidget(roughnessButton);
 
+        horizontalSpacer_13 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_7->addItem(horizontalSpacer_13);
+
 
         verticalLayout_2->addWidget(roughnesstexWidget);
 
@@ -430,6 +528,10 @@ public:
         AOButton->setObjectName(QString::fromUtf8("AOButton"));
 
         horizontalLayout_10->addWidget(AOButton);
+
+        horizontalSpacer_14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_10->addItem(horizontalSpacer_14);
 
 
         verticalLayout_2->addWidget(aotexWidget);

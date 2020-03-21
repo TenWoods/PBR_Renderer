@@ -6,6 +6,8 @@
 PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0), cube_num(0)
 {
 	ui.setupUi(this);
+	setWindowIcon(QIcon(QString("icon.png")));
+
 	//初始化场景树的UI
 	sceneTree = new QStandardItemModel(ui.treeView);
 	sceneTree->setHorizontalHeaderLabels(QStringList() << QStringLiteral("物体名"));
@@ -27,8 +29,8 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 
 void PBR_Renderer::AddSphere()
 {
-	std::string num = std::to_string(sphere_num++);
-	QString text(("Sphere" + num).c_str());
+	std::string amount = std::to_string(sphere_num++);
+	QString text(("Sphere" + amount).c_str());
 	QStandardItem* sphere = new QStandardItem(text);
 	sphere->setData(QVariant(ui.render->AddSphere())); //将对应物体索引存储到item中
 	sceneTree->appendRow(sphere);
@@ -36,8 +38,8 @@ void PBR_Renderer::AddSphere()
 
 void PBR_Renderer::AddCube()
 {
-	std::string num = std::to_string(cube_num++);
-	QString text(("Cube" + num).c_str());
+	std::string amount = std::to_string(cube_num++);
+	QString text(("Cube" + amount).c_str());
 	QStandardItem* cube = new QStandardItem(text);
 	cube->setData(QVariant(ui.render->AddCube()));  //将对应物体索引存储到item中
 	//qDebug() << cube->data().value<int>();
@@ -53,9 +55,10 @@ void PBR_Renderer::ShowProperties(const QModelIndex& index)
 	ui.property->SetProperties();
 }
 
+//教学第一部分
 void PBR_Renderer::ShowPartone()
 {
-	partone = new StudyResourse(this);
+	partone = new StudyResourse(this, 1);
 	partone->setModal(false);
 	partone->show();
 }

@@ -38,6 +38,7 @@
     <QtMoc Include="StudyResourse.h" />
     <QtMoc Include="Property.h" />
     <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="stb_image.h" />
     <QtMoc Include="Render.h" />
@@ -55,6 +56,12 @@
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="StudyResourse.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PBR_Renderer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="tu.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6FF44428-B424-4BAD-9E5E-6A728B981816}</ProjectGuid>
@@ -97,7 +104,7 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>Qt 5.12.6</QtInstall>
-    <QtModules>3dcore 3danimation 3dextras 3dinput 3dlogic 3drender;core;gui;opengl;widgets</QtModules>
+    <QtModules>3danimation;3dcore;3dextras;3dinput;3dlogic;3drender;core;gui;opengl;webchannel;webengine;webenginewidgets;websockets;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -126,7 +133,7 @@
       <AdditionalIncludeDirectories>C:\WorkPlace\PBR_Renderer\PBR_Renderer\x64\Release\uic;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
