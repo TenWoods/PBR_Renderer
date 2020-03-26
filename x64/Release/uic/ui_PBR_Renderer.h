@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'PBR_RenderercsMqjr.ui'
+** Form generated from reading UI file 'PBR_Renderer.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.12.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef PBR_RENDERERCSMQJR_H
-#define PBR_RENDERERCSMQJR_H
+#ifndef UI_PBR_RENDERER_H
+#define UI_PBR_RENDERER_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -45,6 +45,8 @@ public:
     QAction *actionPartone;
     QAction *actionsphere;
     QAction *actioncube;
+    QAction *actionParttwo;
+    QAction *actionPartthree;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     Render *render;
@@ -89,33 +91,45 @@ public:
         PBR_RendererClass->resize(1200, 800);
         actionNewScene = new QAction(PBR_RendererClass);
         actionNewScene->setObjectName(QString::fromUtf8("actionNewScene"));
+        actionNewScene->setEnabled(false);
         actionOpenScene = new QAction(PBR_RendererClass);
         actionOpenScene->setObjectName(QString::fromUtf8("actionOpenScene"));
+        actionOpenScene->setEnabled(false);
         actionSaveScene = new QAction(PBR_RendererClass);
         actionSaveScene->setObjectName(QString::fromUtf8("actionSaveScene"));
+        actionSaveScene->setEnabled(false);
         actionLoadModel = new QAction(PBR_RendererClass);
         actionLoadModel->setObjectName(QString::fromUtf8("actionLoadModel"));
+        actionLoadModel->setEnabled(false);
         actionNewTexture = new QAction(PBR_RendererClass);
         actionNewTexture->setObjectName(QString::fromUtf8("actionNewTexture"));
+        actionNewTexture->setEnabled(false);
         actionLoadTexture = new QAction(PBR_RendererClass);
         actionLoadTexture->setObjectName(QString::fromUtf8("actionLoadTexture"));
+        actionLoadTexture->setEnabled(false);
         actionPBRMaterial = new QAction(PBR_RendererClass);
         actionPBRMaterial->setObjectName(QString::fromUtf8("actionPBRMaterial"));
         actionPBRMaterial->setCheckable(true);
         actionPBRMaterial->setChecked(false);
-        actionPBRMaterial->setEnabled(true);
+        actionPBRMaterial->setEnabled(false);
         actionindirectDiffuse = new QAction(PBR_RendererClass);
         actionindirectDiffuse->setObjectName(QString::fromUtf8("actionindirectDiffuse"));
         actionindirectDiffuse->setCheckable(true);
+        actionindirectDiffuse->setEnabled(false);
         actionIBL = new QAction(PBR_RendererClass);
         actionIBL->setObjectName(QString::fromUtf8("actionIBL"));
         actionIBL->setCheckable(true);
+        actionIBL->setEnabled(false);
         actionPartone = new QAction(PBR_RendererClass);
         actionPartone->setObjectName(QString::fromUtf8("actionPartone"));
         actionsphere = new QAction(PBR_RendererClass);
         actionsphere->setObjectName(QString::fromUtf8("actionsphere"));
         actioncube = new QAction(PBR_RendererClass);
         actioncube->setObjectName(QString::fromUtf8("actioncube"));
+        actionParttwo = new QAction(PBR_RendererClass);
+        actionParttwo->setObjectName(QString::fromUtf8("actionParttwo"));
+        actionPartthree = new QAction(PBR_RendererClass);
+        actionPartthree->setObjectName(QString::fromUtf8("actionPartthree"));
         centralWidget = new QWidget(PBR_RendererClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -143,6 +157,7 @@ public:
         sceneDockWidget = new QDockWidget(PBR_RendererClass);
         sceneDockWidget->setObjectName(QString::fromUtf8("sceneDockWidget"));
         sceneDockWidget->setMinimumSize(QSize(278, 300));
+        sceneDockWidget->setMaximumSize(QSize(350, 524287));
         scenedockWidgetContent = new QWidget();
         scenedockWidgetContent->setObjectName(QString::fromUtf8("scenedockWidgetContent"));
         scenedockWidgetContent->setLayoutDirection(Qt::LeftToRight);
@@ -159,7 +174,7 @@ public:
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        verticalLayout_3->setContentsMargins(2, 2, 2, 2);
+        verticalLayout_3->setContentsMargins(0, 0, 0, 0);
         treeView = new QTreeView(scene);
         treeView->setObjectName(QString::fromUtf8("treeView"));
 
@@ -172,13 +187,13 @@ public:
         verticalLayout_5->setSpacing(6);
         verticalLayout_5->setContentsMargins(11, 11, 11, 11);
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
-        verticalLayout_5->setContentsMargins(2, 2, 2, 2);
+        verticalLayout_5->setContentsMargins(0, 0, 0, 0);
         scrollArea = new QScrollArea(skybox);
         scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 266, 347));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 270, 351));
         gridLayout = new QGridLayout(scrollAreaWidgetContents);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -256,6 +271,7 @@ public:
         informationDockWidget = new QDockWidget(PBR_RendererClass);
         informationDockWidget->setObjectName(QString::fromUtf8("informationDockWidget"));
         informationDockWidget->setMinimumSize(QSize(200, 280));
+        informationDockWidget->setMaximumSize(QSize(350, 524287));
         informationDockWidgetContent = new QWidget();
         informationDockWidgetContent->setObjectName(QString::fromUtf8("informationDockWidgetContent"));
         verticalLayout_2 = new QVBoxLayout(informationDockWidgetContent);
@@ -291,6 +307,8 @@ public:
         functionMenu->addSeparator();
         functionMenu->addAction(actionIBL);
         learnMenu->addAction(actionPartone);
+        learnMenu->addAction(actionParttwo);
+        learnMenu->addAction(actionPartthree);
 
         retranslateUi(PBR_RendererClass);
 
@@ -302,7 +320,7 @@ public:
 
     void retranslateUi(QMainWindow *PBR_RendererClass)
     {
-        PBR_RendererClass->setWindowTitle(QApplication::translate("PBR_RendererClass", "PBR_Renderer", nullptr));
+        PBR_RendererClass->setWindowTitle(QApplication::translate("PBR_RendererClass", "PBR\346\225\231\345\255\246\346\270\262\346\237\223\345\231\250", nullptr));
         actionNewScene->setText(QApplication::translate("PBR_RendererClass", "\346\226\260\345\273\272\345\234\272\346\231\257", nullptr));
         actionOpenScene->setText(QApplication::translate("PBR_RendererClass", "\346\211\223\345\274\200\345\234\272\346\231\257", nullptr));
         actionSaveScene->setText(QApplication::translate("PBR_RendererClass", "\344\277\235\345\255\230\345\234\272\346\231\257", nullptr));
@@ -315,6 +333,8 @@ public:
         actionPartone->setText(QApplication::translate("PBR_RendererClass", "PBR\346\235\220\350\264\250\351\203\250\345\210\206", nullptr));
         actionsphere->setText(QApplication::translate("PBR_RendererClass", "\347\220\203", nullptr));
         actioncube->setText(QApplication::translate("PBR_RendererClass", "\347\253\213\346\226\271\344\275\223", nullptr));
+        actionParttwo->setText(QApplication::translate("PBR_RendererClass", "\351\227\264\346\216\245\346\274\253\345\217\215\345\260\204\351\203\250\345\210\206", nullptr));
+        actionPartthree->setText(QApplication::translate("PBR_RendererClass", "IBL\351\227\264\346\216\245\351\225\234\351\235\242\345\217\215\345\260\204", nullptr));
         menu->setTitle(QApplication::translate("PBR_RendererClass", "\350\217\234\345\215\225", nullptr));
         menu_2->setTitle(QApplication::translate("PBR_RendererClass", "\346\226\260\345\273\272\351\273\230\350\256\244\347\211\251\344\275\223", nullptr));
         functionMenu->setTitle(QApplication::translate("PBR_RendererClass", "\345\212\237\350\203\275\350\247\243\351\224\201", nullptr));
@@ -345,4 +365,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // PBR_RENDERERCSMQJR_H
+#endif // UI_PBR_RENDERER_H

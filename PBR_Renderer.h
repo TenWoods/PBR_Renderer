@@ -17,7 +17,9 @@ public slots:
 	void AddSphere();  //场景添加球
 	void AddCube();  //场景添加立方体
 	void ShowProperties(const QModelIndex& index);  //显示属性
-	void ShowPartone();
+	void ShowPartone(); //显示第一部分教学
+	void UnlockMaterial();
+	
 private:
 	Ui::PBR_RendererClass ui;
 	QStandardItemModel* sceneTree;

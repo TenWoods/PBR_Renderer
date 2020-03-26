@@ -67,13 +67,13 @@ void main()
     viewDir = normalize(viewDir);
     vec3 color = vec3(0.0, 0.0, 0.0);
     //平行光
-	color += CalcDirectLight(dirLight, normal, viewDir);
+	//color += CalcDirectLight(dirLight, normal, viewDir);
     //点光源
     for (int i = 0; i < plNum; i++)
         color += CalcPointLight(pointLights[i], normal, fragPos, viewDir);
     //聚光
-    for (int i = 0; i < slNum; i++)
-        color += CalcSpotLight(spotLights[i], normal, fragPos, viewDir);
+//    for (int i = 0; i < slNum; i++)
+//        color += CalcSpotLight(spotLights[i], normal, fragPos, viewDir);
 	FragColor = vec4(color, 1.0);
 }
 
@@ -87,7 +87,7 @@ vec3 CalcDirectLight(DirectionLight light, vec3 normal, vec3 viewDir)
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0f);
     // 合并结果
-    vec3 ambient  = light.ambient  * vec3(texture(material.texture_diffuse, texcoord));
+    vec3 ambient  = light.ambient  * vec3(texture(material.texture_diffuse, texcoord)) * 0.001;
     vec3 diffuse  = light.lightColor * diff * vec3(texture(material.texture_diffuse, texcoord));
     vec3 specular = light.lightColor * spec * vec3(texture(material.texture_specular, texcoord));
     return (ambient + diffuse + specular);
@@ -106,9 +106,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance)); 
     //合并结果
-    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse, texcoord));
+    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse, texcoord)) * 0.001;
     vec3 diffuse = light.lightColor * diff * vec3(texture(material.texture_diffuse, texcoord));
-    vec3 specular = light.lightColor * spec * vec3(texture(material.texture_diffuse, texcoord));
+    vec3 specular = light.lightColor * spec * vec3(texture(material.texture_specular, texcoord));
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;

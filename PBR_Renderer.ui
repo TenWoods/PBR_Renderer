@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>PBR_Renderer</string>
+   <string>PBR教学渲染器</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -65,6 +65,8 @@
      <string>学习</string>
     </property>
     <addaction name="actionPartone"/>
+    <addaction name="actionParttwo"/>
+    <addaction name="actionPartthree"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="functionMenu"/>
@@ -75,6 +77,12 @@
     <size>
      <width>278</width>
      <height>300</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>350</width>
+     <height>524287</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -111,16 +119,16 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <property name="leftMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="topMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="rightMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QTreeView" name="treeView"/>
@@ -133,16 +141,16 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <property name="leftMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="topMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="rightMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="bottomMargin">
-          <number>2</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QScrollArea" name="scrollArea">
@@ -154,8 +162,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>266</width>
-              <height>347</height>
+              <width>270</width>
+              <height>351</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout">
@@ -261,6 +269,12 @@
      <height>280</height>
     </size>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>350</width>
+     <height>524287</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>属性</string>
    </property>
@@ -288,31 +302,49 @@
    </widget>
   </widget>
   <action name="actionNewScene">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>新建场景</string>
    </property>
   </action>
   <action name="actionOpenScene">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>打开场景</string>
    </property>
   </action>
   <action name="actionSaveScene">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>保存场景</string>
    </property>
   </action>
   <action name="actionLoadModel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>加载模型</string>
    </property>
   </action>
   <action name="actionNewTexture">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>新建材质</string>
    </property>
   </action>
   <action name="actionLoadTexture">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>加载材质</string>
    </property>
@@ -325,7 +357,7 @@
     <bool>false</bool>
    </property>
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>PBR材质与直接光照</string>
@@ -335,6 +367,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>间接漫反射</string>
    </property>
@@ -342,6 +377,9 @@
   <action name="actionIBL">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>IBL间接镜面反射</string>
@@ -360,6 +398,16 @@
   <action name="actioncube">
    <property name="text">
     <string>立方体</string>
+   </property>
+  </action>
+  <action name="actionParttwo">
+   <property name="text">
+    <string>间接漫反射部分</string>
+   </property>
+  </action>
+  <action name="actionPartthree">
+   <property name="text">
+    <string>IBL间接镜面反射</string>
    </property>
   </action>
  </widget>

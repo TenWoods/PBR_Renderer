@@ -103,16 +103,10 @@ void Render::initializeGL()
 
 	//开启计时
 	time.start();
-	//初始化场景物体
-	//sceneObjects.push_back(new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	//sceneObjects.push_back(new Sphere(QVector3D(1.0f, 1.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	//sceneObjects.push_back(new Sphere(QVector3D(1.0f, 0.0f, 1.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	/*sceneObjects[0]->AddTexture("rustediron2_basecolor.png", TEXTURE_TYPE::DIFFUSE);
-	sceneObjects[0]->AddTexture("rustediron2_normal.png", TEXTURE_TYPE::NORMAL);
-	sceneObjects[0]->AddTexture("rustediron2_metallic.png", TEXTURE_TYPE::METALLIC);
-	sceneObjects[0]->AddTexture("rustediron2_roughness.png", TEXTURE_TYPE::ROUGHNESS);
-	sceneObjects[0]->AddTexture("rustediron2_ao.png", TEXTURE_TYPE::AO);*/
-
+	//测试物体
+	sceneObjects.push_back(new Model("model/model.obj", this));
+	sceneObjects[0]->set_position(QVector3D(0.0f, 0.0f, 0.0f));
+	sceneObjects[0]->set_scale(QVector3D(0.2f, 0.2f, 0.2f));
 	//基础平行光
 	/*directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));*/
 	//点光源
@@ -128,7 +122,7 @@ void Render::paintGL()
 {
 	update();
 	//判断使用哪种着色器
-	if (textureON)
+	/*if (textureON)
 	{
 		if (PBRMaterialON)
 		{
@@ -149,8 +143,8 @@ void Render::paintGL()
 		{
 			shaderProgram = &traditonal_notex_shader;
 		}
-	}
-
+	}*/
+	shaderProgram = &traditonal_tex_shader;
 	float currentTime = (float)time.elapsed() / 1000;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;

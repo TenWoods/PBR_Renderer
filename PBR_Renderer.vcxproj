@@ -20,11 +20,13 @@
     <QtRcc Include="PBR_Renderer.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\fragment\1.model_loading.frag" />
     <None Include="shaders\fragment\basePBRFragment.frag" />
     <None Include="shaders\fragment\PBRFragment_withtextures.frag" />
     <None Include="shaders\fragment\traditionalFragment_notexture.frag" />
     <None Include="shaders\fragment\traditionalFragment_withTexture.frag" />
     <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag" />
+    <None Include="shaders\vertex\1.model_loading.vert" />
     <None Include="shaders\vertex\baseVertex.vert" />
     <None Include="shaders\vertex\PBRVertex_withtexture.vert" />
     <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert" />
@@ -92,8 +94,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Library\assimp-5.0.0\build\include;C:\Library\assimp-5.0.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\WorkPlace\PBR_Renderer\PBR_Renderer;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Library\glm;C:\Library\assimp-4.1.0\build\include;C:\Library\assimp-4.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Library\assimp-4.1.0\build\code\Release;C:\WorkPlace\PBR_Renderer\PBR_Renderer;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
@@ -136,7 +138,7 @@
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\WorkPlace\PBR_Renderer\PBR_Renderer\x64\Release\uic;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

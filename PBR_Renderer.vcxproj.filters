@@ -77,6 +77,12 @@
     <None Include="shaders\fragment\traditionalFragment_notexture.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
+    <None Include="shaders\vertex\1.model_loading.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="shaders\fragment\1.model_loading.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">

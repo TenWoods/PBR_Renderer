@@ -5,9 +5,9 @@
 class Mesh
 {
 private :
-	std::vector<Vertex> vertices;
-	std::vector<Texture> textures;
-	std::vector<unsigned int> indices;
+	std::vector<Vertex> m_vertices;
+	std::vector<Texture> m_textures;
+	std::vector<unsigned int> m_indices;
 	unsigned int VAO;
 	unsigned int VBO;
 	unsigned int EBO;

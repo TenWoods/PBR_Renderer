@@ -1,22 +1,20 @@
 /********************************************************************************
-** Form generated from reading UI file 'StudyResourseGjrjPQ.ui'
+** Form generated from reading UI file 'StudyResourse.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.12.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef STUDYRESOURSEGJRJPQ_H
-#define STUDYRESOURSEGJRJPQ_H
+#ifndef UI_STUDYRESOURSE_H
+#define UI_STUDYRESOURSE_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -27,9 +25,7 @@ class Ui_StudyResourse
 {
 public:
     QVBoxLayout *verticalLayout;
-    QScrollArea *scrollArea;
-    QWidget *scrollAreaWidgetContents;
-    QGridLayout *gridLayout;
+    QWidget *widget_2;
     QLabel *label;
     QWidget *widget;
     QHBoxLayout *horizontalLayout;
@@ -41,37 +37,26 @@ public:
     {
         if (StudyResourse->objectName().isEmpty())
             StudyResourse->setObjectName(QString::fromUtf8("StudyResourse"));
-        StudyResourse->resize(581, 615);
+        StudyResourse->resize(714, 1010);
         verticalLayout = new QVBoxLayout(StudyResourse);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        scrollArea = new QScrollArea(StudyResourse);
-        scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
-        scrollArea->setWidgetResizable(true);
-        scrollAreaWidgetContents = new QWidget();
-        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 561, 548));
-        gridLayout = new QGridLayout(scrollAreaWidgetContents);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        label = new QLabel(scrollAreaWidgetContents);
+        widget_2 = new QWidget(StudyResourse);
+        widget_2->setObjectName(QString::fromUtf8("widget_2"));
+        label = new QLabel(widget_2);
         label->setObjectName(QString::fromUtf8("label"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy);
+        label->setGeometry(QRect(9, 9, 551, 541));
 
-        gridLayout->addWidget(label, 0, 0, 1, 1);
-
-        scrollArea->setWidget(scrollAreaWidgetContents);
-
-        verticalLayout->addWidget(scrollArea);
+        verticalLayout->addWidget(widget_2);
 
         widget = new QWidget(StudyResourse);
         widget->setObjectName(QString::fromUtf8("widget"));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
+        widget->setSizePolicy(sizePolicy);
         horizontalLayout = new QHBoxLayout(widget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -115,4 +100,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // STUDYRESOURSEGJRJPQ_H
+#endif // UI_STUDYRESOURSE_H

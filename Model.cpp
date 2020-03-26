@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "Render.h"
 #include "stb_image.h"
+#include <iostream>
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, Render* window);
 
@@ -14,9 +15,9 @@ void Model::LoadModel(std::string const& path)
 {
 	Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        qDebug() << "ERROR::ASSIMP:: " << importer.GetErrorString();
+        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString();
         return;
     }
     //保存模型上级目录
@@ -34,9 +35,9 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
         meshes.push_back(ProcessMesh(mesh, scene));
     }
     //递归处理所有子节点
-    for (int i = 0; i < node->mNumChildren; i++)
+    for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        this->ProcessNode(node->mChildren[i], scene);
+        ProcessNode(node->mChildren[i], scene);
     }
 }
 
@@ -48,32 +49,33 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
         Vertex vertex;
-        QVector3D vector;
-        vector.setX(mesh->mVertices[i].x);
-        vector.setY(mesh->mVertices[i].y);
-        vector.setZ(mesh->mVertices[i].z);
+        glm::vec3 vector;
+        vector.x = mesh->mVertices[i].x;
+        vector.y = mesh->mVertices[i].y;
+        vector.z = mesh->mVertices[i].z;
         vertex.position = vector;
-        vector.setX(mesh->mNormals[i].x);
-        vector.setY(mesh->mNormals[i].y);
-        vector.setZ(mesh->mNormals[i].z);
+        vector.x = mesh->mNormals[i].x;
+        vector.y = mesh->mNormals[i].y;
+        vector.z = mesh->mNormals[i].z;
         vertex.normal = vector;
-        vector.setX(mesh->mTangents[i].x);
-        vector.setY(mesh->mTangents[i].y);
-        vector.setZ(mesh->mTangents[i].z);
-        vertex.tangent = vector;
         if (mesh->mTextureCoords[0])
         {
-            QVector2D texcoord;
-            texcoord.setX(mesh->mTextureCoords[0][i].x);
-            texcoord.setY(mesh->mTextureCoords[0][i].y);
+            glm::vec2 texcoord;
+            texcoord.x = mesh->mTextureCoords[0][i].x;
+            texcoord.y = mesh->mTextureCoords[0][i].y;
             vertex.texcoord = texcoord;
         }
         else
-            vertex.texcoord = QVector2D(0.0f, 0.0f);
-        vector.setX(mesh->mBitangents[i].x);
-        vector.setY(mesh->mBitangents[i].y);
-        vector.setZ(mesh->mBitangents[i].z);
+            vertex.texcoord = glm::vec2(0.0f, 0.0f);
+        vector.x = mesh->mTangents[i].x;
+        vector.y = mesh->mTangents[i].y;
+        vector.z = mesh->mTangents[i].z;
+        vertex.tangent = vector;
+        vector.x = mesh->mBitangents[i].x;
+        vector.y = mesh->mBitangents[i].y;
+        vector.z = mesh->mBitangents[i].z;
         vertex.bitangent = vector;
+        vertices.push_back(vertex);
     }
     //处理索引
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -81,7 +83,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         aiFace face = mesh->mFaces[i];
         for (unsigned int j = 0; j < face.mNumIndices; j++)
         {
-            indices.push_back(face.mIndices[i]);
+            indices.push_back(face.mIndices[j]);
         }
     }
     //处理贴图
@@ -108,7 +110,6 @@ std::vector<Texture> Model::LoadTextures(aiMaterial* material, aiTextureType typ
     {
         aiString str;
         material->GetTexture(type, i, &str);
-        // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
         for (unsigned int j = 0; j < loaded_texture.size(); j++)
         {
@@ -121,7 +122,7 @@ std::vector<Texture> Model::LoadTextures(aiMaterial* material, aiTextureType typ
             }
         }
         if (!skip)
-        {   // if texture hasn't been loaded already, load it
+        {
             Texture texture;
             texture.id = TextureFromFile(str.C_Str(), this->directory, m_window);
             texture.type = typeName;
@@ -139,7 +140,6 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, Ren
     filename = directory + '/' + filename;
 
     unsigned int textureID;
-
     window->glGenTextures(1, &textureID);
 
     int width, height, channel;
@@ -175,7 +175,9 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, Ren
 void Model::Draw(QOpenGLShaderProgram* shader)
 {
     QMatrix4x4 model;
+    shader->bind();
     model.translate(m_position);
+    model.scale(m_scale);
     shader->setUniformValue("model", model);
     QMatrix4x4 view;
     view = m_window->camera.ViewMatrix();
@@ -183,6 +185,7 @@ void Model::Draw(QOpenGLShaderProgram* shader)
     QMatrix4x4 projection;
     projection.perspective(m_window->camera.get_zoom(), (float)m_window->width() / (float)m_window->height(), 0.1f, 100.0f);
     shader->setUniformValue("projection", projection);
+    shader->release();
     for (int i = 0; i < meshes.size(); i++)
     {
         meshes[i].Draw(shader);

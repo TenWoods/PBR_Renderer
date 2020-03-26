@@ -58,7 +58,13 @@ void PBR_Renderer::ShowProperties(const QModelIndex& index)
 //教学第一部分
 void PBR_Renderer::ShowPartone()
 {
-	partone = new StudyResourse(this, 1);
+	partone = new StudyResourse(this, 1, this);
+	partone->setWindowTitle(QStringLiteral("PBR材质与直接光照教学"));
 	partone->setModal(false);
 	partone->show();
+}
+
+void PBR_Renderer::UnlockMaterial()
+{
+	ui.actionPBRMaterial->setEnabled(true);
 }

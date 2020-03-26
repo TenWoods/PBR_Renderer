@@ -72,7 +72,6 @@ void Camera::Rotate(float deltaX, float deltaY)
 	pitch += deltaY * rotateSpeed;
 	if (pitch > 89.0f)
 	{
-		qDebug() << "?";
 		pitch = 89.0f;
 	}
 	if (pitch < -89.0f)

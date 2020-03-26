@@ -3,6 +3,7 @@
 #include <qopenglshaderprogram.h>
 #include <vector>
 #include <string>
+#include <glm\glm.hpp>
 
 class Render;
 
@@ -27,15 +28,15 @@ struct Texture
 struct Vertex
 {
 	//位置
-	QVector3D position;
+	glm::vec3 position;
 	//法线
-	QVector3D normal;
+	glm::vec3 normal;
 	//切线
-	QVector3D tangent;
+	glm::vec3 tangent;
 	//纹理坐标
-	QVector2D texcoord;
+	glm::vec2 texcoord;
 	//副切线
-	QVector3D bitangent;
+	glm::vec3 bitangent;
 };
 
 class RenderObject
