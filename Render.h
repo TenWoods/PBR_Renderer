@@ -6,6 +6,7 @@
 #include <qwindowdefs.h>
 #include <QTime>
 #include <qmath.h>
+#include <queue>
 #include "ui_Render.h"
 #include "Camera.h"
 #include "Light.h"
@@ -30,6 +31,7 @@ public:
 public slots:
 	int AddCube();
 	int AddSphere();
+	int AddModel(std::string path);
 	void ChangePositionX(const QString& text);
 	void ChangePositionY(const QString& text);
 	void ChangePositionZ(const QString& text);
@@ -83,5 +85,9 @@ private:
 	//功能解锁参数
 	bool PBRMaterialON;
 	bool textureON;
+	//加载模型
+	std::string loadModelPath;
+	//test
+	bool isLoadModel;
 };
 

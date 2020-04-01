@@ -5,7 +5,7 @@ Render::Render(QWidget* parent)
 	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f), 
 	lastFrame(0.0f), deltaTime(0.0f), time(), 
 	isFirstMouse(true), isRightMousePress(false),
-	lastX(0.0f), lastY(0.0f), focusObject(NULL), PBRMaterialON(false), textureON(false)
+	lastX(0.0f), lastY(0.0f), focusObject(NULL), PBRMaterialON(false), textureON(false), isLoadModel(false), loadModelPath(), sceneObjects()
 {
 	ui.setupUi(this);
 }
@@ -104,9 +104,7 @@ void Render::initializeGL()
 	//开启计时
 	time.start();
 	//测试物体
-	sceneObjects.push_back(new Model("model/model.obj", this));
-	sceneObjects[0]->set_position(QVector3D(0.0f, 0.0f, 0.0f));
-	sceneObjects[0]->set_scale(QVector3D(0.2f, 0.2f, 0.2f));
+	//sceneObjects.push_back(new Model("C:/WorkPlace/PBR_Renderer/PBR_Renderer/model/test.obj", this));
 	//基础平行光
 	/*directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));*/
 	//点光源
@@ -120,9 +118,15 @@ void Render::initializeGL()
 
 void Render::paintGL()
 {
+	textureON = true;	//debug
+	if (isLoadModel)
+	{
+		sceneObjects.push_back(new Model(loadModelPath, this));
+		isLoadModel = false;
+	}
 	update();
 	//判断使用哪种着色器
-	/*if (textureON)
+	if (textureON)
 	{
 		if (PBRMaterialON)
 		{
@@ -143,8 +147,8 @@ void Render::paintGL()
 		{
 			shaderProgram = &traditonal_notex_shader;
 		}
-	}*/
-	shaderProgram = &traditonal_tex_shader;
+	}
+	//shaderProgram = &traditonal_tex_shader;
 	float currentTime = (float)time.elapsed() / 1000;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
@@ -333,6 +337,16 @@ int Render::AddSphere()
 	return sceneObjects.size() - 1;
 }
 
+int Render::AddModel(std::string path)
+{
+	isLoadModel = true;
+	loadModelPath = path;
+	qDebug() << sceneObjects.size();
+	return sceneObjects.size();   //TODO: 调用绘制函数实时更新index?
+}
+
+//改变属性的槽函数
+//位置改变
 void Render::ChangePositionX(const QString& text)
 {
 	if (focusObject == NULL)
@@ -360,6 +374,7 @@ void Render::ChangePositionZ(const QString& text)
 	focusObject->set_position(position);
 }
 
+//大小改变
 void Render::ChangeScaleX(const QString& text)
 {
 	if (focusObject == NULL)
@@ -387,6 +402,7 @@ void Render::ChangeScaleZ(const QString& text)
 	focusObject->set_scale(scale);
 }
 
+//旋转改变
 void Render::ChangeRotationX(const QString& text)
 {
 	if (focusObject == NULL)
@@ -414,6 +430,7 @@ void Render::ChangeRotationZ(const QString& text)
 	focusObject->set_rotation(rotation);
 }
 
+//颜色改变
 void Render::ChangeColorR(const QString& text)
 {
 	if (focusObject == NULL)
@@ -441,6 +458,7 @@ void Render::ChangeColorB(const QString& text)
 	focusObject->set_color(color);
 }
 
+//金属度改变
 void Render::ChangeMetallic(const QString& text)
 {
 	if (focusObject == NULL)
@@ -448,6 +466,7 @@ void Render::ChangeMetallic(const QString& text)
 	focusObject->set_metallic(text.toFloat());
 }
 
+//粗糙度改变
 void Render::ChangeRoughness(const QString& text)
 {
 	if (focusObject == NULL)
@@ -455,6 +474,7 @@ void Render::ChangeRoughness(const QString& text)
 	focusObject->set_roughness(text.toFloat());
 }
 
+//ao改变
 void Render::ChangeAO(const QString& text)
 {
 	if (focusObject == NULL)
@@ -462,6 +482,7 @@ void Render::ChangeAO(const QString& text)
 	focusObject->set_ao(text.toFloat());
 }
 
+//功能开关
 void Render::SettextureON(bool value)
 {
 	textureON = value;

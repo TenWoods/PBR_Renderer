@@ -5,9 +5,8 @@
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, Render* window);
 
-Model::Model(std::string const& path, Render* window) : RenderObject()
+Model::Model(std::string const& path, Render* window) : RenderObject(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), window)
 {
-    m_window = window;
     LoadModel(path);
 }
 
@@ -88,17 +87,20 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     }
     //处理贴图
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    //环境光贴图->ao
+    std::vector<Texture> aoMaps = LoadTextures(material, aiTextureType_AMBIENT, TEXTURE_TYPE::AO);
+    textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
     //漫反射贴图
     std::vector<Texture> diffuseMaps = LoadTextures(material, aiTextureType_DIFFUSE, TEXTURE_TYPE::DIFFUSE);
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    //高光贴图
-    std::vector<Texture> specularMaps = LoadTextures(material, aiTextureType_SPECULAR, TEXTURE_TYPE::SPECULAR);
+    //高光贴图->粗糙度贴图
+    std::vector<Texture> specularMaps = LoadTextures(material, aiTextureType_SPECULAR, TEXTURE_TYPE::ROUGHNESS);
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     //法线贴图
     std::vector<Texture> normalMaps = LoadTextures(material, aiTextureType_HEIGHT, TEXTURE_TYPE::NORMAL);
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    //高度贴图
-    std::vector<Texture> heightMaps = LoadTextures(material, aiTextureType_AMBIENT, TEXTURE_TYPE::HEIGHT);
+    //高度贴图->金属度贴图
+    std::vector<Texture> heightMaps = LoadTextures(material, aiTextureType_AMBIENT, TEXTURE_TYPE::METALLIC);
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     return Mesh(vertices, indices, textures, m_window);
 }
@@ -178,6 +180,7 @@ void Model::Draw(QOpenGLShaderProgram* shader)
     shader->bind();
     model.translate(m_position);
     model.scale(m_scale);
+    model.rotate(QQuaternion::fromEulerAngles(m_rotation));
     shader->setUniformValue("model", model);
     QMatrix4x4 view;
     view = m_window->camera.ViewMatrix();

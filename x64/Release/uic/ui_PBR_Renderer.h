@@ -100,7 +100,7 @@ public:
         actionSaveScene->setEnabled(false);
         actionLoadModel = new QAction(PBR_RendererClass);
         actionLoadModel->setObjectName(QString::fromUtf8("actionLoadModel"));
-        actionLoadModel->setEnabled(false);
+        actionLoadModel->setEnabled(true);
         actionNewTexture = new QAction(PBR_RendererClass);
         actionNewTexture->setObjectName(QString::fromUtf8("actionNewTexture"));
         actionNewTexture->setEnabled(false);

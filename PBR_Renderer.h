@@ -19,6 +19,7 @@ public slots:
 	void ShowProperties(const QModelIndex& index);  //显示属性
 	void ShowPartone(); //显示第一部分教学
 	void UnlockMaterial();
+	void AddModel();
 	
 private:
 	Ui::PBR_RendererClass ui;

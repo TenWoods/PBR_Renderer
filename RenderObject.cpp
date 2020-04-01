@@ -34,6 +34,7 @@ void RenderObject::set_hasNornalmap(bool value)
 
 void RenderObject::set_position(QVector3D value)
 {
+	qDebug() << "1";
 	m_position = value;
 }
 

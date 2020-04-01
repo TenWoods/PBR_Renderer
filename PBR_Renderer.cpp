@@ -1,6 +1,7 @@
 #include "PBR_Renderer.h"
 #include "Sphere.h"
 #include "Cube.h"
+#include "Model.h"
 
 
 PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0), cube_num(0)
@@ -18,6 +19,7 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	//菜单栏按键绑定
 	connect(ui.actionsphere, &QAction::triggered, this, &PBR_Renderer::AddSphere); //场景生成球
 	connect(ui.actioncube, &QAction::triggered, this, &PBR_Renderer::AddCube);  //场景生成立方体
+	connect(ui.actionLoadModel, &QAction::triggered, this, &PBR_Renderer::AddModel);
 	//功能开启
 	connect(ui.actionPBRMaterial, &QAction::triggered, ui.render, &Render::SetPBRMaterialON);  //PBR材质功能
 	connect(ui.actionPBRMaterial, &QAction::triggered, ui.property, &Property::SetProperties);
@@ -46,6 +48,20 @@ void PBR_Renderer::AddCube()
 	sceneTree->appendRow(cube);
 }
 
+void PBR_Renderer::AddModel()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择模型地址"), "/", QStringLiteral("模型文件 (*.obj);; 所有文件 (*.*);;"));
+	if (path.isEmpty())
+	{
+		return;
+	}
+	QString text("Model");
+	QStandardItem* model = new QStandardItem(text);
+	model->setData(QVariant(ui.render->AddModel(path.toStdString())));
+	sceneTree->appendRow(model);
+	sceneTree->indexFromItem(model);
+}
+
 void PBR_Renderer::ShowProperties(const QModelIndex& index)
 {
 	ui.property->setEnabled(true);
@@ -68,3 +84,4 @@ void PBR_Renderer::UnlockMaterial()
 {
 	ui.actionPBRMaterial->setEnabled(true);
 }
+
