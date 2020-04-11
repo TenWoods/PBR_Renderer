@@ -20,14 +20,16 @@
     <QtRcc Include="PBR_Renderer.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragment\1.model_loading.frag" />
-    <None Include="shaders\fragment\basePBRFragment.frag" />
+    <None Include="shaders\fragment\background.frag" />
+    <None Include="shaders\fragment\equirectangle_to_cubemap.frag" />
+    <None Include="shaders\fragment\irradiance_convolution.frag" />
     <None Include="shaders\fragment\PBRFragment_withtextures.frag" />
     <None Include="shaders\fragment\traditionalFragment_notexture.frag" />
     <None Include="shaders\fragment\traditionalFragment_withTexture.frag" />
     <None Include="shaders\fragment\traditionalFragment_withNormalMap.frag" />
-    <None Include="shaders\vertex\1.model_loading.vert" />
+    <None Include="shaders\vertex\background.vert" />
     <None Include="shaders\vertex\baseVertex.vert" />
+    <None Include="shaders\vertex\cubemap.vert" />
     <None Include="shaders\vertex\PBRVertex_withtexture.vert" />
     <None Include="shaders\vertex\traditionalVertex_withNormalMap.vert" />
   </ItemGroup>

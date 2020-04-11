@@ -13,6 +13,7 @@ class PBR_Renderer : public QMainWindow
 
 public:
 	PBR_Renderer(QWidget *parent = Q_NULLPTR);
+	void SetModelTree(Model* model);
 public slots:
 	void AddSphere();  //场景添加球
 	void AddCube();  //场景添加立方体

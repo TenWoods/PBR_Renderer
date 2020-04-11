@@ -15,23 +15,30 @@
 #include "Sphere.h"
 #include "Model.h"
 
+class PBR_Renderer;
+
 class Render : public QOpenGLWidget, public QOpenGLFunctions_4_4_Core
 {
 	Q_OBJECT
+
+signals:
+	void SetMeshUI(Model* pointer);
 
 public:
 	Render(QWidget *parent = Q_NULLPTR);
 	~Render();
 	Camera camera;
-	void set_focusObject(int i);
-	RenderObject* get_focusObject();
+	std::vector<RenderObject*> sceneObjects;
+	void set_targetObject(RenderObject* value);
+	RenderObject* get_targetObject();
 	bool get_textureON();
 	bool get_PBRMaterialON();
+	RenderObject* AddCube();
+	RenderObject* AddSphere();
+	void AddModel(std::string path, PBR_Renderer* mainwindow);
+
 
 public slots:
-	int AddCube();
-	int AddSphere();
-	int AddModel(std::string path);
 	void ChangePositionX(const QString& text);
 	void ChangePositionY(const QString& text);
 	void ChangePositionZ(const QString& text);
@@ -65,10 +72,18 @@ private:
 	//绘制参数
 	Ui::Render ui;
 	QOpenGLShaderProgram* shaderProgram;
-	QOpenGLShaderProgram traditonal_notex_shader;
-	QOpenGLShaderProgram traditonal_tex_shader;
-	QOpenGLShaderProgram pbr_notex_shader;
-	QOpenGLShaderProgram pbr_tex_shader;
+	QOpenGLShaderProgram traditonal_notex_shader;  //传统光照shader
+	QOpenGLShaderProgram traditonal_tex_shader;    //传统光照带贴图shader
+	QOpenGLShaderProgram pbr_notex_shader;         //pbr无贴图shader
+	QOpenGLShaderProgram pbr_tex_shader;           //pbr有贴图shader
+	QOpenGLShaderProgram envTocube_shader;         //hdr贴图转立方贴图shader
+	QOpenGLShaderProgram irradiance_shader;         //漫反射辐照计算shader
+	QOpenGLShaderProgram background_shader;         //天空盒渲染shader
+	QOpenGLShaderProgram envPBR_notex_shader;            //使用环境贴图的pbr shader
+	void InitShaderProgram(std::string vertexPath, std::string fragmentPath, QOpenGLShaderProgram& targetShader);          //初始化着色器
+	void renderCube();
+	unsigned int cubeVAO;
+	unsigned int cubeVBO;
 	float lastFrame;
 	float deltaTime;
 	QTime time;
@@ -77,11 +92,19 @@ private:
 	bool isFirstMouse;
 	bool isRightMousePress;
 	//场景数据
-	std::vector<RenderObject*> sceneObjects;
 	DirectionLight directionLight;
 	std::vector<PointLight> pointLights;
 	std::vector<SpotLight> spotLights;
-	RenderObject* focusObject;
+	RenderObject* target;
+	//天空盒与IBL相关参数
+	bool isEnvON;
+	bool isFirstLoadEnv;
+	std::string hdrTexturePath;
+	unsigned int captureFBO;   //中间缓冲帧
+	unsigned int captureRBO;
+	unsigned int hdrTexture;    //hdr贴图
+	unsigned int envCubeMap;    //hdr转换后的环境贴图
+	unsigned int irradianceMap; //预计算的漫反射辐照图	
 	//功能解锁参数
 	bool PBRMaterialON;
 	bool textureON;
@@ -89,5 +112,6 @@ private:
 	std::string loadModelPath;
 	//test
 	bool isLoadModel;
+	PBR_Renderer* p_mainwindow;
 };
 

@@ -17,9 +17,6 @@ public :
 	Mesh();
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Render* window);
 	void Draw(QOpenGLShaderProgram* shader) override;
-	void AddTexture(std::string path, TEXTURE_TYPE type) override
-	{
-
-	}
+	void AddTexture(std::string path, TEXTURE_TYPE type) override;
 };
 

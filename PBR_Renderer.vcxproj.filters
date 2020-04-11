@@ -62,9 +62,6 @@
     <None Include="shaders\fragment\traditionalFragment_withTexture.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="shaders\fragment\basePBRFragment.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
     <None Include="shaders\vertex\baseVertex.vert">
       <Filter>Shaders\Vertex</Filter>
     </None>
@@ -77,10 +74,19 @@
     <None Include="shaders\fragment\traditionalFragment_notexture.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="shaders\vertex\1.model_loading.vert">
+    <None Include="shaders\vertex\cubemap.vert">
       <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="shaders\fragment\1.model_loading.frag">
+    <None Include="shaders\vertex\background.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="shaders\fragment\equirectangle_to_cubemap.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\fragment\irradiance_convolution.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\fragment\background.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>

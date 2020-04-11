@@ -115,31 +115,31 @@ void Property::SetProperties()
 	}
 
 	//赋值数据
-	RenderObject* focus = render->get_focusObject();
-	if (focus == NULL)
+	RenderObject* target = render->get_targetObject();
+	if (target == NULL)
 	{
 		return;
 	}
 	//position
-	ui.px->setText(QString("%1").arg(focus->get_position().x()));
-	ui.py->setText(QString("%1").arg(focus->get_position().y()));
-	ui.pz->setText(QString("%1").arg(focus->get_position().z()));
+	ui.px->setText(QString("%1").arg(target->get_position().x()));
+	ui.py->setText(QString("%1").arg(target->get_position().y()));
+	ui.pz->setText(QString("%1").arg(target->get_position().z()));
 	//scale
-	ui.sx->setText((QString("%1").arg(focus->get_scale().x())));
-	ui.sy->setText((QString("%1").arg(focus->get_scale().y())));
-	ui.sz->setText((QString("%1").arg(focus->get_scale().z())));
+	ui.sx->setText((QString("%1").arg(target->get_scale().x())));
+	ui.sy->setText((QString("%1").arg(target->get_scale().y())));
+	ui.sz->setText((QString("%1").arg(target->get_scale().z())));
 	//rotation
-	ui.rx->setText((QString("%1").arg(focus->get_rotation().x())));
-	ui.ry->setText((QString("%1").arg(focus->get_rotation().y())));
-	ui.rz->setText((QString("%1").arg(focus->get_rotation().z())));
+	ui.rx->setText((QString("%1").arg(target->get_rotation().x())));
+	ui.ry->setText((QString("%1").arg(target->get_rotation().y())));
+	ui.rz->setText((QString("%1").arg(target->get_rotation().z())));
 	//color
-	ui.colorR->setText(QString("%1").arg(focus->get_color().x()));
-	ui.colorG->setText(QString("%1").arg(focus->get_color().y()));
-	ui.colorB->setText(QString("%1").arg(focus->get_color().z()));
+	ui.colorR->setText(QString("%1").arg(target->get_color().x()));
+	ui.colorG->setText(QString("%1").arg(target->get_color().y()));
+	ui.colorB->setText(QString("%1").arg(target->get_color().z()));
 	//metallic,roughness,ao
-	ui.metallicSlider->setValue((int)(focus->get_metallic() * 100));
-	ui.roughnessSlider->setValue((int)(focus->get_roughness() * 100));
-	ui.aoSlider->setValue((int)(focus->get_ao() * 100));
+	ui.metallicSlider->setValue((int)(target->get_metallic() * 100));
+	ui.roughnessSlider->setValue((int)(target->get_roughness() * 100));
+	ui.aoSlider->setValue((int)(target->get_ao() * 100));
 	
 }
 
@@ -185,7 +185,7 @@ void Property::SetDiffuseButtonON()
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择漫反射贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
 	if (path.isEmpty())
 		return;
-	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::DIFFUSE);
+	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::DIFFUSE);
 }
 
 void Property::SetSpecularButtonON()
@@ -193,7 +193,7 @@ void Property::SetSpecularButtonON()
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择高光贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
 	if (path.isEmpty())
 		return;
-	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::SPECULAR);
+	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::SPECULAR);
 }
 
 void Property::SetNormalButtonON()
@@ -201,7 +201,7 @@ void Property::SetNormalButtonON()
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择法线贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
 	if (path.isEmpty())
 		return;
-	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::NORMAL);
+	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::NORMAL);
 }
 
 void Property::SetMetallicButtonON()
@@ -209,7 +209,7 @@ void Property::SetMetallicButtonON()
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择金属度贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
 	if (path.isEmpty())
 		return;
-	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::METALLIC);
+	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::METALLIC);
 }
 
 void Property::SetRoughnessButtonON()
@@ -217,7 +217,7 @@ void Property::SetRoughnessButtonON()
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择粗糙度贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
 	if (path.isEmpty())
 		return;
-	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::ROUGHNESS);
+	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::ROUGHNESS);
 }
 
 void Property::SetAOButtonON()
@@ -225,5 +225,5 @@ void Property::SetAOButtonON()
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择AO贴图"), "/", QStringLiteral("贴图文件 (*.png *.jpg);; 所有文件 (*.*);;"));
 	if (path.isEmpty())
 		return;
-	render->get_focusObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::AO);
+	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::AO);
 }

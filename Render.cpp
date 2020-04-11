@@ -1,11 +1,14 @@
 #include "Render.h"
 #include "RenderObject.h"
+#include "PBR_Renderer.h"
+#include "stb_image.h"
+
 
 Render::Render(QWidget* parent)
-	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f), 
-	lastFrame(0.0f), deltaTime(0.0f), time(), 
-	isFirstMouse(true), isRightMousePress(false),
-	lastX(0.0f), lastY(0.0f), focusObject(NULL), PBRMaterialON(false), textureON(false), isLoadModel(false), loadModelPath(), sceneObjects()
+	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f),
+	lastFrame(0.0f), deltaTime(0.0f), time(),
+	isFirstMouse(true), isRightMousePress(false), textureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(true),
+	lastX(0.0f), lastY(0.0f), target(NULL), loadModelPath(), sceneObjects(), cubeVAO(0), cubeVBO(0)
 {
 	ui.setupUi(this);
 }
@@ -22,84 +25,24 @@ void Render::initializeGL()
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	//初始化所有着色器
 	//传统无贴图
-	bool success = traditonal_notex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
-	if (!success)
-	{
-		qDebug() << "load vertex shader failed!" << traditonal_notex_shader.log();
-		return;
-	}
-	success = traditonal_notex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment_notexture.frag");
-	if (!success)
-	{
-		qDebug() << "load frag shader failed!" << traditonal_notex_shader.log();
-		return;
-	}
-	success = traditonal_notex_shader.link();
-	if (!success)
-	{
-		qDebug() << "shader program link failed" << traditonal_notex_shader.log();
-		return;
-	}
-
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/traditionalFragment_notexture.frag", traditonal_notex_shader);
 	//传统有贴图
-	success = traditonal_tex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
-	if (!success)
-	{
-		qDebug() << "load vertex shader failed!" << traditonal_tex_shader.log();
-		return;
-	}
-	success = traditonal_tex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/traditionalFragment_withTexture.frag");
-	if (!success)
-	{
-		qDebug() << "load frag shader failed!" << traditonal_tex_shader.log();
-		return;
-	}
-	success = traditonal_tex_shader.link();
-	if (!success)
-	{
-		qDebug() << "shader program link failed" << traditonal_tex_shader.log();
-		return;
-	}
-
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/traditionalFragment_withTexture.frag", traditonal_tex_shader);
 	//PBR无贴图
-	success = pbr_notex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
-	if (!success)
-	{
-		qDebug() << "load vertex shader failed!" << pbr_notex_shader.log();
-		return;
-	}
-	success = pbr_notex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/basePBRFragment.frag");
-	if (!success)
-	{
-		qDebug() << "load frag shader failed!" << pbr_notex_shader.log();
-		return;
-	}
-	success = pbr_notex_shader.link();
-	if (!success)
-	{
-		qDebug() << "shader program link failed" << pbr_notex_shader.log();
-		return;
-	}
-
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/basePBRFragment.frag", pbr_notex_shader);
 	//PBR有贴图
-	success = pbr_tex_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/vertex/baseVertex.vert");
-	if (!success)
-	{
-		qDebug() << "load vertex shader failed!" << pbr_tex_shader.log();
-		return;
-	}
-	success = pbr_tex_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/fragment/PBRFragment_withtextures.frag");
-	if (!success)
-	{
-		qDebug() << "load frag shader failed!" << pbr_tex_shader.log();
-		return;
-	}
-	success = pbr_tex_shader.link();
-	if (!success)
-	{
-		qDebug() << "shader program link failed" << pbr_tex_shader.log();
-		return;
-	}
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/PBRFragment_withtextures.frag", pbr_tex_shader);
+	//hdr贴图转立方贴图shader
+	InitShaderProgram("shaders/vertex/cubemap.vert", "shaders/fragment/equirectangle_to_cubemap.frag", envTocube_shader);
+	//漫反射辐照计算shader
+	InitShaderProgram("shaders/vertex/cubemap.vert", "shaders/fragment/irradiance_convolution.frag", irradiance_shader);
+	//天空盒渲染shader
+	InitShaderProgram("shaders/vertex/background.vert", "shaders/fragment/background.frag", background_shader);
+	//使用环境贴图的pbr无贴图shader
+	//InitShaderProgram("shaders/vertex/background.vert", "shaders/fragment/background.frag", envPBR_notex_shader);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
 	//开启计时
 	time.start();
@@ -118,10 +61,18 @@ void Render::initializeGL()
 
 void Render::paintGL()
 {
-	textureON = true;	//debug
+	isEnvON = true;
+	//textureON = true;	//debug
 	if (isLoadModel)
 	{
-		sceneObjects.push_back(new Model(loadModelPath, this));
+		Model* model = new Model(loadModelPath, this);
+		sceneObjects.push_back(model);
+		int size = model->get_meshsize();
+		for (int i = 0; i < size; i++)
+		{
+			sceneObjects.push_back(model->get_meshpointer(i));
+		}
+		emit SetMeshUI(model);
 		isLoadModel = false;
 	}
 	update();
@@ -148,11 +99,115 @@ void Render::paintGL()
 			shaderProgram = &traditonal_notex_shader;
 		}
 	}
-	//shaderProgram = &traditonal_tex_shader;
 	float currentTime = (float)time.elapsed() / 1000;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
-	glEnable(GL_DEPTH_TEST);
+	
+	//开启环境贴图的前置渲染数据
+	if (isEnvON)
+	{
+		if (isFirstLoadEnv)
+		{
+			qDebug() << "!";
+			glGenFramebuffers(1, &captureFBO);
+			glGenRenderbuffers(1, &captureRBO);
+			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+			stbi_set_flip_vertically_on_load(true);
+			int width, height, nrComponents;
+			float* data = stbi_loadf("Alexs_Apt_Env.hdr", &width, &height, &nrComponents, 0);
+			if (data)
+			{
+				glGenTextures(1, &hdrTexture);
+				glBindTexture(GL_TEXTURE_2D, hdrTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				stbi_image_free(data);
+			}
+			else
+			{
+				qDebug() << "faild to load HDR image";
+			}
+			glGenTextures(1, &envCubeMap);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
+			//给环境立方贴图预留内存
+			for (unsigned int i = 0; i < 6; ++i)
+			{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+			}
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			QMatrix4x4 captureProjection;
+			captureProjection.perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+			QMatrix4x4 captureViews[6];
+			captureViews[0].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
+			captureViews[1].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(-1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
+			captureViews[2].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+			captureViews[3].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f));
+			captureViews[4].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.0f, -1.0f, 0.0f));
+			captureViews[5].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f), QVector3D(0.0f, -1.0f, 0.0f));
+			envTocube_shader.bind();
+			envTocube_shader.setUniformValue("equirectangularMap", 0);
+			envTocube_shader.setUniformValue("projection", captureProjection);
+			//将hdr贴图转换为立方贴图
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, hdrTexture);
+			glViewport(0, 0, 512, 512); 
+			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+			for (unsigned int i = 0; i < 6; ++i)
+			{
+				qDebug() << "1";
+				envTocube_shader.setUniformValue("view", captureViews[i]);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubeMap, 0);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				renderCube();
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+			glGenTextures(1, &irradianceMap);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+			for (unsigned int i = 0; i < 6; ++i)
+			{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32, 32, 0, GL_RGB, GL_FLOAT, nullptr);
+			}
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+			irradiance_shader.bind();
+			irradiance_shader.setUniformValue("environmentMap", 0);
+			irradiance_shader.setUniformValue("projection", captureProjection);
+			//预计算漫反射辐照
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
+			glViewport(0, 0, 32, 32);
+			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+			for (unsigned int i = 0; i < 6; ++i)
+			{
+				irradiance_shader.setUniformValue("view", captureViews[i]);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				renderCube();
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			isFirstLoadEnv = false;
+		}
+	}
+
+	//正常的渲染
+	glViewport(0, 0, width(), height());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//把光照信息和相机信息传给shader
@@ -219,6 +274,21 @@ void Render::paintGL()
 			continue;
 		}
 		sceneObjects[i]->Draw(shaderProgram);
+	}
+	if (isEnvON)
+	{
+		qDebug() << "?";
+		//绘制天空盒
+		background_shader.bind();
+		QMatrix4x4 projection;
+		projection.perspective(glm::radians(camera.get_zoom()), (float)width() / (float)height(), 0.1f, 100.0f);
+		background_shader.setUniformValue("projection", projection);
+		background_shader.setUniformValue("view", camera.ViewMatrix());
+		background_shader.setUniformValue("environmentMap", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+		renderCube();
+		background_shader.release();
 	}
 }
 
@@ -302,14 +372,106 @@ void Render::mouseReleaseEvent(QMouseEvent* event)
 	isRightMousePress = false;
 }
 
-void Render::set_focusObject(int i)
+//初始化着色器
+void Render::InitShaderProgram(std::string vertexPath, std::string fragmentPath, QOpenGLShaderProgram& targetShader)
 {
-	focusObject = sceneObjects[i];
+	bool success = targetShader.addShaderFromSourceFile(QOpenGLShader::Vertex, vertexPath.c_str());
+	if (!success)
+	{
+		qDebug() << "load vertex shader failed!" << targetShader.log();
+		return;
+	}
+	success = targetShader.addShaderFromSourceFile(QOpenGLShader::Fragment, fragmentPath.c_str());
+	if (!success)
+	{
+		qDebug() << "load frag shader failed!" << targetShader.log();
+		return;
+	}
+	success = targetShader.link();
+	if (!success)
+	{
+		qDebug() << "shader program link failed" << targetShader.log();
+		return;
+	}
 }
 
-RenderObject* Render::get_focusObject()
+//渲染预处理数据用的立方体
+void Render::renderCube()
 {
-	return focusObject;
+	if (cubeVAO == 0)
+	{
+		float vertices[] = {
+			// back face
+			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+			 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+			 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+			// front face
+			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+			 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+			-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+			// left face
+			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+			-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+			// right face
+			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+			 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+			 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+			// bottom face
+			-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+			 1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+			 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+			 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+			-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+			-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+			// top face
+			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+			 1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+			 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+			 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+			-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+		};
+		glGenVertexArrays(1, &cubeVAO);
+		glGenBuffers(1, &cubeVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBindVertexArray(cubeVAO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	glBindVertexArray(cubeVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+//设置选中物体
+void Render::set_targetObject(RenderObject* value)
+{
+	target = value;
+}
+
+RenderObject* Render::get_targetObject()
+{
+	return target;
 }
 
 bool Render::get_textureON()
@@ -322,164 +484,164 @@ bool Render::get_PBRMaterialON()
 	return PBRMaterialON;
 }
 
-//槽函数
-int Render::AddCube()
+//添加物体
+
+RenderObject* Render::AddCube()
 {
-	sceneObjects.push_back(new Cube(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	//qDebug() << sceneObjects.size();
-	return sceneObjects.size() - 1;
+	Cube* cube = new Cube(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this);
+	sceneObjects.push_back(cube);
+	return cube;
 }
 
-int Render::AddSphere()
+RenderObject* Render::AddSphere()
 {
-	sceneObjects.push_back(new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this));
-	//qDebug() << sceneObjects.size();
-	return sceneObjects.size() - 1;
+	Sphere* sphere = new Sphere(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f), this);
+	sceneObjects.push_back(sphere);
+	return sphere;
 }
 
-int Render::AddModel(std::string path)
+void Render::AddModel(std::string path, PBR_Renderer* mainwindow)
 {
 	isLoadModel = true;
 	loadModelPath = path;
-	qDebug() << sceneObjects.size();
-	return sceneObjects.size();   //TODO: 调用绘制函数实时更新index?
+	p_mainwindow = mainwindow;
 }
 
 //改变属性的槽函数
 //位置改变
 void Render::ChangePositionX(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D position = focusObject->get_position();
+	QVector3D position = target->get_position();
 	position.setX(text.toFloat());
-	focusObject->set_position(position);
+	target->set_position(position);
 }
 
 void Render::ChangePositionY(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D position = focusObject->get_position();
+	QVector3D position = target->get_position();
 	position.setY(text.toFloat());
-	focusObject->set_position(position);
+	target->set_position(position);
 }
 
 void Render::ChangePositionZ(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D position = focusObject->get_position();
+	QVector3D position = target->get_position();
 	position.setZ(text.toFloat());
-	focusObject->set_position(position);
+	target->set_position(position);
 }
 
 //大小改变
 void Render::ChangeScaleX(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D scale = focusObject->get_scale();
+	QVector3D scale = target->get_scale();
 	scale.setX(text.toFloat());
-	focusObject->set_scale(scale);
+	target->set_scale(scale);
 }
 
 void Render::ChangeScaleY(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D scale = focusObject->get_scale();
+	QVector3D scale = target->get_scale();
 	scale.setY(text.toFloat());
-	focusObject->set_scale(scale);
+	target->set_scale(scale);
 }
 
 void Render::ChangeScaleZ(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D scale = focusObject->get_scale();
+	QVector3D scale = target->get_scale();
 	scale.setZ(text.toFloat());
-	focusObject->set_scale(scale);
+	target->set_scale(scale);
 }
 
 //旋转改变
 void Render::ChangeRotationX(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D rotation = focusObject->get_rotation();
+	QVector3D rotation = target->get_rotation();
 	rotation.setX(text.toFloat());
-	focusObject->set_rotation(rotation);
+	target->set_rotation(rotation);
 }
 
 void Render::ChangeRotationY(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D rotation = focusObject->get_rotation();
+	QVector3D rotation = target->get_rotation();
 	rotation.setY(text.toFloat());
-	focusObject->set_rotation(rotation);
+	target->set_rotation(rotation);
 }
 
 void Render::ChangeRotationZ(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D rotation = focusObject->get_rotation();
+	QVector3D rotation = target->get_rotation();
 	rotation.setZ(text.toFloat());
-	focusObject->set_rotation(rotation);
+	target->set_rotation(rotation);
 }
 
 //颜色改变
 void Render::ChangeColorR(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D color = focusObject->get_color();
+	QVector3D color = target->get_color();
 	color.setX(text.toFloat());
-	focusObject->set_color(color);
+	target->set_color(color);
 }
 
 void Render::ChangeColorG(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D color = focusObject->get_color();
+	QVector3D color = target->get_color();
 	color.setY(text.toFloat());
-	focusObject->set_color(color);
+	target->set_color(color);
 }
 
 void Render::ChangeColorB(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	QVector3D color = focusObject->get_color();
+	QVector3D color = target->get_color();
 	color.setZ(text.toFloat());
-	focusObject->set_color(color);
+	target->set_color(color);
 }
 
 //金属度改变
 void Render::ChangeMetallic(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	focusObject->set_metallic(text.toFloat());
+	target->set_metallic(text.toFloat());
 }
 
 //粗糙度改变
 void Render::ChangeRoughness(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	focusObject->set_roughness(text.toFloat());
+	target->set_roughness(text.toFloat());
 }
 
 //ao改变
 void Render::ChangeAO(const QString& text)
 {
-	if (focusObject == NULL)
+	if (target == NULL)
 		return;
-	focusObject->set_ao(text.toFloat());
+	target->set_ao(text.toFloat());
 }
 
 //功能开关

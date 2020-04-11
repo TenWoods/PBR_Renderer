@@ -189,8 +189,4 @@ void Model::Draw(QOpenGLShaderProgram* shader)
     projection.perspective(m_window->camera.get_zoom(), (float)m_window->width() / (float)m_window->height(), 0.1f, 100.0f);
     shader->setUniformValue("projection", projection);
     shader->release();
-    for (int i = 0; i < meshes.size(); i++)
-    {
-        meshes[i].Draw(shader);
-    }
 }

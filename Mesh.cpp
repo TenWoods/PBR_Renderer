@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Render.h"
 #include <iostream>
+#include "stb_image.h"
 
 Mesh::Mesh() : VAO(0), VBO(0), EBO(0)
 {
@@ -73,4 +74,43 @@ void Mesh::Draw(QOpenGLShaderProgram* shader)
 	//m_window->glDrawArrays(GL_TRIANGLES, 0, sizeof(m_vertices));
 	shader->release();
 	m_window->glActiveTexture(GL_TEXTURE0);
+}
+
+void Mesh::AddTexture(std::string path, TEXTURE_TYPE type)
+{
+	unsigned int tex;
+	m_window->glGenTextures(1, &tex);
+	m_window->glBindTexture(GL_TEXTURE_2D, tex);
+	m_window->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	m_window->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	m_window->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	m_window->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	int width, height, channel;
+	unsigned char* data = stbi_load(path.c_str(), &width, &height, &channel, 0);
+	if (data)
+	{
+		GLenum format = GL_RED;
+		if (channel == 1)
+		{
+			format = GL_RED;
+		}
+		else if (channel == 3)
+		{
+			format = GL_RGB;
+		}
+		else if (channel == 4)
+		{
+			format = GL_RGBA;
+		}
+		m_window->glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		m_window->glGenerateMipmap(GL_TEXTURE_2D);
+		Texture texture = { tex, type, path };
+		textures.push_back(texture);
+	}
+	else
+	{
+		qDebug() << "load texture error";
+	}
+	stbi_image_free(data);
+	m_window->glBindTexture(GL_TEXTURE_2D, 0);
 }

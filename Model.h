@@ -27,5 +27,13 @@ public :
 	{
 
 	}
+	Mesh* get_meshpointer(int index)
+	{
+		return &meshes[index];
+	}
+	int get_meshsize()
+	{
+		return meshes.size();
+	}
 };
 
