@@ -8,7 +8,7 @@ Camera::Camera()
 	right = QVector3D(1.0f, 0.0f, 0.0f);
 	moveSpeed = 1.0f;
 	rotateSpeed = 1.0f;
-	m_zoom = qDegreesToRadians(45.0f);
+	m_zoom = 45.0f;
 }
 
 Camera::Camera(QVector3D pos, QVector3D lookAtPoint, float moves, float rotates, float zoom) : position(pos), moveSpeed(moves), rotateSpeed(rotates), m_zoom(zoom), front(lookAtPoint - pos), 

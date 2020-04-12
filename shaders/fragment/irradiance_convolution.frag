@@ -16,8 +16,8 @@ void main()
 	vec3 right = cross(up, normal);
 	up = cross(normal, right);
 	float sampleDelta = 0.025;
-	float nrSample = 0.0;
-	for (float phi = 0.0; phi < 2.0 * phi; phi += sampleDelta)
+	int nrSample = 0;
+	for (float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
 	{
 		for (float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
 		{
@@ -28,5 +28,6 @@ void main()
 		}
 	}
 	irradiance = PI * irradiance * (1.0 / float(nrSample));
+	//irradiance = texture(environmentMap, normal).rgb;
 	FragColor = vec4(irradiance, 1.0);
 }

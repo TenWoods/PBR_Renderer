@@ -36,8 +36,42 @@ void Render::initializeGL()
 	InitShaderProgram("shaders/vertex/cubemap.vert", "shaders/fragment/equirectangle_to_cubemap.frag", envTocube_shader);
 	//漫反射辐照计算shader
 	InitShaderProgram("shaders/vertex/cubemap.vert", "shaders/fragment/irradiance_convolution.frag", irradiance_shader);
+	//漫反射辐照图PBR shader
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/irradiancePBR.frag", envPBR_notex_shader);
 	//天空盒渲染shader
 	InitShaderProgram("shaders/vertex/background.vert", "shaders/fragment/background.frag", background_shader);
+	
+	/*std::vector<std::string> faces
+	{
+		"skybox/right.jpg",
+		"skybox/left.jpg",
+		"skybox/top.jpg",
+		"skybox/bottom.jpg",
+		"skybox/front.jpg",
+		"skybox/back.jpg"
+	};
+	glGenTextures(1, &envCubeMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		}
+		else
+		{
+			qDebug() << "Cubemap texture failed to load at path: " << i;
+		}
+		stbi_image_free(data);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);*/
+
 	//使用环境贴图的pbr无贴图shader
 	//InitShaderProgram("shaders/vertex/background.vert", "shaders/fragment/background.frag", envPBR_notex_shader);
 
@@ -94,6 +128,10 @@ void Render::paintGL()
 		{
 			shaderProgram = &pbr_notex_shader;
 		}
+		else if (isEnvON)
+		{
+			shaderProgram = &envPBR_notex_shader;
+		}
 		else
 		{
 			shaderProgram = &traditonal_notex_shader;
@@ -108,20 +146,19 @@ void Render::paintGL()
 	{
 		if (isFirstLoadEnv)
 		{
-			qDebug() << "!";
 			glGenFramebuffers(1, &captureFBO);
 			glGenRenderbuffers(1, &captureRBO);
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+			glGenTextures(1, &hdrTexture);
+			glBindTexture(GL_TEXTURE_2D, hdrTexture);
 			stbi_set_flip_vertically_on_load(true);
 			int width, height, nrComponents;
-			float* data = stbi_loadf("Alexs_Apt_Env.hdr", &width, &height, &nrComponents, 0);
+			float* data = stbi_loadf("Alexs_Apt_2k.hdr", &width, &height, &nrComponents, 0);
 			if (data)
 			{
-				glGenTextures(1, &hdrTexture);
-				glBindTexture(GL_TEXTURE_2D, hdrTexture);
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -136,7 +173,7 @@ void Render::paintGL()
 			glGenTextures(1, &envCubeMap);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
 			//给环境立方贴图预留内存
-			for (unsigned int i = 0; i < 6; ++i)
+			for (unsigned int i = 0; i < 6; i++)
 			{
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
 			}
@@ -146,7 +183,7 @@ void Render::paintGL()
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			QMatrix4x4 captureProjection;
-			captureProjection.perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+			captureProjection.perspective(90.0f, 1.0f, 0.1f, 10.0f);
 			QMatrix4x4 captureViews[6];
 			captureViews[0].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
 			captureViews[1].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(-1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
@@ -160,21 +197,21 @@ void Render::paintGL()
 			//将hdr贴图转换为立方贴图
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, hdrTexture);
-			glViewport(0, 0, 512, 512); 
+			glViewport(0, 0, 512, 512);
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-			for (unsigned int i = 0; i < 6; ++i)
+			for (unsigned int i = 0; i < 6; i++)
 			{
-				qDebug() << "1";
 				envTocube_shader.setUniformValue("view", captureViews[i]);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubeMap, 0);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				renderCube();
 			}
+			envTocube_shader.release();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 			glGenTextures(1, &irradianceMap);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
-			for (unsigned int i = 0; i < 6; ++i)
+			for (unsigned int i = 0; i < 6; i++)
 			{
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32, 32, 0, GL_RGB, GL_FLOAT, nullptr);
 			}
@@ -194,7 +231,7 @@ void Render::paintGL()
 			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
 			glViewport(0, 0, 32, 32);
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-			for (unsigned int i = 0; i < 6; ++i)
+			for (unsigned int i = 0; i < 6; i++)
 			{
 				irradiance_shader.setUniformValue("view", captureViews[i]);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
@@ -213,6 +250,12 @@ void Render::paintGL()
 	//把光照信息和相机信息传给shader
 	shaderProgram->bind();
 	shaderProgram->setUniformValue("cameraPos", camera.get_position());
+	if (isEnvON)
+	{
+		shaderProgram->setUniformValue("irradianceMap", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+	}
 	////平行光信息
 	//shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
 	//shaderProgram->setUniformValue("dirLight.ambient", directionLight.get_ambient());
@@ -277,16 +320,15 @@ void Render::paintGL()
 	}
 	if (isEnvON)
 	{
-		qDebug() << "?";
 		//绘制天空盒
 		background_shader.bind();
 		QMatrix4x4 projection;
-		projection.perspective(glm::radians(camera.get_zoom()), (float)width() / (float)height(), 0.1f, 100.0f);
+		projection.perspective(camera.get_zoom(), (float)width() / (float)height(), 0.1f, 100.0f);
 		background_shader.setUniformValue("projection", projection);
 		background_shader.setUniformValue("view", camera.ViewMatrix());
 		background_shader.setUniformValue("environmentMap", 0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
 		renderCube();
 		background_shader.release();
 	}

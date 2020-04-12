@@ -21,7 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment\background.frag" />
+    <None Include="shaders\fragment\basePBRFragment.frag" />
     <None Include="shaders\fragment\equirectangle_to_cubemap.frag" />
+    <None Include="shaders\fragment\irradiancePBR.frag" />
     <None Include="shaders\fragment\irradiance_convolution.frag" />
     <None Include="shaders\fragment\PBRFragment_withtextures.frag" />
     <None Include="shaders\fragment\traditionalFragment_notexture.frag" />
