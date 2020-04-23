@@ -7,7 +7,7 @@
 Render::Render(QWidget* parent)
 	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f),
 	lastFrame(0.0f), deltaTime(0.0f), time(),
-	isFirstMouse(true), isRightMousePress(false), textureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(true),
+	isFirstMouse(true), isRightMousePress(false), isTextureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(true), isPreReflectON(false), isFirstPreCalc(true),
 	lastX(0.0f), lastY(0.0f), target(NULL), loadModelPath(), sceneObjects(), cubeVAO(0), cubeVBO(0)
 {
 	ui.setupUi(this);
@@ -29,7 +29,7 @@ void Render::initializeGL()
 	//传统有贴图
 	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/traditionalFragment_withTexture.frag", traditonal_tex_shader);
 	//PBR无贴图
-	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/basePBRFragment.frag", pbr_notex_shader);
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/final.frag", pbr_notex_shader);
 	//PBR有贴图
 	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/PBRFragment_withtextures.frag", pbr_tex_shader);
 	//hdr贴图转立方贴图shader
@@ -40,6 +40,10 @@ void Render::initializeGL()
 	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/irradiancePBR.frag", envPBR_notex_shader);
 	//天空盒渲染shader
 	InitShaderProgram("shaders/vertex/background.vert", "shaders/fragment/background.frag", background_shader);
+	//预滤波HDR环境贴图 shader
+	InitShaderProgram("shaders/vertex/cubemap.vert", "shaders/fragment/prefilter.frag", prefilter_shader);
+	//预计算brdf贴图shader
+	InitShaderProgram("shaders/vertex/brdf.vert", "shaders/fragment/brdf.frag", brdf_shader);
 	
 	/*std::vector<std::string> faces
 	{
@@ -77,6 +81,7 @@ void Render::initializeGL()
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	//开启计时
 	time.start();
@@ -96,7 +101,9 @@ void Render::initializeGL()
 void Render::paintGL()
 {
 	isEnvON = true;
-	//textureON = true;	//debug
+	isPreReflectON = true;
+	isPBRMaterialON = true;
+	//isTextureON = true;	//debug
 	if (isLoadModel)
 	{
 		Model* model = new Model(loadModelPath, this);
@@ -111,9 +118,9 @@ void Render::paintGL()
 	}
 	update();
 	//判断使用哪种着色器
-	if (textureON)
+	if (isTextureON)
 	{
-		if (PBRMaterialON)
+		if (isPBRMaterialON)
 		{
 			shaderProgram = &pbr_tex_shader;
 		}
@@ -124,7 +131,7 @@ void Render::paintGL()
 	}
 	else
 	{
-		if (PBRMaterialON)
+		if (isPBRMaterialON)
 		{
 			shaderProgram = &pbr_notex_shader;
 		}
@@ -146,100 +153,16 @@ void Render::paintGL()
 	{
 		if (isFirstLoadEnv)
 		{
-			glGenFramebuffers(1, &captureFBO);
-			glGenRenderbuffers(1, &captureRBO);
-			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
-			glGenTextures(1, &hdrTexture);
-			glBindTexture(GL_TEXTURE_2D, hdrTexture);
-			stbi_set_flip_vertically_on_load(true);
-			int width, height, nrComponents;
-			float* data = stbi_loadf("Alexs_Apt_2k.hdr", &width, &height, &nrComponents, 0);
-			if (data)
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				stbi_image_free(data);
-			}
-			else
-			{
-				qDebug() << "faild to load HDR image";
-			}
-			glGenTextures(1, &envCubeMap);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
-			//给环境立方贴图预留内存
-			for (unsigned int i = 0; i < 6; i++)
-			{
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-			}
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			QMatrix4x4 captureProjection;
-			captureProjection.perspective(90.0f, 1.0f, 0.1f, 10.0f);
-			QMatrix4x4 captureViews[6];
-			captureViews[0].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
-			captureViews[1].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(-1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
-			captureViews[2].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
-			captureViews[3].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f));
-			captureViews[4].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.0f, -1.0f, 0.0f));
-			captureViews[5].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f), QVector3D(0.0f, -1.0f, 0.0f));
-			envTocube_shader.bind();
-			envTocube_shader.setUniformValue("equirectangularMap", 0);
-			envTocube_shader.setUniformValue("projection", captureProjection);
-			//将hdr贴图转换为立方贴图
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, hdrTexture);
-			glViewport(0, 0, 512, 512);
-			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-			for (unsigned int i = 0; i < 6; i++)
-			{
-				envTocube_shader.setUniformValue("view", captureViews[i]);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubeMap, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				renderCube();
-			}
-			envTocube_shader.release();
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-			glGenTextures(1, &irradianceMap);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
-			for (unsigned int i = 0; i < 6; i++)
-			{
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32, 32, 0, GL_RGB, GL_FLOAT, nullptr);
-			}
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
-			irradiance_shader.bind();
-			irradiance_shader.setUniformValue("environmentMap", 0);
-			irradiance_shader.setUniformValue("projection", captureProjection);
-			//预计算漫反射辐照
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
-			glViewport(0, 0, 32, 32);
-			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-			for (unsigned int i = 0; i < 6; i++)
-			{
-				irradiance_shader.setUniformValue("view", captureViews[i]);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				renderCube();
-			}
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			Preirradiance();
 			isFirstLoadEnv = false;
+		}
+	}
+	if (isPreReflectON)
+	{
+		if (isFirstPreCalc)
+		{
+			Prereflect();
+			isFirstPreCalc = false;
 		}
 	}
 
@@ -255,6 +178,12 @@ void Render::paintGL()
 		shaderProgram->setUniformValue("irradianceMap", 0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+		shaderProgram->setUniformValue("prefilterMap", 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+		shaderProgram->setUniformValue("brdfLUT", 2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
 	}
 	////平行光信息
 	//shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
@@ -276,7 +205,7 @@ void Render::paintGL()
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].linear").c_str(), pointLights[i].get_linear());
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].quadratic").c_str(), pointLights[i].get_quadratic());
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].ambient").c_str(), pointLights[i].get_ambient());
-		if (PBRMaterialON)
+		if (isPBRMaterialON)
 		{
 			shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(),
 				pointLights[i].get_lightColor() * 60.0f);
@@ -300,7 +229,7 @@ void Render::paintGL()
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].ambient").c_str(), spotLights[i].get_ambient());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].cutOff").c_str(), spotLights[i].get_cutoff());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].cutoffout").c_str(), spotLights[i].get_cutoffout());
-		if (PBRMaterialON)
+		if (isPBRMaterialON)
 		{
 			shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor() * 300.0f);
 		}
@@ -420,13 +349,13 @@ void Render::InitShaderProgram(std::string vertexPath, std::string fragmentPath,
 	bool success = targetShader.addShaderFromSourceFile(QOpenGLShader::Vertex, vertexPath.c_str());
 	if (!success)
 	{
-		qDebug() << "load vertex shader failed!" << targetShader.log();
+		qDebug() << vertexPath.c_str() <<  "load vertex shader failed!" << targetShader.log();
 		return;
 	}
 	success = targetShader.addShaderFromSourceFile(QOpenGLShader::Fragment, fragmentPath.c_str());
 	if (!success)
 	{
-		qDebug() << "load frag shader failed!" << targetShader.log();
+		qDebug() << fragmentPath.c_str() << "load frag shader failed!" << targetShader.log();
 		return;
 	}
 	success = targetShader.link();
@@ -435,6 +364,176 @@ void Render::InitShaderProgram(std::string vertexPath, std::string fragmentPath,
 		qDebug() << "shader program link failed" << targetShader.log();
 		return;
 	}
+}
+
+//间接光照漫反射辐照预计算
+void Render::Preirradiance()
+{
+	glGenFramebuffers(1, &captureFBO);
+	glGenRenderbuffers(1, &captureRBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+	glGenTextures(1, &hdrTexture);
+	glBindTexture(GL_TEXTURE_2D, hdrTexture);
+	stbi_set_flip_vertically_on_load(true);
+	int width, height, nrComponents;
+	float* data = stbi_loadf("Alexs_Apt_2k.hdr", &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		stbi_image_free(data);
+	}
+	else
+	{
+		qDebug() << "faild to load HDR image";
+	}
+	glGenTextures(1, &envCubeMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
+	//给环境立方贴图预留内存
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	QMatrix4x4 captureProjection;
+	captureProjection.perspective(90.0f, 1.0f, 0.1f, 10.0f);
+	QMatrix4x4 captureViews[6];
+	captureViews[0].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	captureViews[1].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(-1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	captureViews[2].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+	captureViews[3].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f));
+	captureViews[4].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	captureViews[5].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	envTocube_shader.bind();
+	envTocube_shader.setUniformValue("equirectangularMap", 0);
+	envTocube_shader.setUniformValue("projection", captureProjection);
+	//将hdr贴图转换为立方贴图
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, hdrTexture);
+	glViewport(0, 0, 512, 512);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		envTocube_shader.setUniformValue("view", captureViews[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubeMap, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderCube();
+	}
+	envTocube_shader.release();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenTextures(1, &irradianceMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32, 32, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+	irradiance_shader.bind();
+	irradiance_shader.setUniformValue("environmentMap", 0);
+	irradiance_shader.setUniformValue("projection", captureProjection);
+	//预计算漫反射辐照
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
+	glViewport(0, 0, 32, 32);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		irradiance_shader.setUniformValue("view", captureViews[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderCube();
+	}
+	irradiance_shader.release();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Render::Prereflect()
+{
+	QMatrix4x4 captureProjection;
+	captureProjection.perspective(90.0f, 1.0f, 0.1f, 10.0f);
+	QMatrix4x4 captureViews[6];
+	captureViews[0].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	captureViews[1].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(-1.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	captureViews[2].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+	captureViews[3].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, -1.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f));
+	captureViews[4].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	captureViews[5].lookAt(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, -1.0f), QVector3D(0.0f, -1.0f, 0.0f));
+	//生成预过滤环境贴图
+	glGenTextures(1, &prefilterMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 128, 128, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	prefilter_shader.bind();
+	prefilter_shader.setUniformValue("projection", captureProjection);
+	prefilter_shader.setUniformValue("environmentMap", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	unsigned int maxMiplevels = 5;
+	for (unsigned int mip = 0; mip < maxMiplevels; mip++)
+	{
+		unsigned int mipWidth = 128 * std::pow(0.5, mip);
+		unsigned int mipHeight = 128 * std::pow(0.5, mip);
+		glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
+		glViewport(0, 0, mipWidth, mipHeight);
+		float roughness = (float)mip / (float)(maxMiplevels - 1);
+		prefilter_shader.setUniformValue("roughness", roughness);
+		for (unsigned int i = 0; i < 6; ++i)
+		{
+			prefilter_shader.setUniformValue("view", captureViews[i]);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap, mip);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			renderCube();
+		}
+	}
+	prefilter_shader.release();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//预计算BRDF
+	glGenTextures(1, &brdfLUTTexture);
+	glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, nullptr);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLUTTexture, 0);
+	glViewport(0, 0, 512, 512);
+	brdf_shader.bind();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	renderQuad();
+	brdf_shader.release();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 //渲染预处理数据用的立方体
@@ -505,6 +604,33 @@ void Render::renderCube()
 	glBindVertexArray(0);
 }
 
+//渲染预处理数据用的平面
+void Render::renderQuad()
+{
+	if (quadVAO == 0)
+	{
+		float quadVertices[] = {
+			// positions        // texture Coords
+			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		};
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	}
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
+}
+
 //设置选中物体
 void Render::set_targetObject(RenderObject* value)
 {
@@ -518,12 +644,12 @@ RenderObject* Render::get_targetObject()
 
 bool Render::get_textureON()
 {
-	return textureON;
+	return isTextureON;
 }
 
 bool Render::get_PBRMaterialON()
 {
-	return PBRMaterialON;
+	return isPBRMaterialON;
 }
 
 //添加物体
@@ -689,10 +815,15 @@ void Render::ChangeAO(const QString& text)
 //功能开关
 void Render::SettextureON(bool value)
 {
-	textureON = value;
+	isTextureON = value;
 }
 
 void Render::SetPBRMaterialON(bool value)
 {
-	PBRMaterialON = value;
+	isPBRMaterialON = value;
+}
+
+void Render::SetIrradianceON(bool value)
+{
+	isEnvON = value;
 }

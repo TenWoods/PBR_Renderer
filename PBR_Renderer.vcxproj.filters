@@ -95,6 +95,18 @@
     <None Include="shaders\fragment\basePBRFragment.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
+    <None Include="shaders\vertex\brdf.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="shaders\fragment\brdf.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\fragment\prefilter.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="shaders\fragment\final.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">

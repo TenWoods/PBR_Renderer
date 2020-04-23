@@ -56,6 +56,7 @@ public slots:
 	void ChangeAO(const QString& text);
 	void SettextureON(bool value);
 	void SetPBRMaterialON(bool value);
+	void SetIrradianceON(bool value);
 
 protected : 
 	void initializeGL() override;
@@ -72,18 +73,26 @@ private:
 	//绘制参数
 	Ui::Render ui;
 	QOpenGLShaderProgram* shaderProgram;
-	QOpenGLShaderProgram traditonal_notex_shader;  //传统光照shader
-	QOpenGLShaderProgram traditonal_tex_shader;    //传统光照带贴图shader
-	QOpenGLShaderProgram pbr_notex_shader;         //pbr无贴图shader
-	QOpenGLShaderProgram pbr_tex_shader;           //pbr有贴图shader
-	QOpenGLShaderProgram envTocube_shader;         //hdr贴图转立方贴图shader
+	QOpenGLShaderProgram traditonal_notex_shader;   //传统光照shader
+	QOpenGLShaderProgram traditonal_tex_shader;     //传统光照带贴图shader
+	QOpenGLShaderProgram pbr_notex_shader;          //pbr无贴图shader
+	QOpenGLShaderProgram pbr_tex_shader;            //pbr有贴图shader
+	QOpenGLShaderProgram envTocube_shader;          //hdr贴图转立方贴图shader
 	QOpenGLShaderProgram irradiance_shader;         //漫反射辐照计算shader
 	QOpenGLShaderProgram background_shader;         //天空盒渲染shader
-	QOpenGLShaderProgram envPBR_notex_shader;            //使用环境贴图的pbr shader
+	QOpenGLShaderProgram envPBR_notex_shader;       //使用环境贴图的pbr shader
+	QOpenGLShaderProgram prefilter_shader;          //预滤波HDR环境贴图 shader
+	QOpenGLShaderProgram brdf_shader;               //预计算brdf贴图 shader
+
 	void InitShaderProgram(std::string vertexPath, std::string fragmentPath, QOpenGLShaderProgram& targetShader);          //初始化着色器
-	void renderCube();
+	void Preirradiance();   //间接光照漫反射辐照预计算  
+	void Prereflect();      //间接光照镜面反射辐照预计算
+	void renderCube();      //预计算用立方体
+	void renderQuad();      //预计算用平面
 	unsigned int cubeVAO;
 	unsigned int cubeVBO;
+	unsigned int quadVAO;
+	unsigned int quadVBO;
 	float lastFrame;
 	float deltaTime;
 	QTime time;
@@ -97,7 +106,6 @@ private:
 	std::vector<SpotLight> spotLights;
 	RenderObject* target;
 	//天空盒与IBL相关参数
-	bool isEnvON;
 	bool isFirstLoadEnv;
 	std::string hdrTexturePath;
 	unsigned int captureFBO;   //中间缓冲帧
@@ -105,9 +113,14 @@ private:
 	unsigned int hdrTexture;    //hdr贴图
 	unsigned int envCubeMap;    //hdr转换后的环境贴图
 	unsigned int irradianceMap; //预计算的漫反射辐照图	
+	unsigned int prefilterMap;
+	unsigned int brdfLUTTexture;
+	bool isPreReflectON;
+	bool isFirstPreCalc;
 	//功能解锁参数
-	bool PBRMaterialON;
-	bool textureON;
+	bool isPBRMaterialON;
+	bool isTextureON;
+	bool isEnvON;
 	//加载模型
 	std::string loadModelPath;
 	//test
