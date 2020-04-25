@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Render_t {
     QByteArrayData data[25];
-    char stringdata0[304];
+    char stringdata0[309];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -55,7 +55,7 @@ QT_MOC_LITERAL(20, 243, 8), // "ChangeAO"
 QT_MOC_LITERAL(21, 252, 12), // "SettextureON"
 QT_MOC_LITERAL(22, 265, 5), // "value"
 QT_MOC_LITERAL(23, 271, 16), // "SetPBRMaterialON"
-QT_MOC_LITERAL(24, 288, 15) // "SetIrradianceON"
+QT_MOC_LITERAL(24, 288, 20) // "SetIndirectDiffuseON"
 
     },
     "Render\0SetMeshUI\0\0Model*\0pointer\0"
@@ -66,7 +66,7 @@ QT_MOC_LITERAL(24, 288, 15) // "SetIrradianceON"
     "ChangeColorR\0ChangeColorG\0ChangeColorB\0"
     "ChangeMetallic\0ChangeRoughness\0ChangeAO\0"
     "SettextureON\0value\0SetPBRMaterialON\0"
-    "SetIrradianceON"
+    "SetIndirectDiffuseON"
 };
 #undef QT_MOC_LITERAL
 
@@ -156,7 +156,7 @@ void Render::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 15: _t->ChangeAO((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 16: _t->SettextureON((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 17: _t->SetPBRMaterialON((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 18: _t->SetIrradianceON((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 18: _t->SetIndirectDiffuseON((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {

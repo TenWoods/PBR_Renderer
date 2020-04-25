@@ -24,12 +24,16 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	//功能开启
 	connect(ui.actionPBRMaterial, &QAction::triggered, ui.render, &Render::SetPBRMaterialON);  //PBR材质功能
 	//connect(ui.actionPBRMaterial, &QAction::triggered, ui.property, &Property::SetProperties);
+	connect(ui.actionindirectDiffuse, &QAction::triggered, ui.render, &Render::SetIndirectDiffuseON);  //间接漫反射功能
+	connect(ui.actionIBL, &QAction::triggered, ui.render, &Render::SetIndirectSpecularON);             //间接镜面反射功能
 	//场景栏点击事件
 	connect(ui.treeView, &QTreeView::clicked, this, &PBR_Renderer::ShowProperties); //单击显示选中物体的属性
 	//教学文档显示
 	connect(ui.actionPartone, &QAction::triggered, this, &PBR_Renderer::ShowPartone);
 	//meshUI生成信号
 	connect(ui.render, &Render::SetMeshUI, this, &PBR_Renderer::SetModelTree);
+	//添加环境贴图
+	connect(ui.envButton, &QPushButton::clicked, this, &PBR_Renderer::AddEnviromentTexture);
 }
 
 void PBR_Renderer::SetModelTree(Model* model)
@@ -71,7 +75,7 @@ void PBR_Renderer::AddCube()
 	cube->setData(cube_data);         //将对应物体指针存储到item中
 	//cube->setData(QVariant(ui.render->AddCube()));  
 	sceneTree->appendRow(cube);
-	cube->appendRow(new QStandardItem("test"));  //TODO:test
+	//cube->appendRow(new QStandardItem("test")); 
 }
 
 void PBR_Renderer::AddModel()
@@ -88,6 +92,14 @@ void PBR_Renderer::ShowProperties(const QModelIndex& index)
 {
 	ui.property->setEnabled(true);
 	RenderObject* target = (RenderObject*)sceneTree->itemFromIndex(index)->data().value<void*>();
+	if (target->get_textures().size() > 0)
+	{
+		qDebug() << target->get_textures()[0].path.c_str();
+	}
+	else
+	{
+		qDebug() << "?";
+	}
 	ui.render->set_targetObject(target);
 	ui.property->SetProperties();
 }
@@ -101,8 +113,29 @@ void PBR_Renderer::ShowPartone()
 	partone->show();
 }
 
+//解锁PBR材质功能
 void PBR_Renderer::UnlockMaterial()
 {
 	ui.actionPBRMaterial->setEnabled(true);
 }
 
+//解锁间接漫反射功能
+void PBR_Renderer::UnlockDiffuse()
+{
+	ui.actionindirectDiffuse->setEnabled(true);
+}
+
+//解锁直接反射功能
+void PBR_Renderer::UnlockSpecular()
+{
+	ui.actionIBL->setEnabled(true);
+}
+
+//添加环境贴图
+void PBR_Renderer::AddEnviromentTexture()
+{
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("选择环境贴图"), "/", QStringLiteral("环境贴图文件 (*.hdr);;所有文件 (*.*);;"));
+	if (path.isEmpty())
+		return;
+	ui.render->AddEnviromentTex(path.toStdString());
+}

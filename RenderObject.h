@@ -52,7 +52,7 @@ protected :
 	QVector3D m_position;
 	QVector3D m_scale;
 	QVector3D m_rotation;
-	std::vector<Texture> textures;
+	std::vector<Texture> m_textures;
 	QVector3D color;
 	float metallic;
 	float roughness;
@@ -80,4 +80,5 @@ public :
 	float get_ao();
 	virtual void AddTexture(std::string path, TEXTURE_TYPE type) = 0;
 	virtual void Draw(QOpenGLShaderProgram* shader) = 0;
+	std::vector<Texture>& get_textures();  //Debug
 };

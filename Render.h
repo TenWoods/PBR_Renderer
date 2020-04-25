@@ -36,6 +36,7 @@ public:
 	RenderObject* AddCube();
 	RenderObject* AddSphere();
 	void AddModel(std::string path, PBR_Renderer* mainwindow);
+	void AddEnviromentTex(std::string path);
 
 
 public slots:
@@ -56,7 +57,9 @@ public slots:
 	void ChangeAO(const QString& text);
 	void SettextureON(bool value);
 	void SetPBRMaterialON(bool value);
-	void SetIrradianceON(bool value);
+	void SetIndirectDiffuseON(bool value);
+	void SetIndirectSpecularON(bool value);
+
 
 protected : 
 	void initializeGL() override;
@@ -83,6 +86,8 @@ private:
 	QOpenGLShaderProgram envPBR_notex_shader;       //使用环境贴图的pbr shader
 	QOpenGLShaderProgram prefilter_shader;          //预滤波HDR环境贴图 shader
 	QOpenGLShaderProgram brdf_shader;               //预计算brdf贴图 shader
+	QOpenGLShaderProgram envPBR_withTexture_shader;      //具有间接漫反射的PBR shader
+	QOpenGLShaderProgram finalWithTexture_shader;              //间接镜面后最终shader
 
 	void InitShaderProgram(std::string vertexPath, std::string fragmentPath, QOpenGLShaderProgram& targetShader);          //初始化着色器
 	void Preirradiance();   //间接光照漫反射辐照预计算  

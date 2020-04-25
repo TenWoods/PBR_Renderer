@@ -8,10 +8,13 @@ Mesh::Mesh() : VAO(0), VBO(0), EBO(0)
 
 }
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Render* window) : m_window(window), m_vertices(vertices), m_indices(indices), m_textures(textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Render* window) : RenderObject(),
+	m_window(window), m_vertices(vertices), m_indices(indices)
 {
+	m_textures = textures;
 	//std::cout << m_vertices.size() << " " << m_indices.size() << std::endl;
 	SetupMesh();
+	isFirst = true;
 }
 
 void Mesh::SetupMesh()
@@ -48,28 +51,72 @@ void Mesh::Draw(QOpenGLShaderProgram* shader)
 {
 	shader->bind();
 	m_window->glBindVertexArray(VAO);
+	int index = 3;
 	for (unsigned int i = 0; i < m_textures.size(); i++)
 	{
 		switch (m_textures[i].type)
 		{
 		case TEXTURE_TYPE::DIFFUSE :
-			shader->setUniformValue("material.texture_diffuse", i);
+			shader->setUniformValue("material.texture_diffuse", index);
+		/*	if (isFirst)
+			{
+				std::cout << textures[i].path << std::endl;
+			}*/
 			break;
 		case TEXTURE_TYPE::NORMAL :
-			shader->setUniformValue("material.texture_normal", i);
+			shader->setUniformValue("material.texture_normal", index);
+		/*	if (isFirst)
+			{
+				std::cout << textures[i].path << std::endl;
+			}*/
 			break;
 		case TEXTURE_TYPE::SPECULAR :
-			shader->setUniformValue("material.texture_specular", i);
+			shader->setUniformValue("material.texture_specular", index);
+			//if (isFirst)
+			//{
+			//	std::cout << textures[i].path << std::endl;
+			//}
 			break;
 		case TEXTURE_TYPE::HEIGHT :
-			shader->setUniformValue("material.texture_height", i);
+			shader->setUniformValue("material.texture_height", index);
+		/*	if (isFirst)
+			{
+				std::cout << textures[i].path << std::endl;
+			}*/
+			break;
+		case TEXTURE_TYPE::AO :
+			shader->setUniformValue("material.texture_ao", index);
+		/*	if (isFirst)
+			{
+				std::cout << textures[i].path << std::endl;
+			}*/
+			break;
+		case TEXTURE_TYPE::METALLIC :
+			shader->setUniformValue("material.texture_metallic", index);
+		/*	if (isFirst)
+			{
+				std::cout << textures[i].path << std::endl;
+			}*/
+			break;
+		case TEXTURE_TYPE::ROUGHNESS:
+			shader->setUniformValue("material.texture_roughness", index);
+	/*		if (isFirst)
+			{
+				std::cout << textures[i].path << std::endl;
+			}*/
 			break;
 		default:
 			break;
 		}
-		m_window->glActiveTexture(GL_TEXTURE0 + i);
+		m_window->glActiveTexture(GL_TEXTURE0 + index);
 		m_window->glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
+		index++;
+		//if (isFirst)
+		//{
+		//	std::cout << textures[i].path << std::endl;
+		//}
 	}
+	isFirst = false;
 	m_window->glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
 	//m_window->glDrawArrays(GL_TRIANGLES, 0, sizeof(m_vertices));
 	shader->release();
@@ -105,7 +152,7 @@ void Mesh::AddTexture(std::string path, TEXTURE_TYPE type)
 		m_window->glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		m_window->glGenerateMipmap(GL_TEXTURE_2D);
 		Texture texture = { tex, type, path };
-		textures.push_back(texture);
+		m_textures.push_back(texture);
 	}
 	else
 	{

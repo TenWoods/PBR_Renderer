@@ -7,7 +7,7 @@
 Render::Render(QWidget* parent)
 	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f),
 	lastFrame(0.0f), deltaTime(0.0f), time(),
-	isFirstMouse(true), isRightMousePress(false), isTextureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(true), isPreReflectON(false), isFirstPreCalc(true),
+	isFirstMouse(true), isRightMousePress(false), isTextureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(false), isPreReflectON(false), isFirstPreCalc(true),
 	lastX(0.0f), lastY(0.0f), target(NULL), loadModelPath(), sceneObjects(), cubeVAO(0), cubeVBO(0)
 {
 	ui.setupUi(this);
@@ -29,7 +29,7 @@ void Render::initializeGL()
 	//传统有贴图
 	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/traditionalFragment_withTexture.frag", traditonal_tex_shader);
 	//PBR无贴图
-	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/final.frag", pbr_notex_shader);
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/basePBRFragment.frag", pbr_notex_shader);
 	//PBR有贴图
 	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/PBRFragment_withtextures.frag", pbr_tex_shader);
 	//hdr贴图转立方贴图shader
@@ -44,6 +44,12 @@ void Render::initializeGL()
 	InitShaderProgram("shaders/vertex/cubemap.vert", "shaders/fragment/prefilter.frag", prefilter_shader);
 	//预计算brdf贴图shader
 	InitShaderProgram("shaders/vertex/brdf.vert", "shaders/fragment/brdf.frag", brdf_shader);
+	//具有间接漫反射有贴图的PBR shader
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/irradiancePBR_withtexture.frag", envPBR_withTexture_shader);
+	//最终无贴图shader
+	
+	//最终有贴图shader
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/final_withtexture.frag", finalWithTexture_shader);
 	
 	/*std::vector<std::string> faces
 	{
@@ -76,9 +82,6 @@ void Render::initializeGL()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);*/
 
-	//使用环境贴图的pbr无贴图shader
-	//InitShaderProgram("shaders/vertex/background.vert", "shaders/fragment/background.frag", envPBR_notex_shader);
-
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -100,9 +103,9 @@ void Render::initializeGL()
 
 void Render::paintGL()
 {
-	isEnvON = true;
-	isPreReflectON = true;
-	isPBRMaterialON = true;
+	//isEnvON = true;
+	//isPreReflectON = true;
+	//isPBRMaterialON = true;
 	//isTextureON = true;	//debug
 	if (isLoadModel)
 	{
@@ -147,7 +150,7 @@ void Render::paintGL()
 	float currentTime = (float)time.elapsed() / 1000;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
-	
+	//shaderProgram = &finalWithTexture_shader;
 	//开启环境贴图的前置渲染数据
 	if (isEnvON)
 	{
@@ -173,18 +176,6 @@ void Render::paintGL()
 	//把光照信息和相机信息传给shader
 	shaderProgram->bind();
 	shaderProgram->setUniformValue("cameraPos", camera.get_position());
-	if (isEnvON)
-	{
-		shaderProgram->setUniformValue("irradianceMap", 0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
-		shaderProgram->setUniformValue("prefilterMap", 1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
-		shaderProgram->setUniformValue("brdfLUT", 2);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
-	}
 	////平行光信息
 	//shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
 	//shaderProgram->setUniformValue("dirLight.ambient", directionLight.get_ambient());
@@ -237,6 +228,21 @@ void Render::paintGL()
 		{
 			shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].lightColor").c_str(), spotLights[i].get_lightColor());
 		}
+	}
+	if (isEnvON)
+	{
+		shaderProgram->setUniformValue("irradianceMap", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+	}
+	if (isPreReflectON)
+	{
+		shaderProgram->setUniformValue("prefilterMap", 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+		shaderProgram->setUniformValue("brdfLUT", 2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
 	}
 	//绘制场景
 	for (int i = 0; i < sceneObjects.size(); i++)
@@ -379,7 +385,7 @@ void Render::Preirradiance()
 	glBindTexture(GL_TEXTURE_2D, hdrTexture);
 	stbi_set_flip_vertically_on_load(true);
 	int width, height, nrComponents;
-	float* data = stbi_loadf("Alexs_Apt_2k.hdr", &width, &height, &nrComponents, 0);
+	float* data = stbi_loadf(hdrTexturePath.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
@@ -463,6 +469,7 @@ void Render::Preirradiance()
 	}
 	irradiance_shader.release();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	stbi_set_flip_vertically_on_load(false);
 }
 
 void Render::Prereflect()
@@ -675,6 +682,12 @@ void Render::AddModel(std::string path, PBR_Renderer* mainwindow)
 	p_mainwindow = mainwindow;
 }
 
+void Render::AddEnviromentTex(std::string path)
+{
+	isFirstLoadEnv = true;
+	hdrTexturePath = path;
+}
+
 //改变属性的槽函数
 //位置改变
 void Render::ChangePositionX(const QString& text)
@@ -823,7 +836,13 @@ void Render::SetPBRMaterialON(bool value)
 	isPBRMaterialON = value;
 }
 
-void Render::SetIrradianceON(bool value)
+void Render::SetIndirectDiffuseON(bool value)
 {
 	isEnvON = value;
+}
+
+void Render::SetIndirectSpecularON(bool value)
+{
+	isEnvON = value;
+	isPreReflectON = value;
 }

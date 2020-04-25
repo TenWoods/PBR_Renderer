@@ -100,3 +100,8 @@ float RenderObject::get_ao()
 {
 	return ao;
 }
+
+std::vector<Texture>& RenderObject::get_textures()
+{
+	return m_textures;
+}

@@ -13,14 +13,13 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDockWidget>
-#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
@@ -64,21 +63,10 @@ public:
     QTreeView *treeView;
     QWidget *skybox;
     QVBoxLayout *verticalLayout_5;
-    QScrollArea *scrollArea;
-    QWidget *scrollAreaWidgetContents;
-    QGridLayout *gridLayout;
-    QLabel *frontLabel;
-    QLabel *rightLabel;
-    QLabel *backSkybox;
-    QLabel *rightSkybox;
-    QLabel *frontSkybox;
-    QLabel *downSkybox;
-    QLabel *downLabel;
-    QLabel *leftSkybox;
-    QLabel *backLabel;
-    QLabel *leftLabel;
-    QLabel *upLabel;
-    QLabel *upSkybox;
+    QWidget *widget;
+    QVBoxLayout *verticalLayout_4;
+    QLabel *label;
+    QPushButton *envButton;
     QDockWidget *informationDockWidget;
     QWidget *informationDockWidgetContent;
     QVBoxLayout *verticalLayout_2;
@@ -111,15 +99,15 @@ public:
         actionPBRMaterial->setObjectName(QString::fromUtf8("actionPBRMaterial"));
         actionPBRMaterial->setCheckable(true);
         actionPBRMaterial->setChecked(false);
-        actionPBRMaterial->setEnabled(false);
+        actionPBRMaterial->setEnabled(true);
         actionindirectDiffuse = new QAction(PBR_RendererClass);
         actionindirectDiffuse->setObjectName(QString::fromUtf8("actionindirectDiffuse"));
         actionindirectDiffuse->setCheckable(true);
-        actionindirectDiffuse->setEnabled(false);
+        actionindirectDiffuse->setEnabled(true);
         actionIBL = new QAction(PBR_RendererClass);
         actionIBL->setObjectName(QString::fromUtf8("actionIBL"));
         actionIBL->setCheckable(true);
-        actionIBL->setEnabled(false);
+        actionIBL->setEnabled(true);
         actionPartone = new QAction(PBR_RendererClass);
         actionPartone->setObjectName(QString::fromUtf8("actionPartone"));
         actionsphere = new QAction(PBR_RendererClass);
@@ -188,79 +176,24 @@ public:
         verticalLayout_5->setContentsMargins(11, 11, 11, 11);
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
         verticalLayout_5->setContentsMargins(0, 0, 0, 0);
-        scrollArea = new QScrollArea(skybox);
-        scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
-        scrollArea->setWidgetResizable(true);
-        scrollAreaWidgetContents = new QWidget();
-        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 270, 351));
-        gridLayout = new QGridLayout(scrollAreaWidgetContents);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        frontLabel = new QLabel(scrollAreaWidgetContents);
-        frontLabel->setObjectName(QString::fromUtf8("frontLabel"));
+        widget = new QWidget(skybox);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        verticalLayout_4 = new QVBoxLayout(widget);
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        label = new QLabel(widget);
+        label->setObjectName(QString::fromUtf8("label"));
 
-        gridLayout->addWidget(frontLabel, 2, 0, 1, 1);
+        verticalLayout_4->addWidget(label);
 
-        rightLabel = new QLabel(scrollAreaWidgetContents);
-        rightLabel->setObjectName(QString::fromUtf8("rightLabel"));
+        envButton = new QPushButton(widget);
+        envButton->setObjectName(QString::fromUtf8("envButton"));
 
-        gridLayout->addWidget(rightLabel, 1, 3, 1, 2);
+        verticalLayout_4->addWidget(envButton);
 
-        backSkybox = new QLabel(scrollAreaWidgetContents);
-        backSkybox->setObjectName(QString::fromUtf8("backSkybox"));
 
-        gridLayout->addWidget(backSkybox, 2, 5, 1, 2);
-
-        rightSkybox = new QLabel(scrollAreaWidgetContents);
-        rightSkybox->setObjectName(QString::fromUtf8("rightSkybox"));
-
-        gridLayout->addWidget(rightSkybox, 1, 5, 1, 2);
-
-        frontSkybox = new QLabel(scrollAreaWidgetContents);
-        frontSkybox->setObjectName(QString::fromUtf8("frontSkybox"));
-
-        gridLayout->addWidget(frontSkybox, 2, 1, 1, 2);
-
-        downSkybox = new QLabel(scrollAreaWidgetContents);
-        downSkybox->setObjectName(QString::fromUtf8("downSkybox"));
-
-        gridLayout->addWidget(downSkybox, 0, 6, 1, 1);
-
-        downLabel = new QLabel(scrollAreaWidgetContents);
-        downLabel->setObjectName(QString::fromUtf8("downLabel"));
-
-        gridLayout->addWidget(downLabel, 0, 4, 1, 2);
-
-        leftSkybox = new QLabel(scrollAreaWidgetContents);
-        leftSkybox->setObjectName(QString::fromUtf8("leftSkybox"));
-
-        gridLayout->addWidget(leftSkybox, 1, 1, 1, 2);
-
-        backLabel = new QLabel(scrollAreaWidgetContents);
-        backLabel->setObjectName(QString::fromUtf8("backLabel"));
-
-        gridLayout->addWidget(backLabel, 2, 3, 1, 2);
-
-        leftLabel = new QLabel(scrollAreaWidgetContents);
-        leftLabel->setObjectName(QString::fromUtf8("leftLabel"));
-
-        gridLayout->addWidget(leftLabel, 1, 0, 1, 1);
-
-        upLabel = new QLabel(scrollAreaWidgetContents);
-        upLabel->setObjectName(QString::fromUtf8("upLabel"));
-
-        gridLayout->addWidget(upLabel, 0, 0, 1, 1);
-
-        upSkybox = new QLabel(scrollAreaWidgetContents);
-        upSkybox->setObjectName(QString::fromUtf8("upSkybox"));
-
-        gridLayout->addWidget(upSkybox, 0, 1, 1, 3);
-
-        scrollArea->setWidget(scrollAreaWidgetContents);
-
-        verticalLayout_5->addWidget(scrollArea);
+        verticalLayout_5->addWidget(widget);
 
         tabWidget_2->addTab(skybox, QString());
 
@@ -341,19 +274,9 @@ public:
         learnMenu->setTitle(QApplication::translate("PBR_RendererClass", "\345\255\246\344\271\240", nullptr));
         sceneDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\345\234\272\346\231\257\344\270\216\345\244\251\347\251\272\347\233\222", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(scene), QApplication::translate("PBR_RendererClass", "\345\234\272\346\231\257", nullptr));
-        frontLabel->setText(QApplication::translate("PBR_RendererClass", "\345\211\215:", nullptr));
-        rightLabel->setText(QApplication::translate("PBR_RendererClass", "\345\217\263:", nullptr));
-        backSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
-        rightSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
-        frontSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
-        downSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
-        downLabel->setText(QApplication::translate("PBR_RendererClass", "\344\270\213:", nullptr));
-        leftSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
-        backLabel->setText(QApplication::translate("PBR_RendererClass", "\345\220\216:", nullptr));
-        leftLabel->setText(QApplication::translate("PBR_RendererClass", "\345\267\246:", nullptr));
-        upLabel->setText(QApplication::translate("PBR_RendererClass", "\344\270\212:", nullptr));
-        upSkybox->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
-        tabWidget_2->setTabText(tabWidget_2->indexOf(skybox), QApplication::translate("PBR_RendererClass", "\345\244\251\347\251\272\347\233\222", nullptr));
+        label->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
+        envButton->setText(QApplication::translate("PBR_RendererClass", "\351\200\211\346\213\251\347\216\257\345\242\203\350\264\264\345\233\276", nullptr));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(skybox), QApplication::translate("PBR_RendererClass", "\347\216\257\345\242\203\350\264\264\345\233\276", nullptr));
         informationDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\345\261\236\346\200\247", nullptr));
     } // retranslateUi
 

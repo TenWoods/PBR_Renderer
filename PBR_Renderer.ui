@@ -137,7 +137,7 @@
        </widget>
        <widget class="QWidget" name="skybox">
         <attribute name="title">
-         <string>天空盒</string>
+         <string>环境贴图</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <property name="leftMargin">
@@ -153,106 +153,23 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QScrollArea" name="scrollArea">
-           <property name="widgetResizable">
-            <bool>true</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>270</width>
-              <height>351</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout">
-             <item row="2" column="0">
-              <widget class="QLabel" name="frontLabel">
-               <property name="text">
-                <string>前:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3" colspan="2">
-              <widget class="QLabel" name="rightLabel">
-               <property name="text">
-                <string>右:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="5" colspan="2">
-              <widget class="QLabel" name="backSkybox">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="5" colspan="2">
-              <widget class="QLabel" name="rightSkybox">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1" colspan="2">
-              <widget class="QLabel" name="frontSkybox">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="6">
-              <widget class="QLabel" name="downSkybox">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="4" colspan="2">
-              <widget class="QLabel" name="downLabel">
-               <property name="text">
-                <string>下:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1" colspan="2">
-              <widget class="QLabel" name="leftSkybox">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="3" colspan="2">
-              <widget class="QLabel" name="backLabel">
-               <property name="text">
-                <string>后:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="leftLabel">
-               <property name="text">
-                <string>左:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="upLabel">
-               <property name="text">
-                <string>上:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1" colspan="3">
-              <widget class="QLabel" name="upSkybox">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+          <widget class="QWidget" name="widget" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="envButton">
+              <property name="text">
+               <string>选择环境贴图</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -357,7 +274,7 @@
     <bool>false</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>PBR材质与直接光照</string>
@@ -368,7 +285,7 @@
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>间接漫反射</string>
@@ -379,7 +296,7 @@
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>IBL间接镜面反射</string>
