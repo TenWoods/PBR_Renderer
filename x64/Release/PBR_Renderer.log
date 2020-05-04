@@ -1,15 +1,2 @@
-﻿  moc Render.h
-  moc PBR_Renderer.h
-  Cube.cpp
-  Mesh.cpp
-  Model.cpp
-  PBR_Renderer.cpp
-  Property.cpp
-  Render.cpp
-  RenderObject.cpp
-  Sphere.cpp
-  StudyResourse.cpp
-  main.cpp
-  moc_PBR_Renderer.cpp
-  moc_Render.cpp
+﻿  Property.cpp
   PBR_Renderer.vcxproj -> C:\WorkPlace\PBR_Renderer\x64\Release\PBR_Renderer.exe

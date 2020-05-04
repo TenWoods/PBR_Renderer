@@ -92,6 +92,7 @@ void main()
     {
         Lo += CalcSpotLight(spotLights[i], normalized_normal, fragPos, viewDir, F0);
     }
+    //间接光照计算
     vec3 F = fresnelSchlickRoughness(max(dot(normalized_normal, viewDir), 0.0), F0, roughness);
     vec3 ks = F;
     vec3 kd = 1.0 - ks;

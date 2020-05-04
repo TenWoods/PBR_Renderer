@@ -88,45 +88,40 @@ public:
     QWidget *diffuseWidget;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_5;
-    QSpacerItem *horizontalSpacer_23;
     QPushButton *diffuseButton;
-    QSpacerItem *horizontalSpacer_9;
-    QWidget *specularWidget;
-    QHBoxLayout *horizontalLayout_6;
-    QLabel *label_7;
-    QSpacerItem *horizontalSpacer_22;
-    QPushButton *specularButton;
-    QSpacerItem *horizontalSpacer_10;
+    QLabel *label_diffuse;
+    QSpacerItem *verticalSpacer;
     QWidget *normalWidget;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_8;
-    QSpacerItem *horizontalSpacer_21;
     QPushButton *normalButton;
-    QSpacerItem *horizontalSpacer_11;
+    QLabel *label_normal;
+    QSpacerItem *verticalSpacer_3;
     QWidget *metallictexWidget;
     QHBoxLayout *horizontalLayout_8;
     QLabel *label_9;
-    QSpacerItem *horizontalSpacer_24;
     QPushButton *metallicButton;
-    QSpacerItem *horizontalSpacer_12;
+    QLabel *label_metallic;
+    QSpacerItem *verticalSpacer_4;
     QWidget *roughnesstexWidget;
     QHBoxLayout *horizontalLayout_7;
     QLabel *label_10;
     QSpacerItem *horizontalSpacer_25;
     QPushButton *roughnessButton;
-    QSpacerItem *horizontalSpacer_13;
+    QLabel *label_roughness;
+    QSpacerItem *verticalSpacer_5;
     QWidget *aotexWidget;
     QHBoxLayout *horizontalLayout_10;
     QLabel *label_6;
-    QSpacerItem *horizontalSpacer_26;
     QPushButton *AOButton;
-    QSpacerItem *horizontalSpacer_14;
+    QLabel *label_ao;
+    QSpacerItem *verticalSpacer_6;
 
     void setupUi(QWidget *Property)
     {
         if (Property->objectName().isEmpty())
             Property->setObjectName(QString::fromUtf8("Property"));
-        Property->resize(278, 351);
+        Property->resize(475, 878);
         Property->setMaximumSize(QSize(475, 16777215));
         verticalLayout = new QVBoxLayout(Property);
         verticalLayout->setSpacing(6);
@@ -138,7 +133,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, -281, 259, 630));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 456, 1068));
         verticalLayout_2 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -416,48 +411,22 @@ public:
 
         horizontalLayout_5->addWidget(label_5);
 
-        horizontalSpacer_23 = new QSpacerItem(13, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        horizontalLayout_5->addItem(horizontalSpacer_23);
-
         diffuseButton = new QPushButton(diffuseWidget);
         diffuseButton->setObjectName(QString::fromUtf8("diffuseButton"));
 
         horizontalLayout_5->addWidget(diffuseButton);
 
-        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        label_diffuse = new QLabel(diffuseWidget);
+        label_diffuse->setObjectName(QString::fromUtf8("label_diffuse"));
 
-        horizontalLayout_5->addItem(horizontalSpacer_9);
+        horizontalLayout_5->addWidget(label_diffuse);
+
+        verticalSpacer = new QSpacerItem(5, 120, QSizePolicy::Minimum, QSizePolicy::Fixed);
+
+        horizontalLayout_5->addItem(verticalSpacer);
 
 
         verticalLayout_2->addWidget(diffuseWidget);
-
-        specularWidget = new QWidget(scrollAreaWidgetContents);
-        specularWidget->setObjectName(QString::fromUtf8("specularWidget"));
-        horizontalLayout_6 = new QHBoxLayout(specularWidget);
-        horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        label_7 = new QLabel(specularWidget);
-        label_7->setObjectName(QString::fromUtf8("label_7"));
-
-        horizontalLayout_6->addWidget(label_7);
-
-        horizontalSpacer_22 = new QSpacerItem(7, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        horizontalLayout_6->addItem(horizontalSpacer_22);
-
-        specularButton = new QPushButton(specularWidget);
-        specularButton->setObjectName(QString::fromUtf8("specularButton"));
-
-        horizontalLayout_6->addWidget(specularButton);
-
-        horizontalSpacer_10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_6->addItem(horizontalSpacer_10);
-
-
-        verticalLayout_2->addWidget(specularWidget);
 
         normalWidget = new QWidget(scrollAreaWidgetContents);
         normalWidget->setObjectName(QString::fromUtf8("normalWidget"));
@@ -470,18 +439,19 @@ public:
 
         horizontalLayout_9->addWidget(label_8);
 
-        horizontalSpacer_21 = new QSpacerItem(67, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        horizontalLayout_9->addItem(horizontalSpacer_21);
-
         normalButton = new QPushButton(normalWidget);
         normalButton->setObjectName(QString::fromUtf8("normalButton"));
 
         horizontalLayout_9->addWidget(normalButton);
 
-        horizontalSpacer_11 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        label_normal = new QLabel(normalWidget);
+        label_normal->setObjectName(QString::fromUtf8("label_normal"));
 
-        horizontalLayout_9->addItem(horizontalSpacer_11);
+        horizontalLayout_9->addWidget(label_normal);
+
+        verticalSpacer_3 = new QSpacerItem(20, 120, QSizePolicy::Minimum, QSizePolicy::Fixed);
+
+        horizontalLayout_9->addItem(verticalSpacer_3);
 
 
         verticalLayout_2->addWidget(normalWidget);
@@ -497,18 +467,19 @@ public:
 
         horizontalLayout_8->addWidget(label_9);
 
-        horizontalSpacer_24 = new QSpacerItem(7, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        horizontalLayout_8->addItem(horizontalSpacer_24);
-
         metallicButton = new QPushButton(metallictexWidget);
         metallicButton->setObjectName(QString::fromUtf8("metallicButton"));
 
         horizontalLayout_8->addWidget(metallicButton);
 
-        horizontalSpacer_12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        label_metallic = new QLabel(metallictexWidget);
+        label_metallic->setObjectName(QString::fromUtf8("label_metallic"));
 
-        horizontalLayout_8->addItem(horizontalSpacer_12);
+        horizontalLayout_8->addWidget(label_metallic);
+
+        verticalSpacer_4 = new QSpacerItem(20, 120, QSizePolicy::Minimum, QSizePolicy::Fixed);
+
+        horizontalLayout_8->addItem(verticalSpacer_4);
 
 
         verticalLayout_2->addWidget(metallictexWidget);
@@ -533,9 +504,14 @@ public:
 
         horizontalLayout_7->addWidget(roughnessButton);
 
-        horizontalSpacer_13 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        label_roughness = new QLabel(roughnesstexWidget);
+        label_roughness->setObjectName(QString::fromUtf8("label_roughness"));
 
-        horizontalLayout_7->addItem(horizontalSpacer_13);
+        horizontalLayout_7->addWidget(label_roughness);
+
+        verticalSpacer_5 = new QSpacerItem(20, 120, QSizePolicy::Minimum, QSizePolicy::Fixed);
+
+        horizontalLayout_7->addItem(verticalSpacer_5);
 
 
         verticalLayout_2->addWidget(roughnesstexWidget);
@@ -551,18 +527,19 @@ public:
 
         horizontalLayout_10->addWidget(label_6);
 
-        horizontalSpacer_26 = new QSpacerItem(42, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        horizontalLayout_10->addItem(horizontalSpacer_26);
-
         AOButton = new QPushButton(aotexWidget);
         AOButton->setObjectName(QString::fromUtf8("AOButton"));
 
         horizontalLayout_10->addWidget(AOButton);
 
-        horizontalSpacer_14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        label_ao = new QLabel(aotexWidget);
+        label_ao->setObjectName(QString::fromUtf8("label_ao"));
 
-        horizontalLayout_10->addItem(horizontalSpacer_14);
+        horizontalLayout_10->addWidget(label_ao);
+
+        verticalSpacer_6 = new QSpacerItem(20, 120, QSizePolicy::Minimum, QSizePolicy::Fixed);
+
+        horizontalLayout_10->addItem(verticalSpacer_6);
 
 
         verticalLayout_2->addWidget(aotexWidget);
@@ -600,18 +577,21 @@ public:
         label_2->setText(QApplication::translate("Property", "Metallic", nullptr));
         label_3->setText(QApplication::translate("Property", "Roughness", nullptr));
         label_4->setText(QApplication::translate("Property", "AO", nullptr));
-        label_5->setText(QApplication::translate("Property", "Diffuse Texture", nullptr));
+        label_5->setText(QApplication::translate("Property", "Diffuse", nullptr));
         diffuseButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
-        label_7->setText(QApplication::translate("Property", "Specular Texture", nullptr));
-        specularButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        label_diffuse->setText(QString());
         label_8->setText(QApplication::translate("Property", "Normal", nullptr));
         normalButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
-        label_9->setText(QApplication::translate("Property", "Metallic Texture", nullptr));
+        label_normal->setText(QString());
+        label_9->setText(QApplication::translate("Property", "Metallic ", nullptr));
         metallicButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
-        label_10->setText(QApplication::translate("Property", "Roughness Texture", nullptr));
+        label_metallic->setText(QString());
+        label_10->setText(QApplication::translate("Property", "Roughness", nullptr));
         roughnessButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
-        label_6->setText(QApplication::translate("Property", "AO Texture", nullptr));
+        label_roughness->setText(QString());
+        label_6->setText(QApplication::translate("Property", "AO ", nullptr));
         AOButton->setText(QApplication::translate("Property", "\351\200\211\346\213\251\350\264\264\345\233\276", nullptr));
+        label_ao->setText(QString());
     } // retranslateUi
 
 };

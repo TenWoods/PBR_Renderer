@@ -87,11 +87,15 @@ private:
 	QOpenGLShaderProgram prefilter_shader;          //预滤波HDR环境贴图 shader
 	QOpenGLShaderProgram brdf_shader;               //预计算brdf贴图 shader
 	QOpenGLShaderProgram envPBR_withTexture_shader;      //具有间接漫反射的PBR shader
-	QOpenGLShaderProgram finalWithTexture_shader;              //间接镜面后最终shader
+	QOpenGLShaderProgram final_notex_shader;
+	QOpenGLShaderProgram final_withtexture_shader;              //间接镜面后最终shader
+	QOpenGLShaderProgram depth_texture;              //生成深度图shader
+
 
 	void InitShaderProgram(std::string vertexPath, std::string fragmentPath, QOpenGLShaderProgram& targetShader);          //初始化着色器
 	void Preirradiance();   //间接光照漫反射辐照预计算  
 	void Prereflect();      //间接光照镜面反射辐照预计算
+	void Depth();           //生成深度图
 	void renderCube();      //预计算用立方体
 	void renderQuad();      //预计算用平面
 	unsigned int cubeVAO;

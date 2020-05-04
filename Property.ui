@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>278</width>
-    <height>351</height>
+    <width>475</width>
+    <height>878</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -20,6 +20,9 @@
    <string>Property</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -41,9 +44,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-281</y>
-        <width>259</width>
-        <height>630</height>
+        <y>0</y>
+        <width>456</width>
+        <height>1068</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -507,25 +510,9 @@
           <item>
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Diffuse Texture</string>
+             <string>Diffuse</string>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_23">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>13</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="diffuseButton">
@@ -535,63 +522,24 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QWidget" name="specularWidget" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="label_diffuse">
             <property name="text">
-             <string>Specular Texture</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_22">
+           <spacer name="verticalSpacer">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeType">
              <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>7</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="specularButton">
-            <property name="text">
-             <string>选择贴图</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_10">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
+              <width>5</width>
+              <height>120</height>
              </size>
             </property>
            </spacer>
@@ -610,22 +558,6 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_21">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>67</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
            <widget class="QPushButton" name="normalButton">
             <property name="text">
              <string>选择贴图</string>
@@ -633,14 +565,24 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_11">
+           <widget class="QLabel" name="label_normal">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>120</height>
              </size>
             </property>
            </spacer>
@@ -654,25 +596,9 @@
           <item>
            <widget class="QLabel" name="label_9">
             <property name="text">
-             <string>Metallic Texture</string>
+             <string>Metallic </string>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_24">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>7</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="metallicButton">
@@ -682,14 +608,24 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_12">
+           <widget class="QLabel" name="label_metallic">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_4">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>120</height>
              </size>
             </property>
            </spacer>
@@ -703,7 +639,7 @@
           <item>
            <widget class="QLabel" name="label_10">
             <property name="text">
-             <string>Roughness Texture</string>
+             <string>Roughness</string>
             </property>
            </widget>
           </item>
@@ -731,14 +667,24 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_13">
+           <widget class="QLabel" name="label_roughness">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>120</height>
              </size>
             </property>
            </spacer>
@@ -752,25 +698,9 @@
           <item>
            <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>AO Texture</string>
+             <string>AO </string>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_26">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>42</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="AOButton">
@@ -780,14 +710,24 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_14">
+           <widget class="QLabel" name="label_ao">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_6">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>120</height>
              </size>
             </property>
            </spacer>

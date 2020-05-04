@@ -92,14 +92,6 @@ void PBR_Renderer::ShowProperties(const QModelIndex& index)
 {
 	ui.property->setEnabled(true);
 	RenderObject* target = (RenderObject*)sceneTree->itemFromIndex(index)->data().value<void*>();
-	if (target->get_textures().size() > 0)
-	{
-		qDebug() << target->get_textures()[0].path.c_str();
-	}
-	else
-	{
-		qDebug() << "?";
-	}
 	ui.render->set_targetObject(target);
 	ui.property->SetProperties();
 }

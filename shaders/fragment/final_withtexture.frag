@@ -64,6 +64,8 @@ uniform sampler2D brdfLUT;
 
 const float PI = 3.14159265359;
 
+//获取法线数据
+vec3 GetNormalData();
 //定向光计算
 vec3 CalcDirectLight(DirectionLight light, vec3 normal, vec3 viewDir, vec3 F0, vec3 albedo, float metallic, float roughness, float ao);
 //点光源计算
@@ -87,7 +89,7 @@ void main()
     float metallic = texture(material.texture_metallic, texcoord).r;
     float roughness = texture(material.texture_roughness, texcoord).r;
     float ao = texture(material.texture_ao, texcoord).r;
-    vec3 normalized_normal = normalize(normal);
+    vec3 normalized_normal = GetNormalData();
     vec3 viewDir = normalize(cameraPos - fragPos);
     vec3 reflectDir = reflect(-viewDir, normalized_normal); 
     vec3 Lo = vec3(0.0);
@@ -123,6 +125,24 @@ void main()
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0 / 2.2));
     FragColor = vec4(color, 1.0);
+}
+
+//从法线贴图读取数据
+vec3 GetNormalData()
+{
+    vec3 tangentNormal = texture(material.texture_normal, texcoord).xyz * 2.0 - 1.0;
+
+    vec3 Q1  = dFdx(fragPos);
+    vec3 Q2  = dFdy(fragPos);
+    vec2 st1 = dFdx(texcoord);
+    vec2 st2 = dFdy(texcoord);
+
+    vec3 N   = normalize(normal);
+    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B  = -normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+
+    return normalize(TBN * tangentNormal);
 }
 
 //法线分布函数

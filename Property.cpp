@@ -17,7 +17,6 @@ Property::Property(QWidget *parent)
 	connect(ui.aoEdit, &QLineEdit::textChanged, this, &Property::AOSliderFromEdit);
 	//贴图按键连接
 	connect(ui.diffuseButton, &QPushButton::clicked, this, &Property::SetDiffuseButtonON);
-	connect(ui.specularButton, &QPushButton::clicked, this, &Property::SetSpecularButtonON);
 	connect(ui.normalButton, &QPushButton::clicked, this, &Property::SetNormalButtonON);
 	connect(ui.metallicButton, &QPushButton::clicked, this, &Property::SetMetallicButtonON);
 	connect(ui.roughnessButton, &QPushButton::clicked, this, &Property::SetRoughnessButtonON);
@@ -64,7 +63,6 @@ void Property::SetProperties()
 	//根据功能开放程度开放调节栏
 	if (render->get_PBRMaterialON())  //开启pbr材质功能
 	{
-		ui.specularWidget->setEnabled(false);
 		if (render->get_textureON())  //有贴图
 		{
 			ui.metallicWidget->setEnabled(false);
@@ -93,14 +91,6 @@ void Property::SetProperties()
 		ui.metallictexWidget->setEnabled(false);
 		ui.roughnesstexWidget->setEnabled(false);
 		ui.aotexWidget->setEnabled(false);
-		if (render->get_textureON())
-		{
-			ui.specularWidget->setEnabled(true);
-		}
-		else
-		{
-			ui.specularWidget->setEnabled(false);
-		}
 	}
 	if (render->get_textureON())  //开启贴图功能
 	{
@@ -140,7 +130,41 @@ void Property::SetProperties()
 	ui.metallicSlider->setValue((int)(target->get_metallic() * 100));
 	ui.roughnessSlider->setValue((int)(target->get_roughness() * 100));
 	ui.aoSlider->setValue((int)(target->get_ao() * 100));
-	
+	//设置贴图预览
+	auto textures = target->get_textures();
+	for (int i = 0; i < textures.size(); i++)
+	{
+		QPixmap tex;
+		QPixmap fittex;
+		switch (textures[i].type)
+		{
+		case TEXTURE_TYPE::DIFFUSE:
+			tex = QPixmap(textures[i].path.c_str());
+			fittex = tex.scaled(ui.label_diffuse->size(), Qt::KeepAspectRatio);
+			ui.label_diffuse->setPixmap(fittex);
+			break;
+		case TEXTURE_TYPE::NORMAL:
+			tex = QPixmap(textures[i].path.c_str());
+			fittex = tex.scaled(ui.label_normal->size(), Qt::KeepAspectRatio);
+			ui.label_normal->setPixmap(fittex);
+			break;
+		case TEXTURE_TYPE::METALLIC:
+			tex = QPixmap(textures[i].path.c_str());
+			fittex = tex.scaled(ui.label_metallic->size(), Qt::KeepAspectRatio);
+			ui.label_metallic->setPixmap(fittex);
+			break;
+		case TEXTURE_TYPE::ROUGHNESS:
+			tex = QPixmap(textures[i].path.c_str());
+			fittex = tex.scaled(ui.label_roughness->size(), Qt::KeepAspectRatio);
+			ui.label_roughness->setPixmap(fittex);
+			break;
+		case TEXTURE_TYPE::AO:
+			tex = QPixmap(textures[i].path.c_str());
+			fittex = tex.scaled(ui.label_ao->size(), Qt::KeepAspectRatio);
+			ui.label_ao->setPixmap(fittex);
+			break;
+		}
+	}
 }
 
 void Property::set_render(Render* value)
@@ -186,6 +210,9 @@ void Property::SetDiffuseButtonON()
 	if (path.isEmpty())
 		return;
 	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::DIFFUSE);
+	QPixmap tex(path);
+	QPixmap fittex = tex.scaled(ui.label_diffuse->size(), Qt::KeepAspectRatio);
+	ui.label_diffuse->setPixmap(fittex);
 }
 
 void Property::SetSpecularButtonON()
@@ -202,6 +229,9 @@ void Property::SetNormalButtonON()
 	if (path.isEmpty())
 		return;
 	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::NORMAL);
+	QPixmap tex(path);
+	QPixmap fittex = tex.scaled(ui.label_normal->size(), Qt::KeepAspectRatio);
+	ui.label_normal->setPixmap(fittex);
 }
 
 void Property::SetMetallicButtonON()
@@ -210,6 +240,9 @@ void Property::SetMetallicButtonON()
 	if (path.isEmpty())
 		return;
 	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::METALLIC);
+	QPixmap tex(path);
+	QPixmap fittex = tex.scaled(ui.label_metallic->size(), Qt::KeepAspectRatio);
+	ui.label_metallic->setPixmap(fittex);
 }
 
 void Property::SetRoughnessButtonON()
@@ -218,6 +251,9 @@ void Property::SetRoughnessButtonON()
 	if (path.isEmpty())
 		return;
 	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::ROUGHNESS);
+	QPixmap tex(path);
+	QPixmap fittex = tex.scaled(ui.label_roughness->size(), Qt::KeepAspectRatio);
+	ui.label_roughness->setPixmap(fittex);
 }
 
 void Property::SetAOButtonON()
@@ -226,4 +262,7 @@ void Property::SetAOButtonON()
 	if (path.isEmpty())
 		return;
 	render->get_targetObject()->AddTexture(path.toStdString(), TEXTURE_TYPE::AO);
+	QPixmap tex(path);
+	QPixmap fittex = tex.scaled(ui.label_ao->size(), Qt::KeepAspectRatio);
+	ui.label_ao->setPixmap(fittex);
 }

@@ -7,7 +7,7 @@
 Render::Render(QWidget* parent)
 	: QOpenGLWidget(parent), camera(QVector3D(0.0f, 0.0f, 2.0f), QVector3D(0.0f, 0.0f, 0.0f), 5.0f, 0.1f, 45.0f),
 	lastFrame(0.0f), deltaTime(0.0f), time(),
-	isFirstMouse(true), isRightMousePress(false), isTextureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(false), isPreReflectON(false), isFirstPreCalc(true),
+	isFirstMouse(true), isRightMousePress(false), isTextureON(false), isLoadModel(false), isEnvON(false), isFirstLoadEnv(false), isPreReflectON(true), isFirstPreCalc(true),
 	lastX(0.0f), lastY(0.0f), target(NULL), loadModelPath(), sceneObjects(), cubeVAO(0), cubeVBO(0)
 {
 	ui.setupUi(this);
@@ -47,9 +47,9 @@ void Render::initializeGL()
 	//具有间接漫反射有贴图的PBR shader
 	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/irradiancePBR_withtexture.frag", envPBR_withTexture_shader);
 	//最终无贴图shader
-	
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/final.frag", final_notex_shader);
 	//最终有贴图shader
-	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/final_withtexture.frag", finalWithTexture_shader);
+	InitShaderProgram("shaders/vertex/baseVertex.vert", "shaders/fragment/final_withtexture.frag", final_withtexture_shader);
 	
 	/*std::vector<std::string> faces
 	{
@@ -94,15 +94,16 @@ void Render::initializeGL()
 	/*directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));*/
 	//点光源
 	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	/*pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
 	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));*/
 	//聚光
 	/*spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));*/
 }
 
 void Render::paintGL()
 {
+	update();
 	//isEnvON = true;
 	//isPreReflectON = true;
 	//isPBRMaterialON = true;
@@ -119,13 +120,24 @@ void Render::paintGL()
 		emit SetMeshUI(model);
 		isLoadModel = false;
 	}
-	update();
 	//判断使用哪种着色器
 	if (isTextureON)
 	{
-		if (isPBRMaterialON)
+		if (isPBRMaterialON && !isEnvON)
 		{
 			shaderProgram = &pbr_tex_shader;
+		}
+		else if (isEnvON)
+		{
+			if (isPreReflectON)
+			{
+				//qDebug() << "tex final";
+				shaderProgram = &final_withtexture_shader;
+			}
+			else
+			{
+				shaderProgram = &envPBR_withTexture_shader;
+			}
 		}
 		else
 		{
@@ -134,13 +146,21 @@ void Render::paintGL()
 	}
 	else
 	{
-		if (isPBRMaterialON)
+		if (isPBRMaterialON && !isEnvON)
 		{
 			shaderProgram = &pbr_notex_shader;
 		}
 		else if (isEnvON)
 		{
-			shaderProgram = &envPBR_notex_shader;
+			if (isPreReflectON)
+			{
+				//qDebug() << "notex final";
+				shaderProgram = &final_notex_shader;
+			}
+			else
+			{
+				shaderProgram = &envPBR_notex_shader;
+			}
 		}
 		else
 		{
@@ -150,22 +170,20 @@ void Render::paintGL()
 	float currentTime = (float)time.elapsed() / 1000;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
-	//shaderProgram = &finalWithTexture_shader;
+	//shaderProgram = &final_notex_shader;
 	//开启环境贴图的前置渲染数据
 	if (isEnvON)
 	{
 		if (isFirstLoadEnv)
 		{
 			Preirradiance();
-			isFirstLoadEnv = false;
 		}
 	}
 	if (isPreReflectON)
 	{
-		if (isFirstPreCalc)
+		if (isFirstPreCalc && !isFirstLoadEnv)
 		{
 			Prereflect();
-			isFirstPreCalc = false;
 		}
 	}
 
@@ -398,6 +416,7 @@ void Render::Preirradiance()
 	else
 	{
 		qDebug() << "faild to load HDR image";
+		return;
 	}
 	glGenTextures(1, &envCubeMap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubeMap);
@@ -470,6 +489,7 @@ void Render::Preirradiance()
 	irradiance_shader.release();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	stbi_set_flip_vertically_on_load(false);
+	isFirstLoadEnv = false;
 }
 
 void Render::Prereflect()
@@ -541,6 +561,7 @@ void Render::Prereflect()
 	renderQuad();
 	brdf_shader.release();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	isFirstPreCalc = false;
 }
 
 //渲染预处理数据用的立方体
@@ -685,6 +706,7 @@ void Render::AddModel(std::string path, PBR_Renderer* mainwindow)
 void Render::AddEnviromentTex(std::string path)
 {
 	isFirstLoadEnv = true;
+	isFirstPreCalc = true;
 	hdrTexturePath = path;
 }
 
@@ -839,10 +861,13 @@ void Render::SetPBRMaterialON(bool value)
 void Render::SetIndirectDiffuseON(bool value)
 {
 	isEnvON = value;
+	isFirstLoadEnv = true;
 }
 
 void Render::SetIndirectSpecularON(bool value)
 {
 	isEnvON = value;
 	isPreReflectON = value;
+	isFirstLoadEnv = true;
+	isFirstPreCalc = true;
 }
