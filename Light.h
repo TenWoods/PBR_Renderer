@@ -8,17 +8,18 @@ private :
 	QVector3D m_ambient;
 
 public : 
-	Light() : m_lightColor(0.0f, 0.0f, 0.0f), m_ambient(0.0f, 0.0f, 0.0f)
+	bool isOn;
+	Light() : m_lightColor(0.0f, 0.0f, 0.0f), m_ambient(0.0f, 0.0f, 0.0f), isOn(true)
+	{
+		
+	}
+
+	Light(QVector3D lightColor, QVector3D ambient) : m_lightColor(lightColor), m_ambient(ambient), isOn(true)
 	{
 
 	}
 
-	Light(QVector3D lightColor, QVector3D ambient) : m_lightColor(lightColor), m_ambient(ambient)
-	{
-
-	}
-
-	void set_diffuse(QVector3D value)
+	void set_color(QVector3D value)
 	{
 		m_lightColor = value;
 	}

@@ -24,6 +24,7 @@ public slots:
 	void UnlockSpecular();
 	void AddModel();
 	void AddEnviromentTexture();
+	void SetLightData(int i);
 	
 private:
 	Ui::PBR_RendererClass ui;

@@ -14,7 +14,7 @@
    <string>PBR教学渲染器</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
      <widget class="Render" name="render"/>
     </item>
@@ -47,8 +47,6 @@
     <addaction name="actionLoadModel"/>
     <addaction name="menu_2"/>
     <addaction name="separator"/>
-    <addaction name="actionNewTexture"/>
-    <addaction name="actionLoadTexture"/>
    </widget>
    <widget class="QMenu" name="functionMenu">
     <property name="title">
@@ -137,7 +135,7 @@
        </widget>
        <widget class="QWidget" name="skybox">
         <attribute name="title">
-         <string>环境贴图</string>
+         <string>环境贴图与光源</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <property name="leftMargin">
@@ -155,11 +153,158 @@
          <item>
           <widget class="QWidget" name="widget" native="true">
            <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>TextLabel</string>
+             <widget class="QScrollArea" name="scrollArea">
+              <property name="widgetResizable">
+               <bool>true</bool>
               </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>308</width>
+                 <height>322</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_8">
+                <item>
+                 <widget class="QWidget" name="widget_2" native="true">
+                  <layout class="QVBoxLayout" name="verticalLayout_7">
+                   <item>
+                    <widget class="QRadioButton" name="radioButton_pointlight1">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="text">
+                      <string>点光源1</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="widget_6" native="true">
+                     <layout class="QHBoxLayout" name="horizontalLayout">
+                      <item>
+                       <widget class="QLabel" name="label">
+                        <property name="text">
+                         <string>position</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p1px"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p1py"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p1pz"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="widget_3" native="true">
+                     <layout class="QHBoxLayout" name="horizontalLayout_2">
+                      <item>
+                       <widget class="QLabel" name="label_2">
+                        <property name="text">
+                         <string>color</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p1cr"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p1cg"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p1cb"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QWidget" name="widget_4" native="true">
+                  <layout class="QVBoxLayout" name="verticalLayout_9">
+                   <item>
+                    <widget class="QRadioButton" name="radioButton_pointlight2">
+                     <property name="text">
+                      <string>点光源2</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="widget_7" native="true">
+                     <layout class="QHBoxLayout" name="horizontalLayout_3">
+                      <item>
+                       <widget class="QLabel" name="label_3">
+                        <property name="text">
+                         <string>position</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p2px"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p2py"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p2pz"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="widget_5" native="true">
+                     <layout class="QHBoxLayout" name="horizontalLayout_4">
+                      <item>
+                       <widget class="QLabel" name="label_4">
+                        <property name="text">
+                         <string>color</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p2cr"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p2cg"/>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_p2cb"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
             <item>

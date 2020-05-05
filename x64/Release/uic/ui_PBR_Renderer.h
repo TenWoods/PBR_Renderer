@@ -16,10 +16,13 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
@@ -47,7 +50,7 @@ public:
     QAction *actionParttwo;
     QAction *actionPartthree;
     QWidget *centralWidget;
-    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_6;
     Render *render;
     QMenuBar *menuBar;
     QMenu *menu;
@@ -65,7 +68,39 @@ public:
     QVBoxLayout *verticalLayout_5;
     QWidget *widget;
     QVBoxLayout *verticalLayout_4;
+    QScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
+    QVBoxLayout *verticalLayout_8;
+    QWidget *widget_2;
+    QVBoxLayout *verticalLayout_7;
+    QRadioButton *radioButton_pointlight1;
+    QWidget *widget_6;
+    QHBoxLayout *horizontalLayout;
     QLabel *label;
+    QLineEdit *lineEdit_p1px;
+    QLineEdit *lineEdit_p1py;
+    QLineEdit *lineEdit_p1pz;
+    QWidget *widget_3;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_2;
+    QLineEdit *lineEdit_p1cr;
+    QLineEdit *lineEdit_p1cg;
+    QLineEdit *lineEdit_p1cb;
+    QWidget *widget_4;
+    QVBoxLayout *verticalLayout_9;
+    QRadioButton *radioButton_pointlight2;
+    QWidget *widget_7;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *label_3;
+    QLineEdit *lineEdit_p2px;
+    QLineEdit *lineEdit_p2py;
+    QLineEdit *lineEdit_p2pz;
+    QWidget *widget_5;
+    QHBoxLayout *horizontalLayout_4;
+    QLabel *label_4;
+    QLineEdit *lineEdit_p2cr;
+    QLineEdit *lineEdit_p2cg;
+    QLineEdit *lineEdit_p2cb;
     QPushButton *envButton;
     QDockWidget *informationDockWidget;
     QWidget *informationDockWidgetContent;
@@ -120,14 +155,14 @@ public:
         actionPartthree->setObjectName(QString::fromUtf8("actionPartthree"));
         centralWidget = new QWidget(PBR_RendererClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        horizontalLayout = new QHBoxLayout(centralWidget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        verticalLayout_6 = new QVBoxLayout(centralWidget);
+        verticalLayout_6->setSpacing(6);
+        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
         render = new Render(centralWidget);
         render->setObjectName(QString::fromUtf8("render"));
 
-        horizontalLayout->addWidget(render);
+        verticalLayout_6->addWidget(render);
 
         PBR_RendererClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PBR_RendererClass);
@@ -182,10 +217,167 @@ public:
         verticalLayout_4->setSpacing(6);
         verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        label = new QLabel(widget);
+        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
+        scrollArea = new QScrollArea(widget);
+        scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 308, 322));
+        verticalLayout_8 = new QVBoxLayout(scrollAreaWidgetContents);
+        verticalLayout_8->setSpacing(6);
+        verticalLayout_8->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
+        widget_2 = new QWidget(scrollAreaWidgetContents);
+        widget_2->setObjectName(QString::fromUtf8("widget_2"));
+        verticalLayout_7 = new QVBoxLayout(widget_2);
+        verticalLayout_7->setSpacing(6);
+        verticalLayout_7->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        radioButton_pointlight1 = new QRadioButton(widget_2);
+        radioButton_pointlight1->setObjectName(QString::fromUtf8("radioButton_pointlight1"));
+        radioButton_pointlight1->setEnabled(true);
+        radioButton_pointlight1->setChecked(true);
+
+        verticalLayout_7->addWidget(radioButton_pointlight1);
+
+        widget_6 = new QWidget(widget_2);
+        widget_6->setObjectName(QString::fromUtf8("widget_6"));
+        horizontalLayout = new QHBoxLayout(widget_6);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        label = new QLabel(widget_6);
         label->setObjectName(QString::fromUtf8("label"));
 
-        verticalLayout_4->addWidget(label);
+        horizontalLayout->addWidget(label);
+
+        lineEdit_p1px = new QLineEdit(widget_6);
+        lineEdit_p1px->setObjectName(QString::fromUtf8("lineEdit_p1px"));
+
+        horizontalLayout->addWidget(lineEdit_p1px);
+
+        lineEdit_p1py = new QLineEdit(widget_6);
+        lineEdit_p1py->setObjectName(QString::fromUtf8("lineEdit_p1py"));
+
+        horizontalLayout->addWidget(lineEdit_p1py);
+
+        lineEdit_p1pz = new QLineEdit(widget_6);
+        lineEdit_p1pz->setObjectName(QString::fromUtf8("lineEdit_p1pz"));
+
+        horizontalLayout->addWidget(lineEdit_p1pz);
+
+
+        verticalLayout_7->addWidget(widget_6);
+
+        widget_3 = new QWidget(widget_2);
+        widget_3->setObjectName(QString::fromUtf8("widget_3"));
+        horizontalLayout_2 = new QHBoxLayout(widget_3);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_2 = new QLabel(widget_3);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        horizontalLayout_2->addWidget(label_2);
+
+        lineEdit_p1cr = new QLineEdit(widget_3);
+        lineEdit_p1cr->setObjectName(QString::fromUtf8("lineEdit_p1cr"));
+
+        horizontalLayout_2->addWidget(lineEdit_p1cr);
+
+        lineEdit_p1cg = new QLineEdit(widget_3);
+        lineEdit_p1cg->setObjectName(QString::fromUtf8("lineEdit_p1cg"));
+
+        horizontalLayout_2->addWidget(lineEdit_p1cg);
+
+        lineEdit_p1cb = new QLineEdit(widget_3);
+        lineEdit_p1cb->setObjectName(QString::fromUtf8("lineEdit_p1cb"));
+
+        horizontalLayout_2->addWidget(lineEdit_p1cb);
+
+
+        verticalLayout_7->addWidget(widget_3);
+
+
+        verticalLayout_8->addWidget(widget_2);
+
+        widget_4 = new QWidget(scrollAreaWidgetContents);
+        widget_4->setObjectName(QString::fromUtf8("widget_4"));
+        verticalLayout_9 = new QVBoxLayout(widget_4);
+        verticalLayout_9->setSpacing(6);
+        verticalLayout_9->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_9->setObjectName(QString::fromUtf8("verticalLayout_9"));
+        radioButton_pointlight2 = new QRadioButton(widget_4);
+        radioButton_pointlight2->setObjectName(QString::fromUtf8("radioButton_pointlight2"));
+        radioButton_pointlight2->setChecked(true);
+
+        verticalLayout_9->addWidget(radioButton_pointlight2);
+
+        widget_7 = new QWidget(widget_4);
+        widget_7->setObjectName(QString::fromUtf8("widget_7"));
+        horizontalLayout_3 = new QHBoxLayout(widget_7);
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        label_3 = new QLabel(widget_7);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        horizontalLayout_3->addWidget(label_3);
+
+        lineEdit_p2px = new QLineEdit(widget_7);
+        lineEdit_p2px->setObjectName(QString::fromUtf8("lineEdit_p2px"));
+
+        horizontalLayout_3->addWidget(lineEdit_p2px);
+
+        lineEdit_p2py = new QLineEdit(widget_7);
+        lineEdit_p2py->setObjectName(QString::fromUtf8("lineEdit_p2py"));
+
+        horizontalLayout_3->addWidget(lineEdit_p2py);
+
+        lineEdit_p2pz = new QLineEdit(widget_7);
+        lineEdit_p2pz->setObjectName(QString::fromUtf8("lineEdit_p2pz"));
+
+        horizontalLayout_3->addWidget(lineEdit_p2pz);
+
+
+        verticalLayout_9->addWidget(widget_7);
+
+        widget_5 = new QWidget(widget_4);
+        widget_5->setObjectName(QString::fromUtf8("widget_5"));
+        horizontalLayout_4 = new QHBoxLayout(widget_5);
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        label_4 = new QLabel(widget_5);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        horizontalLayout_4->addWidget(label_4);
+
+        lineEdit_p2cr = new QLineEdit(widget_5);
+        lineEdit_p2cr->setObjectName(QString::fromUtf8("lineEdit_p2cr"));
+
+        horizontalLayout_4->addWidget(lineEdit_p2cr);
+
+        lineEdit_p2cg = new QLineEdit(widget_5);
+        lineEdit_p2cg->setObjectName(QString::fromUtf8("lineEdit_p2cg"));
+
+        horizontalLayout_4->addWidget(lineEdit_p2cg);
+
+        lineEdit_p2cb = new QLineEdit(widget_5);
+        lineEdit_p2cb->setObjectName(QString::fromUtf8("lineEdit_p2cb"));
+
+        horizontalLayout_4->addWidget(lineEdit_p2cb);
+
+
+        verticalLayout_9->addWidget(widget_5);
+
+
+        verticalLayout_8->addWidget(widget_4);
+
+        scrollArea->setWidget(scrollAreaWidgetContents);
+
+        verticalLayout_4->addWidget(scrollArea);
 
         envButton = new QPushButton(widget);
         envButton->setObjectName(QString::fromUtf8("envButton"));
@@ -230,8 +422,6 @@ public:
         menu->addAction(actionLoadModel);
         menu->addAction(menu_2->menuAction());
         menu->addSeparator();
-        menu->addAction(actionNewTexture);
-        menu->addAction(actionLoadTexture);
         menu_2->addAction(actionsphere);
         menu_2->addAction(actioncube);
         functionMenu->addAction(actionPBRMaterial);
@@ -274,9 +464,14 @@ public:
         learnMenu->setTitle(QApplication::translate("PBR_RendererClass", "\345\255\246\344\271\240", nullptr));
         sceneDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\345\234\272\346\231\257\344\270\216\345\244\251\347\251\272\347\233\222", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(scene), QApplication::translate("PBR_RendererClass", "\345\234\272\346\231\257", nullptr));
-        label->setText(QApplication::translate("PBR_RendererClass", "TextLabel", nullptr));
+        radioButton_pointlight1->setText(QApplication::translate("PBR_RendererClass", "\347\202\271\345\205\211\346\272\2201", nullptr));
+        label->setText(QApplication::translate("PBR_RendererClass", "position", nullptr));
+        label_2->setText(QApplication::translate("PBR_RendererClass", "color", nullptr));
+        radioButton_pointlight2->setText(QApplication::translate("PBR_RendererClass", "\347\202\271\345\205\211\346\272\2202", nullptr));
+        label_3->setText(QApplication::translate("PBR_RendererClass", "position", nullptr));
+        label_4->setText(QApplication::translate("PBR_RendererClass", "color", nullptr));
         envButton->setText(QApplication::translate("PBR_RendererClass", "\351\200\211\346\213\251\347\216\257\345\242\203\350\264\264\345\233\276", nullptr));
-        tabWidget_2->setTabText(tabWidget_2->indexOf(skybox), QApplication::translate("PBR_RendererClass", "\347\216\257\345\242\203\350\264\264\345\233\276", nullptr));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(skybox), QApplication::translate("PBR_RendererClass", "\347\216\257\345\242\203\350\264\264\345\233\276\344\270\216\345\205\211\346\272\220", nullptr));
         informationDockWidget->setWindowTitle(QApplication::translate("PBR_RendererClass", "\345\261\236\346\200\247", nullptr));
     } // retranslateUi
 

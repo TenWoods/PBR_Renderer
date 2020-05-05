@@ -23,6 +23,7 @@ class Render : public QOpenGLWidget, public QOpenGLFunctions_4_4_Core
 
 signals:
 	void SetMeshUI(Model* pointer);
+	void SetLightUI(int i);
 
 public:
 	Render(QWidget *parent = Q_NULLPTR);
@@ -37,6 +38,8 @@ public:
 	RenderObject* AddSphere();
 	void AddModel(std::string path, PBR_Renderer* mainwindow);
 	void AddEnviromentTex(std::string path);
+	std::vector<PointLight>& get_pointLights();
+	std::vector<SpotLight>& get_spotLights();
 
 
 public slots:
@@ -59,7 +62,20 @@ public slots:
 	void SetPBRMaterialON(bool value);
 	void SetIndirectDiffuseON(bool value);
 	void SetIndirectSpecularON(bool value);
-
+	void SetPLightONOFF1(bool value);
+	void SetPLightONOFF2(bool value);
+	void SetPlightPositionX1(const QString& text);
+	void SetPlightPositionY1(const QString& text);
+	void SetPlightPositionZ1(const QString& text);
+	void SetPlightPositionX2(const QString& text);
+	void SetPlightPositionY2(const QString& text);
+	void SetPlightPositionZ2(const QString& text);
+	void SetPlightColorR1(const QString& text);
+	void SetPlightColorG1(const QString& text);
+	void SetPlightColorB1(const QString& text);
+	void SetPlightColorR2(const QString& text);
+	void SetPlightColorG2(const QString& text);
+	void SetPlightColorB2(const QString& text);
 
 protected : 
 	void initializeGL() override;
@@ -89,13 +105,12 @@ private:
 	QOpenGLShaderProgram envPBR_withTexture_shader;      //具有间接漫反射的PBR shader
 	QOpenGLShaderProgram final_notex_shader;
 	QOpenGLShaderProgram final_withtexture_shader;              //间接镜面后最终shader
-	QOpenGLShaderProgram depth_texture;              //生成深度图shader
-
+	//QOpenGLShaderProgram depth_texture;              //生成深度图shader
 
 	void InitShaderProgram(std::string vertexPath, std::string fragmentPath, QOpenGLShaderProgram& targetShader);          //初始化着色器
 	void Preirradiance();   //间接光照漫反射辐照预计算  
 	void Prereflect();      //间接光照镜面反射辐照预计算
-	void Depth();           //生成深度图
+	//void Depth();           //生成深度图
 	void renderCube();      //预计算用立方体
 	void renderQuad();      //预计算用平面
 	unsigned int cubeVAO;

@@ -34,6 +34,24 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	connect(ui.render, &Render::SetMeshUI, this, &PBR_Renderer::SetModelTree);
 	//添加环境贴图
 	connect(ui.envButton, &QPushButton::clicked, this, &PBR_Renderer::AddEnviromentTexture);
+	//光源设置
+	connect(ui.render, &Render::SetLightUI, this, &PBR_Renderer::SetLightData);
+	//1号
+	connect(ui.radioButton_pointlight1, &QRadioButton::clicked, ui.render, &Render::SetPLightONOFF1);
+	connect(ui.lineEdit_p1px, &QLineEdit::textChanged, ui.render, &Render::SetPlightPositionX1);
+	connect(ui.lineEdit_p1py, &QLineEdit::textChanged, ui.render, &Render::SetPlightPositionY1);
+	connect(ui.lineEdit_p1pz, &QLineEdit::textChanged, ui.render, &Render::SetPlightPositionZ1);
+	connect(ui.lineEdit_p1cr, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorR1);
+	connect(ui.lineEdit_p1cg, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorG1);
+	connect(ui.lineEdit_p1cb, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorB1);
+	//2号
+	connect(ui.radioButton_pointlight2, &QRadioButton::clicked, ui.render, &Render::SetPLightONOFF2);
+	connect(ui.lineEdit_p2px, &QLineEdit::textChanged, ui.render, &Render::SetPlightPositionX2);
+	connect(ui.lineEdit_p2py, &QLineEdit::textChanged, ui.render, &Render::SetPlightPositionY2);
+	connect(ui.lineEdit_p2pz, &QLineEdit::textChanged, ui.render, &Render::SetPlightPositionZ2);
+	connect(ui.lineEdit_p2cr, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorR2);
+	connect(ui.lineEdit_p2cg, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorG2);
+	connect(ui.lineEdit_p2cb, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorB2);
 }
 
 void PBR_Renderer::SetModelTree(Model* model)
@@ -130,4 +148,26 @@ void PBR_Renderer::AddEnviromentTexture()
 	if (path.isEmpty())
 		return;
 	ui.render->AddEnviromentTex(path.toStdString());
+}
+
+void PBR_Renderer::SetLightData(int i)
+{
+	if (i == 0)
+	{
+		ui.lineEdit_p1px->setText(QString("%1").arg(ui.render->get_pointLights()[0].get_position().x()));
+		ui.lineEdit_p1py->setText(QString("%1").arg(ui.render->get_pointLights()[0].get_position().y()));
+		ui.lineEdit_p1pz->setText(QString("%1").arg(ui.render->get_pointLights()[0].get_position().z()));
+		ui.lineEdit_p1cr->setText(QString("%1").arg(ui.render->get_pointLights()[0].get_lightColor().x()));
+		ui.lineEdit_p1cg->setText(QString("%1").arg(ui.render->get_pointLights()[0].get_lightColor().y()));
+		ui.lineEdit_p1cb->setText(QString("%1").arg(ui.render->get_pointLights()[0].get_lightColor().z()));
+	}
+	else if (i == 1)
+	{
+		ui.lineEdit_p2px->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_position().x()));
+		ui.lineEdit_p2py->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_position().y()));
+		ui.lineEdit_p2pz->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_position().z()));
+		ui.lineEdit_p2cr->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_lightColor().x()));
+		ui.lineEdit_p2cg->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_lightColor().y()));
+		ui.lineEdit_p2cb->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_lightColor().z()));
+	}
 }

@@ -90,15 +90,13 @@ void Render::initializeGL()
 	time.start();
 	//测试物体
 	//sceneObjects.push_back(new Model("C:/WorkPlace/PBR_Renderer/PBR_Renderer/model/test.obj", this));
-	//基础平行光
-	/*directionLight = DirectionLight(QVector3D(1.0f, 1.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-0.2f, -1.0f, -0.3f));*/
 	//点光源
-	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	/*pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(-10.0f, -10.0f, 10.0f), 0.09f, 0.032f));
-	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(10.0f, -10.0f, 10.0f), 0.09f, 0.032f));*/
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.0f, 0.2f, 0.2f), QVector3D(-10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	emit SetLightUI(0);
+	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.0f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
+	emit SetLightUI(1);
 	//聚光
-	/*spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));*/
+	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
 }
 
 void Render::paintGL()
@@ -194,21 +192,15 @@ void Render::paintGL()
 	//把光照信息和相机信息传给shader
 	shaderProgram->bind();
 	shaderProgram->setUniformValue("cameraPos", camera.get_position());
-	////平行光信息
-	//shaderProgram->setUniformValue("dirLight.direction", directionLight.get_direction());
-	//shaderProgram->setUniformValue("dirLight.ambient", directionLight.get_ambient());
-	//if (PBRMaterialON)
-	//{
-	//	shaderProgram->setUniformValue("dirLight.lightColor", directionLight.get_lightColor() * 300.0f);
-	//}
-	//else
-	//{
-	//	shaderProgram->setUniformValue("dirLight.lightColor", directionLight.get_lightColor());
-	//}
 	//点光源信息
 	shaderProgram->setUniformValue("plNum", (int)pointLights.size());
 	for (int i = 0; i < pointLights.size(); i++)
 	{
+		if (!pointLights[i].isOn)
+		{
+			shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + std::string("].lightColor")).c_str(), QVector3D(0.0f, 0.0f, 0.0f));
+			continue;
+		}
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i].get_position());
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].constant").c_str(), pointLights[i].get_constant());
 		shaderProgram->setUniformValue(("pointLights[" + std::to_string(i) + "].linear").c_str(), pointLights[i].get_linear());
@@ -659,6 +651,16 @@ void Render::renderQuad()
 	glBindVertexArray(0);
 }
 
+std::vector<PointLight>& Render::get_pointLights()
+{
+	return pointLights;
+}
+
+std::vector<SpotLight>& Render::get_spotLights()
+{
+	return spotLights;
+}
+
 //设置选中物体
 void Render::set_targetObject(RenderObject* value)
 {
@@ -870,4 +872,100 @@ void Render::SetIndirectSpecularON(bool value)
 	isPreReflectON = value;
 	isFirstLoadEnv = true;
 	isFirstPreCalc = true;
+}
+
+//光源相关
+//1号点光源开关
+void Render::SetPLightONOFF1(bool value)
+{
+	pointLights[0].isOn = value;
+	qDebug() << value;
+}
+
+//2号点光源开关
+void Render::SetPLightONOFF2(bool value)
+{
+	pointLights[1].isOn = value;
+	qDebug() << value;
+}
+
+//1号光源位置改变与颜色改变
+void Render::SetPlightPositionX1(const QString& text)
+{
+	QVector3D position = pointLights[0].get_position();
+	position.setX(text.toFloat());
+	pointLights[0].set_position(position);
+}
+void Render::SetPlightPositionY1(const QString& text)
+{
+	QVector3D position = pointLights[0].get_position();
+	position.setY(text.toFloat());
+	pointLights[0].set_position(position);
+}
+void Render::SetPlightPositionZ1(const QString& text)
+{
+	QVector3D position = pointLights[0].get_position();
+	position.setZ(text.toFloat());
+	pointLights[0].set_position(position);
+}
+
+void Render::SetPlightColorR1(const QString& text)
+{
+	QVector3D color = pointLights[0].get_ambient();
+	color.setX(text.toFloat());
+	pointLights[0].set_color(color);
+	qDebug() << color;
+}
+void Render::SetPlightColorG1(const QString& text)
+{
+	QVector3D color = pointLights[0].get_ambient();
+	color.setY(text.toFloat());
+	pointLights[0].set_color(color);
+	qDebug() << color;
+}
+void Render::SetPlightColorB1(const QString& text)
+{
+	QVector3D color = pointLights[0].get_ambient();
+	color.setZ(text.toFloat());
+	pointLights[0].set_color(color);
+	qDebug() << color;
+}
+
+//2号光源位置改变与颜色改变
+void Render::SetPlightPositionX2(const QString& text)
+{
+	QVector3D position = pointLights[1].get_position();
+	position.setX(text.toFloat());
+	pointLights[1].set_position(position);
+}
+void Render::SetPlightPositionY2(const QString& text)
+{
+	QVector3D position = pointLights[1].get_position();
+	position.setY(text.toFloat());
+	pointLights[1].set_position(position);
+}
+void Render::SetPlightPositionZ2(const QString& text)
+{
+	QVector3D position = pointLights[1].get_position();
+	position.setZ(text.toFloat());
+	pointLights[1].set_position(position);
+}
+
+void Render::SetPlightColorR2(const QString& text)
+{
+	QVector3D color = pointLights[1].get_ambient();
+	color.setX(text.toFloat());
+	pointLights[1].set_color(color);
+}
+void Render::SetPlightColorG2(const QString& text)
+{
+	QVector3D color = pointLights[1].get_ambient();
+	color.setY(text.toFloat());
+	pointLights[1].set_color(color);
+}
+void Render::SetPlightColorB2(const QString& text)
+{
+	QVector3D color = pointLights[1].get_ambient();
+	color.setZ(text.toFloat());
+	pointLights[1].set_color(color);
 }

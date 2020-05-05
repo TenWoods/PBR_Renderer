@@ -1,13 +1,13 @@
 #include "RenderObject.h"
 #include "Render.h"
 
-RenderObject::RenderObject() : m_position(0.0, 0.0, 0.0), m_scale(1.0, 1.0, 1.0), m_rotation(0.0, 0.0, 0.0), childObject(NULL), fatherObject(NULL), m_window(NULL), hasNormalmap(false), color(0.0f, 0.0f, 0.5f), metallic(0.5f), roughness(0.5f), ao(1.0f)
+RenderObject::RenderObject() : m_position(0.0, 0.0, 0.0), m_scale(1.0, 1.0, 1.0), m_rotation(0.0, 0.0, 0.0), childObject(NULL), fatherObject(NULL), m_window(NULL), hasNormalmap(false), color(0.5f, 0.5f, 0.5f), metallic(0.5f), roughness(0.5f), ao(1.0f)
 {
 
 }
 
 RenderObject::RenderObject(QVector3D position, QVector3D scale, QVector3D rotation, Render* window) : m_position(position), m_scale(scale), m_rotation(rotation),
-childObject(NULL), fatherObject(NULL), m_window(window), hasNormalmap(false), color(0.0f, 0.0f, 0.5f), metallic(0.5f), roughness(0.5f), ao(1.0f)
+childObject(NULL), fatherObject(NULL), m_window(window), hasNormalmap(false), color(0.5f, 0.5f, 0.5f), metallic(0.5f), roughness(0.5f), ao(1.0f)
 {
 
 }
