@@ -30,6 +30,8 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	connect(ui.treeView, &QTreeView::clicked, this, &PBR_Renderer::ShowProperties); //单击显示选中物体的属性
 	//教学文档显示
 	connect(ui.actionPartone, &QAction::triggered, this, &PBR_Renderer::ShowPartone);
+	connect(ui.actionParttwo, &QAction::triggered, this, &PBR_Renderer::ShowParttwo);
+	connect(ui.actionPartthree, &QAction::triggered, this, &PBR_Renderer::ShowPartthree);
 	//meshUI生成信号
 	connect(ui.render, &Render::SetMeshUI, this, &PBR_Renderer::SetModelTree);
 	//添加环境贴图
@@ -52,6 +54,17 @@ PBR_Renderer::PBR_Renderer(QWidget* parent) : QMainWindow(parent), sphere_num(0)
 	connect(ui.lineEdit_p2cr, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorR2);
 	connect(ui.lineEdit_p2cg, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorG2);
 	connect(ui.lineEdit_p2cb, &QLineEdit::textChanged, ui.render, &Render::SetPlightColorB2);
+	//手电
+	connect(ui.radioButton_spotlight, &QRadioButton::clicked, ui.render, &Render::SetSLightONOFF);
+	connect(ui.lineEdit_spx, &QLineEdit::textChanged, ui.render, &Render::SetSlightPositionX);
+	connect(ui.lineEdit_spy, &QLineEdit::textChanged, ui.render, &Render::SetSlightPositionY);
+	connect(ui.lineEdit_spz, &QLineEdit::textChanged, ui.render, &Render::SetSlightPositionZ);
+	connect(ui.lineEdit_scr, &QLineEdit::textChanged, ui.render, &Render::SetSlightColorR);
+	connect(ui.lineEdit_scg, &QLineEdit::textChanged, ui.render, &Render::SetSlightColorG);
+	connect(ui.lineEdit_scb, &QLineEdit::textChanged, ui.render, &Render::SetSlightColorB);
+	connect(ui.lineEdit_sdx, &QLineEdit::textChanged, ui.render, &Render::SetSlightDirectionX);
+	connect(ui.lineEdit_sdy, &QLineEdit::textChanged, ui.render, &Render::SetSlightDirectionY);
+	connect(ui.lineEdit_sdz, &QLineEdit::textChanged, ui.render, &Render::SetSlightDirectionZ);
 }
 
 void PBR_Renderer::SetModelTree(Model* model)
@@ -123,6 +136,24 @@ void PBR_Renderer::ShowPartone()
 	partone->show();
 }
 
+//教学第二部分
+void PBR_Renderer::ShowParttwo()
+{
+	parttwo = new StudyResourse(this, 2, this);
+	parttwo->setWindowTitle(QStringLiteral("IBL间接漫反射"));
+	parttwo->setModal(false);
+	parttwo->show();
+}
+
+//教学第三部分
+void PBR_Renderer::ShowPartthree()
+{
+	partthree = new StudyResourse(this, 3, this);
+	partthree->setWindowTitle(QStringLiteral("IBL间接镜面反射"));
+	partthree->setModal(false);
+	partthree->show();
+}
+
 //解锁PBR材质功能
 void PBR_Renderer::UnlockMaterial()
 {
@@ -169,5 +200,17 @@ void PBR_Renderer::SetLightData(int i)
 		ui.lineEdit_p2cr->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_lightColor().x()));
 		ui.lineEdit_p2cg->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_lightColor().y()));
 		ui.lineEdit_p2cb->setText(QString("%1").arg(ui.render->get_pointLights()[1].get_lightColor().z()));
+	}
+	else if (i == 2)
+	{
+		ui.lineEdit_spx->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_position().x()));
+		ui.lineEdit_spy->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_position().y()));
+		ui.lineEdit_spz->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_position().z()));
+		ui.lineEdit_scr->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_lightColor().x()));
+		ui.lineEdit_scg->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_lightColor().y()));
+		ui.lineEdit_scb->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_lightColor().z()));
+		ui.lineEdit_sdx->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_direction().x()));
+		ui.lineEdit_sdy->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_direction().y()));
+		ui.lineEdit_sdz->setText(QString("%1").arg(ui.render->get_spotLights()[0].get_direction().z()));
 	}
 }

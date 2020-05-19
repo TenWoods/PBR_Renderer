@@ -96,7 +96,8 @@ void Render::initializeGL()
 	pointLights.push_back(PointLight(QVector3D(5.0f, 5.0f, 5.0f), QVector3D(0.0f, 0.2f, 0.2f), QVector3D(10.0f, 10.0f, 10.0f), 0.09f, 0.032f));
 	emit SetLightUI(1);
 	//聚光
-	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
+	spotLights.push_back(SpotLight(QVector3D(0.0f, 0.0f, 0.5f), QVector3D(0.2f, 0.2f, 0.2f), QVector3D(0.0f, 0.0f, 2.0f), 0.09f, 0.032f, QVector3D(0.0f, 0.0f, -2.0f), cos(qDegreesToRadians(12.5f)), cos(qDegreesToRadians(15.0f))));
+	emit SetLightUI(2);
 }
 
 void Render::paintGL()
@@ -221,6 +222,11 @@ void Render::paintGL()
 	shaderProgram->setUniformValue("slNum", (int)spotLights.size());
 	for (int i = 0; i < spotLights.size(); i++)
 	{
+		if (!spotLights[i].isOn)
+		{
+			shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + std::string("].lightColor")).c_str(), QVector3D(0.0f, 0.0f, 0.0f));
+			continue;
+		}
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].position").c_str(), spotLights[i].get_position());
 		shaderProgram->setUniformValue(("spotLights[" + std::to_string(i) + "].direction").c_str(),
 			spotLights[i].get_direction());
@@ -911,24 +917,27 @@ void Render::SetPlightPositionZ1(const QString& text)
 
 void Render::SetPlightColorR1(const QString& text)
 {
-	QVector3D color = pointLights[0].get_ambient();
+	QVector3D color = pointLights[0].get_lightColor();
+	//qDebug() << color;
 	color.setX(text.toFloat());
 	pointLights[0].set_color(color);
-	qDebug() << color;
+	
 }
 void Render::SetPlightColorG1(const QString& text)
 {
-	QVector3D color = pointLights[0].get_ambient();
+	QVector3D color = pointLights[0].get_lightColor();
+	//qDebug() << color;
 	color.setY(text.toFloat());
 	pointLights[0].set_color(color);
-	qDebug() << color;
+	
 }
 void Render::SetPlightColorB1(const QString& text)
 {
-	QVector3D color = pointLights[0].get_ambient();
+	QVector3D color = pointLights[0].get_lightColor();
+	//qDebug() << color;
 	color.setZ(text.toFloat());
 	pointLights[0].set_color(color);
-	qDebug() << color;
+	
 }
 
 //2号光源位置改变与颜色改变
@@ -953,19 +962,90 @@ void Render::SetPlightPositionZ2(const QString& text)
 
 void Render::SetPlightColorR2(const QString& text)
 {
-	QVector3D color = pointLights[1].get_ambient();
+	QVector3D color = pointLights[1].get_lightColor();
 	color.setX(text.toFloat());
 	pointLights[1].set_color(color);
 }
 void Render::SetPlightColorG2(const QString& text)
 {
-	QVector3D color = pointLights[1].get_ambient();
+	QVector3D color = pointLights[1].get_lightColor();
 	color.setY(text.toFloat());
 	pointLights[1].set_color(color);
 }
 void Render::SetPlightColorB2(const QString& text)
 {
-	QVector3D color = pointLights[1].get_ambient();
+	QVector3D color = pointLights[1].get_lightColor();
 	color.setZ(text.toFloat());
 	pointLights[1].set_color(color);
+}
+
+void Render::SetSLightONOFF(bool value)
+{
+	spotLights[0].isOn = value;
+}
+
+void Render::SetSlightPositionX(const QString& text)
+{
+	QVector3D position = spotLights[0].get_position();
+	position.setX(text.toFloat());
+	spotLights[0].set_position(position);
+}
+
+void Render::SetSlightPositionY(const QString& text)
+{
+	QVector3D position = spotLights[0].get_position();
+	position.setY(text.toFloat());
+	spotLights[0].set_position(position);
+}
+
+void Render::SetSlightPositionZ(const QString& text)
+{
+	QVector3D position = spotLights[0].get_position();
+	position.setZ(text.toFloat());
+	spotLights[0].set_position(position);
+}
+
+void Render::SetSlightColorR(const QString& text)
+{
+	QVector3D color = spotLights[0].get_lightColor();
+	color.setX(text.toFloat());
+	spotLights[0].set_color(color);
+}
+void Render::SetSlightColorG(const QString& text)
+{
+	QVector3D color = spotLights[0].get_lightColor();
+	color.setY(text.toFloat());
+	spotLights[0].set_color(color);
+}
+
+void Render::SetSlightColorB(const QString& text)
+{
+	QVector3D color = spotLights[0].get_lightColor();
+	color.setZ(text.toFloat());
+	spotLights[0].set_color(color);
+}
+
+void Render::SetSlightDirectionX(const QString& text)
+{
+	QVector3D direction = spotLights[0].get_direction();
+	qDebug() << direction;
+	direction.setX(text.toFloat());
+	spotLights[0].set_direction(direction);
+	
+}
+
+void Render::SetSlightDirectionY(const QString& text)
+{
+	QVector3D direction = spotLights[0].get_direction();
+	qDebug() << direction;
+	direction.setY(text.toFloat());
+	spotLights[0].set_direction(direction);
+}
+
+void Render::SetSlightDirectionZ(const QString& text)
+{
+	QVector3D direction = spotLights[0].get_direction();
+	qDebug() << direction;
+	direction.setZ(text.toFloat());
+	spotLights[0].set_direction(direction);
 }

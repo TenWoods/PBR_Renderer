@@ -19,6 +19,8 @@ public slots:
 	void AddCube();  //场景添加立方体
 	void ShowProperties(const QModelIndex& index);  //显示属性
 	void ShowPartone(); //显示第一部分教学
+	void ShowParttwo(); //显示第二部分教学
+	void ShowPartthree(); //显示第三部分教学
 	void UnlockMaterial();
 	void UnlockDiffuse();
 	void UnlockSpecular();
@@ -33,4 +35,6 @@ private:
 	int sphere_num;
 	int cube_num;
 	StudyResourse* partone;
+	StudyResourse* parttwo;
+	StudyResourse* partthree;
 };

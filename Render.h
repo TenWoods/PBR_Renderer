@@ -64,6 +64,7 @@ public slots:
 	void SetIndirectSpecularON(bool value);
 	void SetPLightONOFF1(bool value);
 	void SetPLightONOFF2(bool value);
+	void SetSLightONOFF(bool value);
 	void SetPlightPositionX1(const QString& text);
 	void SetPlightPositionY1(const QString& text);
 	void SetPlightPositionZ1(const QString& text);
@@ -76,6 +77,15 @@ public slots:
 	void SetPlightColorR2(const QString& text);
 	void SetPlightColorG2(const QString& text);
 	void SetPlightColorB2(const QString& text);
+	void SetSlightPositionX(const QString& text);
+	void SetSlightPositionY(const QString& text);
+	void SetSlightPositionZ(const QString& text);
+	void SetSlightColorR(const QString& text);
+	void SetSlightColorG(const QString& text);
+	void SetSlightColorB(const QString& text);
+	void SetSlightDirectionX(const QString& text);
+	void SetSlightDirectionY(const QString& text);
+	void SetSlightDirectionZ(const QString& text);
 
 protected : 
 	void initializeGL() override;

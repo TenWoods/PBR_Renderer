@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Render_t {
-    QByteArrayData data[42];
-    char stringdata0[598];
+    QByteArrayData data[52];
+    char stringdata0[778];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -61,18 +61,28 @@ QT_MOC_LITERAL(26, 301, 20), // "SetIndirectDiffuseON"
 QT_MOC_LITERAL(27, 322, 21), // "SetIndirectSpecularON"
 QT_MOC_LITERAL(28, 344, 15), // "SetPLightONOFF1"
 QT_MOC_LITERAL(29, 360, 15), // "SetPLightONOFF2"
-QT_MOC_LITERAL(30, 376, 19), // "SetPlightPositionX1"
-QT_MOC_LITERAL(31, 396, 19), // "SetPlightPositionY1"
-QT_MOC_LITERAL(32, 416, 19), // "SetPlightPositionZ1"
-QT_MOC_LITERAL(33, 436, 19), // "SetPlightPositionX2"
-QT_MOC_LITERAL(34, 456, 19), // "SetPlightPositionY2"
-QT_MOC_LITERAL(35, 476, 19), // "SetPlightPositionZ2"
-QT_MOC_LITERAL(36, 496, 16), // "SetPlightColorR1"
-QT_MOC_LITERAL(37, 513, 16), // "SetPlightColorG1"
-QT_MOC_LITERAL(38, 530, 16), // "SetPlightColorB1"
-QT_MOC_LITERAL(39, 547, 16), // "SetPlightColorR2"
-QT_MOC_LITERAL(40, 564, 16), // "SetPlightColorG2"
-QT_MOC_LITERAL(41, 581, 16) // "SetPlightColorB2"
+QT_MOC_LITERAL(30, 376, 14), // "SetSLightONOFF"
+QT_MOC_LITERAL(31, 391, 19), // "SetPlightPositionX1"
+QT_MOC_LITERAL(32, 411, 19), // "SetPlightPositionY1"
+QT_MOC_LITERAL(33, 431, 19), // "SetPlightPositionZ1"
+QT_MOC_LITERAL(34, 451, 19), // "SetPlightPositionX2"
+QT_MOC_LITERAL(35, 471, 19), // "SetPlightPositionY2"
+QT_MOC_LITERAL(36, 491, 19), // "SetPlightPositionZ2"
+QT_MOC_LITERAL(37, 511, 16), // "SetPlightColorR1"
+QT_MOC_LITERAL(38, 528, 16), // "SetPlightColorG1"
+QT_MOC_LITERAL(39, 545, 16), // "SetPlightColorB1"
+QT_MOC_LITERAL(40, 562, 16), // "SetPlightColorR2"
+QT_MOC_LITERAL(41, 579, 16), // "SetPlightColorG2"
+QT_MOC_LITERAL(42, 596, 16), // "SetPlightColorB2"
+QT_MOC_LITERAL(43, 613, 18), // "SetSlightPositionX"
+QT_MOC_LITERAL(44, 632, 18), // "SetSlightPositionY"
+QT_MOC_LITERAL(45, 651, 18), // "SetSlightPositionZ"
+QT_MOC_LITERAL(46, 670, 15), // "SetSlightColorR"
+QT_MOC_LITERAL(47, 686, 15), // "SetSlightColorG"
+QT_MOC_LITERAL(48, 702, 15), // "SetSlightColorB"
+QT_MOC_LITERAL(49, 718, 19), // "SetSlightDirectionX"
+QT_MOC_LITERAL(50, 738, 19), // "SetSlightDirectionY"
+QT_MOC_LITERAL(51, 758, 19) // "SetSlightDirectionZ"
 
     },
     "Render\0SetMeshUI\0\0Model*\0pointer\0"
@@ -85,13 +95,18 @@ QT_MOC_LITERAL(41, 581, 16) // "SetPlightColorB2"
     "ChangeAO\0SettextureON\0value\0"
     "SetPBRMaterialON\0SetIndirectDiffuseON\0"
     "SetIndirectSpecularON\0SetPLightONOFF1\0"
-    "SetPLightONOFF2\0SetPlightPositionX1\0"
-    "SetPlightPositionY1\0SetPlightPositionZ1\0"
-    "SetPlightPositionX2\0SetPlightPositionY2\0"
-    "SetPlightPositionZ2\0SetPlightColorR1\0"
-    "SetPlightColorG1\0SetPlightColorB1\0"
-    "SetPlightColorR2\0SetPlightColorG2\0"
-    "SetPlightColorB2"
+    "SetPLightONOFF2\0SetSLightONOFF\0"
+    "SetPlightPositionX1\0SetPlightPositionY1\0"
+    "SetPlightPositionZ1\0SetPlightPositionX2\0"
+    "SetPlightPositionY2\0SetPlightPositionZ2\0"
+    "SetPlightColorR1\0SetPlightColorG1\0"
+    "SetPlightColorB1\0SetPlightColorR2\0"
+    "SetPlightColorG2\0SetPlightColorB2\0"
+    "SetSlightPositionX\0SetSlightPositionY\0"
+    "SetSlightPositionZ\0SetSlightColorR\0"
+    "SetSlightColorG\0SetSlightColorB\0"
+    "SetSlightDirectionX\0SetSlightDirectionY\0"
+    "SetSlightDirectionZ"
 };
 #undef QT_MOC_LITERAL
 
@@ -101,7 +116,7 @@ static const uint qt_meta_data_Render[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      35,   14, // methods
+      45,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -109,43 +124,53 @@ static const uint qt_meta_data_Render[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  189,    2, 0x06 /* Public */,
-       5,    1,  192,    2, 0x06 /* Public */,
+       1,    1,  239,    2, 0x06 /* Public */,
+       5,    1,  242,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       7,    1,  195,    2, 0x0a /* Public */,
-       9,    1,  198,    2, 0x0a /* Public */,
-      10,    1,  201,    2, 0x0a /* Public */,
-      11,    1,  204,    2, 0x0a /* Public */,
-      12,    1,  207,    2, 0x0a /* Public */,
-      13,    1,  210,    2, 0x0a /* Public */,
-      14,    1,  213,    2, 0x0a /* Public */,
-      15,    1,  216,    2, 0x0a /* Public */,
-      16,    1,  219,    2, 0x0a /* Public */,
-      17,    1,  222,    2, 0x0a /* Public */,
-      18,    1,  225,    2, 0x0a /* Public */,
-      19,    1,  228,    2, 0x0a /* Public */,
-      20,    1,  231,    2, 0x0a /* Public */,
-      21,    1,  234,    2, 0x0a /* Public */,
-      22,    1,  237,    2, 0x0a /* Public */,
-      23,    1,  240,    2, 0x0a /* Public */,
-      25,    1,  243,    2, 0x0a /* Public */,
-      26,    1,  246,    2, 0x0a /* Public */,
-      27,    1,  249,    2, 0x0a /* Public */,
-      28,    1,  252,    2, 0x0a /* Public */,
-      29,    1,  255,    2, 0x0a /* Public */,
-      30,    1,  258,    2, 0x0a /* Public */,
-      31,    1,  261,    2, 0x0a /* Public */,
-      32,    1,  264,    2, 0x0a /* Public */,
-      33,    1,  267,    2, 0x0a /* Public */,
-      34,    1,  270,    2, 0x0a /* Public */,
-      35,    1,  273,    2, 0x0a /* Public */,
-      36,    1,  276,    2, 0x0a /* Public */,
-      37,    1,  279,    2, 0x0a /* Public */,
-      38,    1,  282,    2, 0x0a /* Public */,
-      39,    1,  285,    2, 0x0a /* Public */,
-      40,    1,  288,    2, 0x0a /* Public */,
-      41,    1,  291,    2, 0x0a /* Public */,
+       7,    1,  245,    2, 0x0a /* Public */,
+       9,    1,  248,    2, 0x0a /* Public */,
+      10,    1,  251,    2, 0x0a /* Public */,
+      11,    1,  254,    2, 0x0a /* Public */,
+      12,    1,  257,    2, 0x0a /* Public */,
+      13,    1,  260,    2, 0x0a /* Public */,
+      14,    1,  263,    2, 0x0a /* Public */,
+      15,    1,  266,    2, 0x0a /* Public */,
+      16,    1,  269,    2, 0x0a /* Public */,
+      17,    1,  272,    2, 0x0a /* Public */,
+      18,    1,  275,    2, 0x0a /* Public */,
+      19,    1,  278,    2, 0x0a /* Public */,
+      20,    1,  281,    2, 0x0a /* Public */,
+      21,    1,  284,    2, 0x0a /* Public */,
+      22,    1,  287,    2, 0x0a /* Public */,
+      23,    1,  290,    2, 0x0a /* Public */,
+      25,    1,  293,    2, 0x0a /* Public */,
+      26,    1,  296,    2, 0x0a /* Public */,
+      27,    1,  299,    2, 0x0a /* Public */,
+      28,    1,  302,    2, 0x0a /* Public */,
+      29,    1,  305,    2, 0x0a /* Public */,
+      30,    1,  308,    2, 0x0a /* Public */,
+      31,    1,  311,    2, 0x0a /* Public */,
+      32,    1,  314,    2, 0x0a /* Public */,
+      33,    1,  317,    2, 0x0a /* Public */,
+      34,    1,  320,    2, 0x0a /* Public */,
+      35,    1,  323,    2, 0x0a /* Public */,
+      36,    1,  326,    2, 0x0a /* Public */,
+      37,    1,  329,    2, 0x0a /* Public */,
+      38,    1,  332,    2, 0x0a /* Public */,
+      39,    1,  335,    2, 0x0a /* Public */,
+      40,    1,  338,    2, 0x0a /* Public */,
+      41,    1,  341,    2, 0x0a /* Public */,
+      42,    1,  344,    2, 0x0a /* Public */,
+      43,    1,  347,    2, 0x0a /* Public */,
+      44,    1,  350,    2, 0x0a /* Public */,
+      45,    1,  353,    2, 0x0a /* Public */,
+      46,    1,  356,    2, 0x0a /* Public */,
+      47,    1,  359,    2, 0x0a /* Public */,
+      48,    1,  362,    2, 0x0a /* Public */,
+      49,    1,  365,    2, 0x0a /* Public */,
+      50,    1,  368,    2, 0x0a /* Public */,
+      51,    1,  371,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -173,6 +198,16 @@ static const uint qt_meta_data_Render[] = {
     QMetaType::Void, QMetaType::Bool,   24,
     QMetaType::Void, QMetaType::Bool,   24,
     QMetaType::Void, QMetaType::Bool,   24,
+    QMetaType::Void, QMetaType::Bool,   24,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    8,
     QMetaType::Void, QMetaType::QString,    8,
     QMetaType::Void, QMetaType::QString,    8,
     QMetaType::Void, QMetaType::QString,    8,
@@ -218,18 +253,28 @@ void Render::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 20: _t->SetIndirectSpecularON((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 21: _t->SetPLightONOFF1((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 22: _t->SetPLightONOFF2((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 23: _t->SetPlightPositionX1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 24: _t->SetPlightPositionY1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 25: _t->SetPlightPositionZ1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 26: _t->SetPlightPositionX2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 27: _t->SetPlightPositionY2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 28: _t->SetPlightPositionZ2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 29: _t->SetPlightColorR1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 30: _t->SetPlightColorG1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 31: _t->SetPlightColorB1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 32: _t->SetPlightColorR2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 33: _t->SetPlightColorG2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 34: _t->SetPlightColorB2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 23: _t->SetSLightONOFF((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 24: _t->SetPlightPositionX1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 25: _t->SetPlightPositionY1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 26: _t->SetPlightPositionZ1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 27: _t->SetPlightPositionX2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 28: _t->SetPlightPositionY2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 29: _t->SetPlightPositionZ2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 30: _t->SetPlightColorR1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 31: _t->SetPlightColorG1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 32: _t->SetPlightColorB1((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 33: _t->SetPlightColorR2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 34: _t->SetPlightColorG2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 35: _t->SetPlightColorB2((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 36: _t->SetSlightPositionX((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 37: _t->SetSlightPositionY((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 38: _t->SetSlightPositionZ((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 39: _t->SetSlightColorR((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 40: _t->SetSlightColorG((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 41: _t->SetSlightColorB((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 42: _t->SetSlightDirectionX((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 43: _t->SetSlightDirectionY((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 44: _t->SetSlightDirectionZ((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -282,13 +327,13 @@ int Render::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 35)
+        if (_id < 45)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 35;
+        _id -= 45;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 35)
+        if (_id < 45)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 35;
+        _id -= 45;
     }
     return _id;
 }
