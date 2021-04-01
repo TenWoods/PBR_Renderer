@@ -1,1 +1,1 @@
-﻿  PBR_Renderer.vcxproj -> C:\WorkPlace\PBR_Renderer\x64\Release\PBR_Renderer.exe
+﻿C:\Users\jukis\AppData\Local\QtMsBuild\qt_vars.targets(86,5): error : There's no Qt version assigned to project PBR_Renderer.vcxproj for configuration Release/x64. Please assign a Qt installation in 'Qt Project Settings'.
